@@ -11,6 +11,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -26,7 +28,8 @@ import melonproject.melon.entity.info.AgencyInfoEntity;
 @NoArgsConstructor
 @Entity
 @Table(name="artist_info")
-@DiscriminatorColumn//기본값이 DTYPE
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="art_dtype")//기본값이 DTYPE
 public class ArtistInfoEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="art_seq") private Long artSeq;
@@ -36,5 +39,5 @@ public class ArtistInfoEntity {
     @Column(name="art_country") private String artCountry;
     @Column(name="art_file") private String artFile;
     @Column(name="art_uri") private String artUri;
-    @Column(name="art_dtype") private String artDtype;
+    // @Column(name="art_dtype") private String artDtype;
 }

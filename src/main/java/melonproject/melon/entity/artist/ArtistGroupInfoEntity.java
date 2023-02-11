@@ -22,7 +22,5 @@ import lombok.Setter;
 @Table(name="artist_group_info")
 @DiscriminatorValue("GROUP")
 public class ArtistGroupInfoEntity extends ArtistInfoEntity{
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="art_seq") private Long artSeq;
     @Column(name="agi_split") private LocalDate agiSplit;
 }

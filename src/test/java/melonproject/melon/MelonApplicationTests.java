@@ -53,6 +53,10 @@ class MelonApplicationTests {
 
 	@Test
 	void contextLoads() {
+		// System.out.println(artcRepo.findAll().get(0));
+		System.out.println(artgRepo.findAll().get(0).getArtName());
+		System.out.println(artsRepo.findAll().get(0).getArtName());
+		// System.out.println(artRepo.findAll().get(0));
 	}
 
 }

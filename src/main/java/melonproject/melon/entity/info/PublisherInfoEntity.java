@@ -20,5 +20,5 @@ import lombok.Setter;
 public class PublisherInfoEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="pi_seq") private Long piSeq;
-    @Column(name="pi_name") private Long piName;
+    @Column(name="pi_name") private String piName;
 }

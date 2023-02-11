@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
 
@@ -36,4 +37,5 @@ public class SongInfoEntity {
     @Column(name="si_order") private Integer       siOrder;
     @Column(name="si_lyrics") private String      siLyrics;
     @Column(name="si_reg_dt") private LocalDate      siRegDt;
+    @ManyToOne(fetch=FetchType.LAZY) @JsonIgnore @JoinColumn(name="si_art_seq") private ArtistInfoEntity artist;
 }

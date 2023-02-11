@@ -1,11 +1,14 @@
 package melonproject.melon.entity.artist;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +23,5 @@ import lombok.Setter;
 @Table(name="artist_solo_info")
 @DiscriminatorValue("SOLO")
 public class ArtistSoloInfoEntity extends ArtistInfoEntity{
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="art_seq") private Long artSeq;
-    @Column(name="asi_birth") private Long asiBirth;
+    @Column(name="asi_birth") private LocalDate asiBirth;
 }
