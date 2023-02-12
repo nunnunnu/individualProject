@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 import melonproject.melon.entity.info.AgencyInfoEntity;
 
 @Getter
@@ -30,6 +31,7 @@ import melonproject.melon.entity.info.AgencyInfoEntity;
 @Table(name="artist_info")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name="art_dtype")//기본값이 DTYPE
+@SuperBuilder
 public class ArtistInfoEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="art_seq") private Long artSeq;

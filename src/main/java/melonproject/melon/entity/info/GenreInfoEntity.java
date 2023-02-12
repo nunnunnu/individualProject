@@ -20,6 +20,6 @@ import lombok.Setter;
 public class GenreInfoEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="gi_seq") private Long giSeq;
-    @Column(name="gi_name") private Long giName;
+    @Column(name="gi_name") private String giName;
 }
 	

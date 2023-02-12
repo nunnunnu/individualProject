@@ -1,6 +1,8 @@
 package melonproject.melon.service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -9,11 +11,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.ArtistInfoEntity;
+import melonproject.melon.entity.artist.album.AlbumGenreConnection;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 import melonproject.melon.entity.info.AgencyInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.info.PublisherInfoEntity;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
+import melonproject.melon.repository.artist.album.AlbumGenreConnectionRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.info.AgencyInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
@@ -28,11 +32,12 @@ public class AlbumService {
     private final AgencyInfoRepository agenRepo;
     private final ArtistInfoRepository artRepo;
     private final FileService fService;
+    private final GenreInfoRepository genreRepo;
+    private final AlbumGenreConnectionRepository agRepo;
 
     public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file){
-        System.out.println(data);
         Map<String, Object> map = new LinkedHashMap<>();
-        if(data.getAgency()==null || data.getName()==null || data.getPublisher()==null || data.getType()==null){
+        if(data.getRegDt()==null || data.getAgency()==null || data.getName()==null || data.getPublisher()==null || data.getType()==null){
             map.put("status", false);
             map.put("message", "필수 값을 모두 입력해주세요");
             map.put("code", HttpStatus.BAD_REQUEST);
@@ -71,7 +76,35 @@ public class AlbumService {
         map.put("status", true);
         map.put("message", "앨범 정보를 등록했습니다.");
         map.put("code", HttpStatus.OK);
-                
+        
+        return map;
+    }
+    public Map<String, Object> albumGenreConnection(Long albumSeq, Long... genreSeq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        AlbumInfoEntity album = albumRepo.findById(albumSeq).orElse(null);
+        if(album==null){
+            map.put("status", false);
+            map.put("message", "앨범 정보를 등록했습니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        List<GenreInfoEntity> genreList = genreRepo.findIdList(genreSeq);
+        if(genreSeq.length!= genreList.size()){
+            map.put("status", false);
+            map.put("message", "잘못된 장르 번호가 포함되어있습니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        List<AlbumGenreConnection> result = new ArrayList<>();
+        for(GenreInfoEntity g : genreList){
+            AlbumGenreConnection agc = new AlbumGenreConnection(null, g, album);
+            result.add(agc);
+        }
+        agRepo.saveAll(result);
+        map.put("status", true);
+        map.put("message", "앨범 장르를 저장했습니다");
+        map.put("code", HttpStatus.OK);
+        
         return map;
     }
 }

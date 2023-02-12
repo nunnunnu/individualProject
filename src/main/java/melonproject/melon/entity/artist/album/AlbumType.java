@@ -1,5 +1,8 @@
 package melonproject.melon.entity.artist.album;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum AlbumType {
     정규("LP"),
     싱글("SINGLE"),
@@ -15,5 +18,22 @@ public enum AlbumType {
 
     AlbumType(String name){this.name=name;}
 
+    @JsonValue
     public String getName(){return name;}
+
+    @JsonCreator
+    public static AlbumType from(String name) {
+        // for (AlbumType type : AlbumType.values()) {
+        //     if (type.getName().equals(name)) {
+        //         return type;
+        //     }
+        // }
+        // return null;
+        try {
+            return AlbumType.valueOf(name);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
 }
