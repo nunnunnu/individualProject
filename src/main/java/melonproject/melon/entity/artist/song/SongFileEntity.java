@@ -29,6 +29,11 @@ public class SongFileEntity {
     @Column(name="sf_seq") private Long sfSeq; 
     @Column(name="sf_file") private String sfFile; 
     @Column(name="sf_uri") private String sfUri; 
-    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sf_si_seq") private SongInfoEntity sfSiSeq; 
-    @Column(name="sf_quality") private String sfQuality; 
+    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sf_si_seq") private SongInfoEntity song; 
+    @Column(name="sf_quality") private SoundQuality sfQuality; 
+
+    public void fileSaveSetting(SongInfoEntity entity, SoundQuality sound){
+        this.song = entity;
+        this.sfQuality = sound;
+    }
 }

@@ -84,7 +84,7 @@ public class AlbumService {
         AlbumInfoEntity album = albumRepo.findById(albumSeq).orElse(null);
         if(album==null){
             map.put("status", false);
-            map.put("message", "앨범 정보를 등록했습니다.");
+            map.put("message", "앨범 번호 오류입니다.");
             map.put("code", HttpStatus.BAD_REQUEST);
             return map;
         }

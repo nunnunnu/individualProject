@@ -128,11 +128,11 @@ public class FileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return AlbumInfoEntity.builder().albumCover(saveFileName).albumUri(originFileName).build();
+        return AlbumInfoEntity.builder().albumCover(saveFileName).albumUri(fileName).build();
     }
     public ArtistSoloInfoEntity saveArtistSoloFile(MultipartFile file, String name){
         if(file==null){
-            return ArtistSoloInfoEntity.builder().artFile("basic.jpg").artUri(name).build();
+            return ArtistSoloInfoEntity.builder().artFile("basic.jpeg").artUri(name).build();
         }
         Path folderLocation = Paths.get(artist_img_path);
 
@@ -143,7 +143,7 @@ public class FileService {
         for (int i = 0; i < split.length - 1; i++) {
             fileName += split[i]; //원래 split[i]+"." 이렇게 해줘야함
         }
-        String saveFileName = "artist_Solo_"; //보통 원본 이름을 저장하는것이아니라 시간대를 입력함
+        String saveFileName = "artist_solo_"; //보통 원본 이름을 저장하는것이아니라 시간대를 입력함
         Calendar c = Calendar.getInstance();
         saveFileName += c.getTimeInMillis() + "." + ext; // todo_161310135.png 이런식으로 저장됨
 
@@ -156,11 +156,11 @@ public class FileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ArtistSoloInfoEntity.builder().artFile(saveFileName).artUri(originFileName).build();
+        return ArtistSoloInfoEntity.builder().artFile(saveFileName).artUri(fileName).build();
     }
     public ArtistGroupInfoEntity saveArtistGroupFile(MultipartFile file, String name){
         if(file==null){
-            return ArtistGroupInfoEntity.builder().artFile("basic.jpg").artUri(name).build();
+            return ArtistGroupInfoEntity.builder().artFile("basic.jpeg").artUri(name).build();
         }
         Path folderLocation = Paths.get(artist_img_path);
 
@@ -184,10 +184,10 @@ public class FileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ArtistGroupInfoEntity.builder().artFile(saveFileName).artUri(originFileName).build();
+        return ArtistGroupInfoEntity.builder().artFile(saveFileName).artUri(fileName).build();
     }
     public SongFileEntity saveSongFile(MultipartFile file){
-        Path folderLocation = Paths.get(artist_img_path);
+        Path folderLocation = Paths.get(song_img_path);
 
         String originFileName = file.getOriginalFilename();
         String[] split = originFileName.split(("\\.")); //.을 기준으로 나눔
@@ -209,6 +209,6 @@ public class FileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return SongFileEntity.builder().sfFile(saveFileName).sfUri(originFileName).build();
+        return SongFileEntity.builder().sfFile(saveFileName).sfUri(fileName).build();
     }
 }

@@ -29,8 +29,6 @@ public class ArtistSoloInfoEntity extends ArtistInfoEntity{
         this.setAgency(agency);
         this.setArtCountry(country);
         this.setArtDebut(debut);
-        this.setArtFile(name);
         this.setArtName(name);
-        this.setArtUri(name);
     }
 }

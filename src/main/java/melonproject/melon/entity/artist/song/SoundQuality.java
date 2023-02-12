@@ -2,13 +2,11 @@ package melonproject.melon.entity.artist.song;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
-import melonproject.melon.entity.artist.album.AlbumType;
-
-public enum SongWirter {
-    작사,작곡,편곡;
+public enum SoundQuality {
+    MP3, FLAC;
 
     @JsonCreator
-    public static SongWirter from(String name) {
+    public static SoundQuality from(String name) {
         // for (AlbumType type : AlbumType.values()) {
         //     if (type.getName().equals(name)) {
         //         return type;
@@ -16,7 +14,7 @@ public enum SongWirter {
         // }
         // return null;
         try {
-            return SongWirter.valueOf(name);
+            return SoundQuality.valueOf(name);
         } catch (Exception e) {
             return null;
         }

@@ -23,8 +23,6 @@ public class ArtistController {
 
     @PutMapping("/add")
     public ResponseEntity<Object> addArtist(@RequestPart ArtistAddVO data, @RequestPart @Nullable MultipartFile file){
-        System.out.println("file");
-        System.out.println(file);
         Map<String, Object> map = artService.saveArtist(data, file);
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));

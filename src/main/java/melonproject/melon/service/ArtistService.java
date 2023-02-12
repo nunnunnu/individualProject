@@ -49,13 +49,9 @@ public class ArtistService {
         
         if(data.getDtype().equals("SOLO")){
             ArtistSoloInfoEntity solo = fService.saveArtistSoloFile(file, data.getName());
+            System.out.println(solo.getArtFile());
+            System.out.println(solo.getArtUri());
             solo.addSetting(agency, data.getBirth(), data.getCountry(), data.getDebut(), data.getName());
-            System.out.println(solo.getArtSeq());
-            if(data.getBirth()==null){
-                solo.setArtSeq(solo.getArtSeq());
-            }else{
-
-            }
             asRepo.save(solo);
             map.put("status", true);
             map.put("message", "솔로 아티스트 정보가 입력되었습니다.");
