@@ -1,10 +1,13 @@
 package melonproject.melon.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +26,7 @@ import melonproject.melon.repository.info.AgencyInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.info.PublisherInfoRepository;
 import melonproject.melon.vo.album.AlbumAddVO;
+import melonproject.melon.vo.album.AlbumNewListVO;
 
 @Service
 @RequiredArgsConstructor
@@ -105,6 +109,19 @@ public class AlbumService {
         map.put("message", "앨범 장르를 저장했습니다");
         map.put("code", HttpStatus.OK);
         
+        return map;
+    }
+
+    public Map<String, Object> newAlbumList(Pageable page, LocalDate date){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        Page<AlbumInfoEntity> albums = albumRepo.findByalbumRegDtLessThanEqual(page,date);
+        Page<AlbumNewListVO> result = albums.map(a->new AlbumNewListVO(a));
+
+        map.put("status", true);
+        map.put("data", result);
+        map.put("code", HttpStatus.OK);
+
         return map;
     }
 }

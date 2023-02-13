@@ -1,6 +1,8 @@
 package melonproject.melon.entity.artist.album;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -14,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +24,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import melonproject.melon.entity.artist.ArtistInfoEntity;
+import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.info.AgencyInfoEntity;
 import melonproject.melon.entity.info.PublisherInfoEntity;
 
@@ -43,6 +47,8 @@ public class AlbumInfoEntity {
     @Column(name="album_cover") private String albumCover;
     @Column(name="album_uri") private String albumUri;
     @Column(name="album_name") private String albumName;
+    @OneToMany(mappedBy="album")
+    private List<SongInfoEntity> songList = new ArrayList<>();
     
     public void setting(
         LocalDate albumRegDt,

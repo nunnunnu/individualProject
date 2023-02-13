@@ -1,9 +1,14 @@
 package melonproject.melon.controller;
 
+import java.time.LocalDate;
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +35,14 @@ public class AlbumController {
     @PutMapping("/genre")
     public ResponseEntity<Object> addAlbumGenre(@RequestParam Long album, @RequestParam Long... genre){
         Map<String, Object> map = aService.albumGenreConnection(album, genre);
+    
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @GetMapping("/new")
+    public ResponseEntity<Object> newAlbum(@PageableDefault(size=20, sort="albumRegDt",direction = Sort.Direction.ASC) Pageable  page){
+        
+        System.out.println("page:"+page);
+        Map<String, Object> map = aService.newAlbumList(page, LocalDate.now());
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
