@@ -26,6 +26,6 @@ import melonproject.melon.entity.artist.ArtistInfoEntity;
 public class SongArtistConnection {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="sac_seq") private Long sacSeq;
-    @ManyToOne(fetch=FetchType.LAZY) @JsonIgnore @JoinColumn(name="sac_art_seq") private ArtistInfoEntity sacArtSeq;
-    @ManyToOne(fetch=FetchType.LAZY) @JsonIgnore @JoinColumn(name="sac_si_seq") private SongInfoEntity sacSiSeq;
+    @ManyToOne(fetch=FetchType.LAZY) @JsonIgnore @JoinColumn(name="sac_art_seq") private ArtistInfoEntity artist;
+    @ManyToOne(fetch=FetchType.LAZY) @JsonIgnore @JoinColumn(name="sac_si_seq") private SongInfoEntity song;
 }

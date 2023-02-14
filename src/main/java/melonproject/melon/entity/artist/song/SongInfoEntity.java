@@ -1,8 +1,9 @@
 package melonproject.melon.entity.artist.song;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -15,6 +16,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,6 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
+import melonproject.melon.entity.user.SongLikesEntity;
 
 @Getter
 @Setter
@@ -45,5 +48,13 @@ public class SongInfoEntity {
     @Column(name="si_lyrics") private String      siLyrics;
     // @ColumnDefault("")
     @Column(name="si_reg_dt") private LocalDate      siRegDt;
+    @Column(name="si_movie") private String siMovie;
     // @ManyToOne(fetch=FetchType.LAZY) @JsonIgnore @JoinColumn(name="si_art_seq") private ArtistInfoEntity artist;
+
+    @OneToMany(mappedBy="song")
+    private List<SongLikesEntity> likes = new ArrayList<>();
+    @OneToMany(mappedBy="song")
+    private List<SongFileEntity> files = new ArrayList<>();
+    @OneToMany(mappedBy="song")
+    private List<SongArtistConnection> artists = new ArrayList<>();
 }

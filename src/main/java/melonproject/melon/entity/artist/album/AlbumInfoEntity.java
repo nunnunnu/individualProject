@@ -47,8 +47,15 @@ public class AlbumInfoEntity {
     @Column(name="album_cover") private String albumCover;
     @Column(name="album_uri") private String albumUri;
     @Column(name="album_name") private String albumName;
+    @Column(name="album_explan") private String albumExplan;
     @OneToMany(mappedBy="album")
     private List<SongInfoEntity> songList = new ArrayList<>();
+    @OneToMany(mappedBy="album")
+    private List<AlbumGenreConnection> genreList = new ArrayList<>();
+    // @OneToMany(mappedBy="album")
+    // private List<AlbumGradeEntity> gradeList = new ArrayList<>();
+    @OneToMany(mappedBy="album")
+    private List<AlbumCommentEntity> commentList = new ArrayList<>();
     
     public void setting(
         LocalDate albumRegDt,

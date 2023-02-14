@@ -28,6 +28,6 @@ import melonproject.melon.entity.artist.song.SongInfoEntity;
 public class SongLikesEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="sl_seq") private Long slSeq;
-    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sl_si_seq") private SongInfoEntity slSiSeq;
-    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sl_mi_seq") private MemberInfoEntity slMiSeq;
+    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sl_si_seq") private SongInfoEntity song;
+    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sl_mi_seq") private MemberInfoEntity member;
 }

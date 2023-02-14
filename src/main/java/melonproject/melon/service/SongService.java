@@ -58,7 +58,17 @@ public class SongService {
             map.put("code", HttpStatus.BAD_REQUEST);
             return map;
         }
-        SongInfoEntity song = new SongInfoEntity(null, data.getName(), album, genre, data.getTitle(), data.getOrder(), data.getLyrics(), data.getRegDt());
+        // SongInfoEntity song = new SongInfoEntity(null, data.getName(), album, genre, data.getTitle(), data.getOrder(), data.getLyrics(), data.getRegDt());
+        SongInfoEntity song = SongInfoEntity.builder()
+                                .siName(data.getName())
+                                .album(album)
+                                .genre(genre)
+                                .siTitle(data.getTitle())
+                                .siOrder(data.getOrder())
+                                .siLyrics(data.getLyrics())
+                                .siRegDt(data.getRegDt())
+                                .build();
+        
         
         songRepo.save(song);
         map.put("status", true);

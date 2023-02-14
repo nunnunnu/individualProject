@@ -15,16 +15,20 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumGenreConnection;
+import melonproject.melon.entity.artist.album.AlbumGradeEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 import melonproject.melon.entity.info.AgencyInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.info.PublisherInfoEntity;
+import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumGenreConnectionRepository;
+import melonproject.melon.repository.artist.album.AlbumGradeRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.info.AgencyInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.info.PublisherInfoRepository;
+import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.vo.album.AlbumAddVO;
 import melonproject.melon.vo.album.AlbumNewListVO;
 
@@ -38,6 +42,8 @@ public class AlbumService {
     private final FileService fService;
     private final GenreInfoRepository genreRepo;
     private final AlbumGenreConnectionRepository agRepo;
+    private final MemberInfoRepository mRepo;
+    private final AlbumGradeRepository gradeRepo;
 
     public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file){
         Map<String, Object> map = new LinkedHashMap<>();
@@ -124,4 +130,41 @@ public class AlbumService {
 
         return map;
     }
+    public Map<String, Object> detailAlbum(){
+        Map<String, Object> map = new LinkedHashMap<>();
+        
+        return map;
+    }
+
+    public Map<String, Object> setAlbumGrade(Long memberSeq, Long albumSeq, Double grade){
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findById(memberSeq).orElse(null);
+        if(member==null){
+            map.put("status", false);
+            map.put("message", "회원 번호 오류입니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        AlbumInfoEntity album = albumRepo.findById(albumSeq).orElse(null);
+        if(album==null){
+            map.put("status", false);
+            map.put("message", "앨범 번호 오류입니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        if(gradeRepo.countByAlbumAndMember(album, member) >=1){
+            map.put("status", false);
+            map.put("message", "이미 평점을 등록한 앨범입니다.");
+            map.put("code", HttpStatus.ACCEPTED);
+            return map;
+
+        }
+        AlbumGradeEntity entity = new AlbumGradeEntity(null, album, grade, member);
+        gradeRepo.save(entity);
+        map.put("status", true);
+        map.put("message", "평점이 등록되었습니다.");
+        map.put("code", HttpStatus.OK);
+        return map;
+    }
+    
 }
