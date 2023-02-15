@@ -52,6 +52,12 @@ public class AlbumController {
         Map<String, Object> map = aService.setAlbumGrade(member, album, grade);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
-
+        
+    }
+    @GetMapping("/detail/{seq}")
+    public ResponseEntity<Object> getAlbumDetail(@PathVariable Long seq){
+        Map<String, Object> map = aService.albumDetail(seq);
+        
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
 }

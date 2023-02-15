@@ -2,6 +2,7 @@ package melonproject.melon.vo.album;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.util.StringUtils;
 
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import melonproject.melon.entity.artist.album.AlbumGenreConnection;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumType;
+import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.vo.artist.ArtistInfoVO;
 import melonproject.melon.vo.song.SongInfoVO;
 
@@ -47,14 +49,18 @@ public class AlbumDetailVO {
         this.regDt = album.getAlbumRegDt();
         this.uri = album.getAlbumUri();
         this.explan = album.getAlbumExplan();
+        artistVOsetting(new ArtistInfoVO(album.getArtist()));
+        addSongList(album.getSongList());
     }
 
     public void artistVOsetting(ArtistInfoVO artist){
         this.artist = artist;
     }
 
-    public void addSongList(List<SongInfoVO> songs){
-        this.song.addAll(songs);
+    public void addSongList(Set<SongInfoEntity> songs){
+        for(SongInfoEntity s : songs){
+            this.song.add(new SongInfoVO(s));
+        }
     }
     
 

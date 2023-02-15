@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,6 +26,6 @@ import melonproject.melon.entity.info.GenreInfoEntity;
 public class AlbumGenreConnection {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="agc_seq") private Long agcSeq;
-    @ManyToOne @JsonIgnore @JoinColumn(name="agc_gi_seq") private GenreInfoEntity genre;
-    @ManyToOne @JsonIgnore @JoinColumn(name="agc_album_seq") private AlbumInfoEntity album;
+    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="agc_gi_seq") private GenreInfoEntity genre;
+    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="agc_album_seq") private AlbumInfoEntity album;
 }

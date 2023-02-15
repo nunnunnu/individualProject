@@ -2,7 +2,8 @@ package melonproject.melon.entity.artist.album;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -48,14 +49,14 @@ public class AlbumInfoEntity {
     @Column(name="album_uri") private String albumUri;
     @Column(name="album_name") private String albumName;
     @Column(name="album_explan") private String albumExplan;
-    @OneToMany(mappedBy="album")
-    private List<SongInfoEntity> songList = new ArrayList<>();
-    @OneToMany(mappedBy="album")
-    private List<AlbumGenreConnection> genreList = new ArrayList<>();
+    @OneToMany(mappedBy="album", fetch = FetchType.LAZY)
+    private Set<SongInfoEntity> songList = new HashSet<>();
+    @OneToMany(mappedBy="album", fetch = FetchType.LAZY)
+    private Set<AlbumGenreConnection> genreList = new HashSet<>();
     // @OneToMany(mappedBy="album")
     // private List<AlbumGradeEntity> gradeList = new ArrayList<>();
-    @OneToMany(mappedBy="album")
-    private List<AlbumCommentEntity> commentList = new ArrayList<>();
+    @OneToMany(mappedBy="album", fetch = FetchType.LAZY)
+    private Set<AlbumCommentEntity> commentList = new HashSet<>();
     
     public void setting(
         LocalDate albumRegDt,

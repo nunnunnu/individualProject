@@ -30,6 +30,7 @@ import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.info.PublisherInfoRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.vo.album.AlbumAddVO;
+import melonproject.melon.vo.album.AlbumDetailVO;
 import melonproject.melon.vo.album.AlbumNewListVO;
 
 @Service
@@ -164,6 +165,24 @@ public class AlbumService {
         map.put("status", true);
         map.put("message", "평점이 등록되었습니다.");
         map.put("code", HttpStatus.OK);
+        return map;
+    }
+
+    public Map<String, Object> albumDetail(Long albumSeq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        AlbumInfoEntity album = albumRepo.findAllFetch(albumSeq);
+        if(album==null){
+            map.put("status", false);
+            map.put("message", "앨범 번호 오류입니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        AlbumDetailVO albumVo = new AlbumDetailVO(album);
+        map.put("status", true);
+        map.put("message", "조회성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", albumVo);
+
         return map;
     }
     

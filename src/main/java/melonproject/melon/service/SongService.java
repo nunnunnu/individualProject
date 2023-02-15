@@ -1,5 +1,6 @@
 package melonproject.melon.service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -15,12 +16,16 @@ import melonproject.melon.entity.artist.song.SongFileEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.artist.song.SoundQuality;
 import melonproject.melon.entity.info.GenreInfoEntity;
+import melonproject.melon.entity.user.HistoryPlayEntity;
+import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.artist.song.SongCreatorRepository;
 import melonproject.melon.repository.artist.song.SongFileRepository;
 import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
+import melonproject.melon.repository.user.HistoryPlayRepository;
+import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.vo.song.SongAddVO;
 import melonproject.melon.vo.song.SongCreatorAddVO;
 
@@ -34,6 +39,8 @@ public class SongService {
     private final SongCreatorRepository scRepo;
     private final FileService fService;
     private final SongFileRepository sfRepo;
+    private final MemberInfoRepository mRepo;
+    private final HistoryPlayRepository hpRepo;
 
     public Map<String, Object> songAdd(SongAddVO data){
         System.out.println(data);
@@ -135,4 +142,33 @@ public class SongService {
 
         return map;
     }
+    public void listenMusicList(Long memberSeq, Long songSeq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        System.out.println(memberSeq);
+        System.out.println(songSeq);
+        MemberInfoEntity member = mRepo.findById(memberSeq).orElse(null);
+        if(member==null){
+            // map.put("status", false);
+            // map.put("message", "회원번호 오류");
+            // map.put("code", HttpStatus.BAD_GATEWAY);
+            return ;
+        }
+        System.out.println(member);
+        SongInfoEntity song = songRepo.findById(songSeq).orElse(null);
+        if(song==null){
+            // map.put("status", false);
+            // map.put("message", "곡번호 오류");
+            // map.put("code", HttpStatus.BAD_GATEWAY);
+            return ;
+        }
+        System.out.println(song);
+        HistoryPlayEntity entity = new HistoryPlayEntity(null, song, member, LocalDateTime.now(), null);
+        System.out.println(entity);
+        hpRepo.save(entity);
+        // map.put("status", true);
+        // map.put("message", "저장성공");
+        // map.put("code", HttpStatus.OK);
+        return ;
+    }
+    
 }
