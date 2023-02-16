@@ -51,10 +51,12 @@ public class SongInfoEntity {
     @Column(name="si_movie") private String siMovie;
     // @ManyToOne(fetch=FetchType.LAZY) @JsonIgnore @JoinColumn(name="si_art_seq") private ArtistInfoEntity artist;
 
-    @OneToMany(mappedBy="song",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="song",fetch = FetchType.EAGER)
     private List<SongLikesEntity> likes = new ArrayList<>();
     @OneToMany(mappedBy="song", fetch = FetchType.LAZY)
     private List<SongFileEntity> files = new ArrayList<>();
     @OneToMany(mappedBy="song", fetch = FetchType.LAZY)
     private List<SongArtistConnection> artists = new ArrayList<>();
+    @OneToMany(mappedBy="song", fetch = FetchType.LAZY)
+    private List<SongCreatorEntity> creators = new ArrayList<>();
 }

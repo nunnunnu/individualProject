@@ -1,6 +1,7 @@
 package melonproject.melon.vo.album;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -29,13 +30,14 @@ public class AlbumDetailVO {
     private Integer comment;
     private LocalDate regDt;
     private ArtistInfoVO artist;
-    private List<SongInfoVO> song;
+    private List<SongInfoVO> song = new ArrayList<>();
     private String uri;
     private String explan;
 
     public AlbumDetailVO(AlbumInfoEntity album){
         this.type = album.getAlbumType();
         this.name = album.getAlbumName();
+        this.genreList="";
         for(AlbumGenreConnection g : album.getGenreList()){
             if(StringUtils.hasText(genreList)){
                 this.genreList += ", ";

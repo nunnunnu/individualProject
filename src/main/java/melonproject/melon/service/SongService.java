@@ -27,7 +27,8 @@ import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.vo.song.SongAddVO;
-import melonproject.melon.vo.song.SongCreatorAddVO;
+import melonproject.melon.vo.song.SongDetailVO;
+import melonproject.melon.vo.song.Creator.SongCreatorAddVO;
 
 @Service
 @RequiredArgsConstructor
@@ -153,7 +154,6 @@ public class SongService {
             // map.put("code", HttpStatus.BAD_GATEWAY);
             return ;
         }
-        System.out.println(member);
         SongInfoEntity song = songRepo.findById(songSeq).orElse(null);
         if(song==null){
             // map.put("status", false);
@@ -161,14 +161,27 @@ public class SongService {
             // map.put("code", HttpStatus.BAD_GATEWAY);
             return ;
         }
-        System.out.println(song);
         HistoryPlayEntity entity = new HistoryPlayEntity(null, song, member, LocalDateTime.now(), null);
-        System.out.println(entity);
         hpRepo.save(entity);
         // map.put("status", true);
         // map.put("message", "저장성공");
         // map.put("code", HttpStatus.OK);
         return ;
     }
-    
+    public Map<String, Object> songDetailShow(Long seq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        SongInfoEntity song = songRepo.findById(seq).orElse(null);
+        if(song==null){
+            map.put("status", false);
+            map.put("message", "곡번호 오류");
+            map.put("code", HttpStatus.BAD_GATEWAY);
+            return map;
+        }
+        SongDetailVO songVO = new SongDetailVO(song);
+        map.put("status", true);
+        map.put("message", "성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", songVO);
+        return map;
+    }
 }

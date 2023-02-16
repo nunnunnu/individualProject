@@ -24,10 +24,10 @@ import melonproject.melon.entity.artist.song.SongInfoEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="album_grade")
+@Table(name="song_likes")
 public class SongLikesEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="sl_seq") private Long slSeq;
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sl_si_seq") private SongInfoEntity song;
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sl_mi_seq") private MemberInfoEntity member;
-}
+}		

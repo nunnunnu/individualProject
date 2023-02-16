@@ -1,7 +1,6 @@
 package melonproject.melon.entity.artist.album;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,7 +49,7 @@ public class AlbumInfoEntity {
     @Column(name="album_uri") private String albumUri;
     @Column(name="album_name") private String albumName;
     @Column(name="album_explan") private String albumExplan;
-    @OneToMany(mappedBy="album", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy="album", fetch = FetchType.LAZY) @OrderBy("siOrder asc")
     private Set<SongInfoEntity> songList = new HashSet<>();
     @OneToMany(mappedBy="album", fetch = FetchType.LAZY)
     private Set<AlbumGenreConnection> genreList = new HashSet<>();

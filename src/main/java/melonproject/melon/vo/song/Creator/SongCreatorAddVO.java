@@ -1,4 +1,4 @@
-package melonproject.melon.vo.song;
+package melonproject.melon.vo.song.Creator;
 
 import lombok.Data;
 import melonproject.melon.entity.artist.song.SongWirter;

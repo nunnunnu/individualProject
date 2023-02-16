@@ -33,6 +33,7 @@ public class SongInfoVO {
         this.likes = entity.getLikes().size();
         this.movie = entity.getSiMovie();
         for(SongFileEntity file : entity.getFiles()){
+            System.out.println("sss");
             this.files.add(new SongFileVO(file));
         }
 

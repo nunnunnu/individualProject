@@ -17,6 +17,7 @@ import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumGenreConnection;
 import melonproject.melon.entity.artist.album.AlbumGradeEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
+import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.info.AgencyInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.info.PublisherInfoEntity;
@@ -25,6 +26,7 @@ import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumGenreConnectionRepository;
 import melonproject.melon.repository.artist.album.AlbumGradeRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
+import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.info.AgencyInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.info.PublisherInfoRepository;
@@ -45,6 +47,7 @@ public class AlbumService {
     private final AlbumGenreConnectionRepository agRepo;
     private final MemberInfoRepository mRepo;
     private final AlbumGradeRepository gradeRepo;
+    private final SongInfoRepository songRepo;
 
     public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file){
         Map<String, Object> map = new LinkedHashMap<>();
@@ -178,6 +181,8 @@ public class AlbumService {
             return map;
         }
         AlbumDetailVO albumVo = new AlbumDetailVO(album);
+        List<SongInfoEntity> songs = songRepo.findByAlbum(album);
+        
         map.put("status", true);
         map.put("message", "조회성공");
         map.put("code", HttpStatus.OK);
