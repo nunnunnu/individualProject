@@ -13,7 +13,7 @@ import melonproject.melon.entity.artist.song.SongCreatorEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.vo.album.AlbumInfoVO;
 import melonproject.melon.vo.artist.ArtistInfoVO;
-import melonproject.melon.vo.artist.ArtistListVO;
+import melonproject.melon.vo.song.Creator.CreatorInfoVO;
 
 @Data
 @AllArgsConstructor
@@ -27,7 +27,7 @@ public class SongDetailVO {
     private Integer likes;
     private AlbumInfoVO album;
     private String lyrics;
-    private List<ArtistInfoVO> creates = new ArrayList<>();
+    private List<CreatorInfoVO> creates = new ArrayList<>();
 
     public SongDetailVO(SongInfoEntity entity){
         this.name = entity.getSiName();
@@ -37,6 +37,7 @@ public class SongDetailVO {
         this.lyrics = entity.getSiLyrics();
         artistsAdd(entity.getArtists());
         createsAdd(entity.getCreators());
+        this.album = new AlbumInfoVO(entity.getAlbum());
     }
     public void artistsAdd(List<SongArtistConnection> art){
         for(SongArtistConnection a : art){
@@ -45,7 +46,7 @@ public class SongDetailVO {
     }
     public void createsAdd(List<SongCreatorEntity> creator){
         for(SongCreatorEntity s : creator){
-            creates.add(new ArtistInfoVO(s.getArtist()));
+            creates.add(new CreatorInfoVO(s));
         }
     }
 
