@@ -50,4 +50,7 @@ public class ArtistInfoEntity {
     // @Column(name="art_dtype") private String artDtype;
     @OneToMany(mappedBy = "artist")
     private Set<ArtistFanEntity> fanList = new HashSet<>();
+    @Column(name="art_introduce") private String artIntroduce;
+
 }
+

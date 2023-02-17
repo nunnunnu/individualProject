@@ -23,6 +23,10 @@ import melonproject.melon.entity.info.AgencyInfoEntity;
 @DiscriminatorValue("SOLO")
 public class ArtistSoloInfoEntity extends ArtistInfoEntity{
     @Column(name="asi_birth") private LocalDate asiBirth;
+    @Column(name="asi_real_name") private String asiRealName;
+    @Column(name="asi_blood") private String asiBlood;
+    @Column(name="asi_gen") private String asiGen;
+    @Column(name="asi_constellation") private String asiConstellation;
 
     public void addSetting(AgencyInfoEntity agency, LocalDate birth, String country, LocalDate debut, String name) {
         this.asiBirth = birth;
