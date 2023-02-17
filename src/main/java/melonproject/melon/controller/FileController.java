@@ -26,9 +26,8 @@ public class FileController {
     @GetMapping("/song/{uri}/{member}/{song}")
     public ResponseEntity<Resource> getSong ( @PathVariable String uri, @PathVariable Long song,
             HttpServletRequest request, @PathVariable Long member ) throws Exception {
-
+                System.out.println("???");
             songService.listenMusicList(member, song);
-            System.out.println("aaa");
 
         return fService.getSong(uri, request);
     }

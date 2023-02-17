@@ -144,9 +144,6 @@ public class SongService {
         return map;
     }
     public void listenMusicList(Long memberSeq, Long songSeq){
-        Map<String, Object> map = new LinkedHashMap<>();
-        System.out.println(memberSeq);
-        System.out.println(songSeq);
         MemberInfoEntity member = mRepo.findById(memberSeq).orElse(null);
         if(member==null){
             // map.put("status", false);

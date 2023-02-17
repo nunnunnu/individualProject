@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import melonproject.melon.entity.info.AgencyInfoEntity;
+import melonproject.melon.entity.user.ArtistFanEntity;
 
 @Getter
 @Setter
@@ -47,4 +48,6 @@ public class ArtistInfoEntity {
     // @OneToMany(mappedBy = "group")
     // private Set<ArtistConnectionEntity> SoloList = new HashSet<>();
     // @Column(name="art_dtype") private String artDtype;
+    @OneToMany(mappedBy = "artist")
+    private Set<ArtistFanEntity> fanList = new HashSet<>();
 }
