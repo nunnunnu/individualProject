@@ -21,6 +21,7 @@ import melonproject.melon.repository.artist.ArtistSoloInfoRepository;
 import melonproject.melon.repository.info.AgencyInfoRepository;
 import melonproject.melon.vo.artist.ArtistAddVO;
 import melonproject.melon.vo.artist.ArtistChanelVO;
+import melonproject.melon.vo.artist.ArtistDetailVO;
 
 @Service
 @RequiredArgsConstructor
@@ -83,19 +84,60 @@ public class ArtistService {
             return map;
         }
         ArtistChanelVO chanelVO = new ArtistChanelVO(artist);
-        List<ArtistConnectionEntity> connection = acRepo.findByGroup(artist);
-        for(ArtistConnectionEntity ac : connection){
-            chanelVO.soloSetting(ac.getSolo());
+        if(chanelVO.getType().equals("솔로")){
+            List<ArtistConnectionEntity> connection = acRepo.findBySolo(artist);
+            for(ArtistConnectionEntity ac : connection){
+                chanelVO.groupSetting(ac.getGroup());
+            }
+            
+        }else if(chanelVO.getType().equals("그룹")){
+            List<ArtistConnectionEntity> connection = acRepo.findByGroup(artist);
+            for(ArtistConnectionEntity ac : connection){
+                chanelVO.soloSetting(ac.getSolo());
+            }
         }
-        
         map.put("status",true);
         map.put("message","조회성공");
         map.put("code",HttpStatus.OK);
         map.put("data", chanelVO);
         return map;
+    }
 
+    public Map<String, Object> artistDetailPage(Long seq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        
+        // ArtistInfoEntity artist =aRepo.findById(seq).orElse(null);
+        // if(artist==null){
+        //   
+        // }
+        ArtistSoloInfoEntity solo = asRepo.findById(seq).orElse(null);
+        ArtistDetailVO adVO = null;
+        if(solo!=null){
+            adVO = new ArtistDetailVO(solo);
+            List<ArtistConnectionEntity> connetion = acRepo.findBySolo(solo);
+            for(ArtistConnectionEntity a : connetion){
+                adVO.addArtists(a.getGroup());
+            }
+        }else{
+            ArtistGroupInfoEntity group = agRepo.findById(seq).orElse(null);
+            if(group == null){
+                map.put("status",false);
+                map.put("message","아티스트 번호가 잘못되었습니다.");
+                map.put("code",HttpStatus.BAD_REQUEST);
+                return map;
+            }
+            adVO = new ArtistDetailVO(group);
+            List<ArtistConnectionEntity> connetion = acRepo.findByGroup(group);
+            for(ArtistConnectionEntity a : connetion){
+                adVO.addArtists(a.getSolo());
+            }
+        }
+        map.put("status",true);
+        map.put("message","조회성공");
+        map.put("code",HttpStatus.OK);
+        map.put("data", adVO);
 
-
+        return map;
     }
 }
 

@@ -35,4 +35,10 @@ public class ArtistController {
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));    
     }
+    @GetMapping("/detail/{artist}")
+    public ResponseEntity<Object> artistDetailPage(@PathVariable Long artist){
+        Map<String, Object> map = artService.artistDetailPage(artist);
+        
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));    
+    }
 }

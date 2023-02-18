@@ -9,4 +9,6 @@ import melonproject.melon.entity.artist.ArtistInfoEntity;
 
 public interface ArtistConnectionRepository extends JpaRepository<ArtistConnectionEntity, Long>{
     List<ArtistConnectionEntity> findByGroup(ArtistInfoEntity artist);
+
+    List<ArtistConnectionEntity> findBySolo(ArtistInfoEntity artist);
 }

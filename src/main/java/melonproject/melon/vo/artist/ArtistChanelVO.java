@@ -24,15 +24,16 @@ public class ArtistChanelVO {
 
     public ArtistChanelVO(ArtistInfoEntity entity){
         this.name = entity.getArtName();
-        if(entity instanceof ArtistSoloInfoEntity){
-            this.type = "솔로";
-        }else if(entity instanceof ArtistGroupInfoEntity){
-            this.type = "그룹";
+        this.type = entity.isType(entity);
+        if(entity.getAgency()!=null){
+            this.agency = entity.getAgency().getAiName();
         }
-        this.agency = entity.getAgency().getAiName();
         this.fan = entity.getFanList().size();
     }
     public void soloSetting(ArtistSoloInfoEntity solo){
+        artists.add(new ArtistInfoVO(solo));
+    }
+    public void groupSetting(ArtistGroupInfoEntity solo){
         artists.add(new ArtistInfoVO(solo));
     }
 }  

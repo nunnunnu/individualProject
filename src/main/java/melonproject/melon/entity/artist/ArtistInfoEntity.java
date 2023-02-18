@@ -52,5 +52,15 @@ public class ArtistInfoEntity {
     private Set<ArtistFanEntity> fanList = new HashSet<>();
     @Column(name="art_introduce") private String artIntroduce;
 
+    public String isType(ArtistInfoEntity artist){
+        if(artist instanceof ArtistSoloInfoEntity){
+            return "솔로";
+        }else if(artist instanceof ArtistGroupInfoEntity){
+            return "그룹";
+        }else{
+            return null;
+        }
+    }
+
 }
 
