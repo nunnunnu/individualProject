@@ -24,5 +24,7 @@ public interface AlbumInfoRepository extends JpaRepository<AlbumInfoEntity, Long
     AlbumInfoEntity findAllFetch(@Param("seq") Long albumSeq);
 
     Page<AlbumInfoEntity> findByArtist(ArtistInfoEntity artist, Pageable page);
+
+    List<AlbumInfoEntity> findTop2ByOrderByAlbumRegDt();
     
 }
