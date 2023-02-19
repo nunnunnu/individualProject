@@ -192,7 +192,7 @@ public class AlbumService {
         return map;
     }
     
-    public Map<String, Object> artistAlbum(Long seq){
+    public Map<String, Object> artistAlbum(Long seq, Pageable page){
         Map<String, Object> map = new LinkedHashMap<>();
         ArtistInfoEntity artist = artRepo.findById(seq).orElse(null);
         if(artist==null){
@@ -202,12 +202,8 @@ public class AlbumService {
             return map;
         }
 
-        List<AlbumInfoEntity> albums = albumRepo.findByArtist(artist);
-        List<ArtistAlbumVO> result = new ArrayList<>();
-        for(AlbumInfoEntity a : albums){
-            SongInfoEntity song = songRepo.findTop1ByAlbumAndSiTitle(a, true);
-            result.add(new ArtistAlbumVO(a, song));
-        }
+        Page<AlbumInfoEntity> albums = albumRepo.findByArtist(artist, page);
+        Page<ArtistAlbumVO> result = albums.map(a->new ArtistAlbumVO(a, songRepo.findTop1ByAlbumAndSiTitle(a, true)));
         map.put("status", true);
         map.put("message", "조회성공");
         map.put("code", HttpStatus.OK);

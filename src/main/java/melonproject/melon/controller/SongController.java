@@ -3,8 +3,11 @@ package melonproject.melon.controller;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -56,8 +59,10 @@ public class SongController {
     }
     
     @GetMapping("artist/part/{seq}")
-    public ResponseEntity<Object> artistSongPart(@PathVariable Long seq){
-        Map<String, Object> map = songService.artistSongParticipation(seq);
+    public ResponseEntity<Object> artistSongPart(@PathVariable Long seq,
+        @RequestParam @PageableDefault(size=10, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page
+    ){
+        Map<String, Object> map = songService.artistSongParticipation(seq, page);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         

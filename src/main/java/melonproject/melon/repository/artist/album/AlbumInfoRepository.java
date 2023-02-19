@@ -23,6 +23,6 @@ public interface AlbumInfoRepository extends JpaRepository<AlbumInfoEntity, Long
     @Query("select a from AlbumInfoEntity a join fetch a.publisher join fetch a.agency left join fetch a.artist left join fetch a.songList left join fetch a.genreList left join fetch a.commentList where a.albumSeq = :seq")
     AlbumInfoEntity findAllFetch(@Param("seq") Long albumSeq);
 
-    List<AlbumInfoEntity> findByArtist(ArtistInfoEntity artist);
+    Page<AlbumInfoEntity> findByArtist(ArtistInfoEntity artist, Pageable page);
     
 }

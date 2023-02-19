@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -187,7 +190,7 @@ public class SongService {
         map.put("data", songVO);
         return map;
     }
-    public Map<String, Object> artistSongParticipation(Long seq){
+    public Map<String, Object> artistSongParticipation(Long seq, Pageable page){
         Map<String, Object> map = new LinkedHashMap<>();
         ArtistInfoEntity artist = artRepo.findById(seq).orElse(null);
         if(artist==null){
@@ -196,17 +199,15 @@ public class SongService {
             map.put("code", HttpStatus.BAD_REQUEST);
             return map;
         }
-        List<SongArtistConnection> songs = sacRepo.findByArtist(artist);
-        List<ArtistSongVO> songVO = new ArrayList<>();
-        for(SongArtistConnection s : songs){
-            SongInfoEntity song = s.getSong();
-            SongFileEntity file = sfRepo.findBySongAndSfQuality(song, SoundQuality.MP3);
-            songVO.add(new ArtistSongVO(song, file!=null?file.getSfUri():null));
-        }
+        Page<SongArtistConnection> songs = sacRepo.findByArtist(artist, page);
+        // List<ArtistSongVO> songVO = new ArrayList<>();
+        Page<ArtistSongVO> result = songs.map(
+            s->new ArtistSongVO(s.getSong(),
+            sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3).getSfUri():null));
         map.put("status", true);
         map.put("message", "조회성공.");
         map.put("code", HttpStatus.OK);
-        map.put("data", songVO);
+        map.put("data", result);
         return map;
     }
 }

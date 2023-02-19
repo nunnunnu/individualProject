@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -60,8 +61,10 @@ public class AlbumController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
     @GetMapping("/artist/{seq}")
-    public ResponseEntity<Object> getAlumArtist(@PathVariable Long seq){
-        Map<String, Object> map = aService.artistAlbum(seq);
+    public ResponseEntity<Object> getAlumArtist(@PathVariable Long seq,
+        @RequestParam @PageableDefault(size=10, sort="albumRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page  
+    ){
+        Map<String, Object> map = aService.artistAlbum(seq, page);
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
