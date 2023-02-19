@@ -52,7 +52,6 @@ public class AlbumController {
         Map<String, Object> map = aService.setAlbumGrade(member, album, grade);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
-        
     }
     @GetMapping("/detail/{seq}")
     public ResponseEntity<Object> getAlbumDetail(@PathVariable Long seq){
@@ -60,4 +59,11 @@ public class AlbumController {
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
+    @GetMapping("/artist/{seq}")
+    public ResponseEntity<Object> getAlumArtist(@PathVariable Long seq){
+        Map<String, Object> map = aService.artistAlbum(seq);
+        
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    
 }

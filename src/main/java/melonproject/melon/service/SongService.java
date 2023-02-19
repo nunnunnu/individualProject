@@ -1,7 +1,9 @@
 package melonproject.melon.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
+import melonproject.melon.entity.artist.song.SongArtistConnection;
 import melonproject.melon.entity.artist.song.SongCreatorEntity;
 import melonproject.melon.entity.artist.song.SongFileEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
@@ -20,12 +23,14 @@ import melonproject.melon.entity.user.HistoryPlayEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
+import melonproject.melon.repository.artist.song.SongArtistConnectionRepository;
 import melonproject.melon.repository.artist.song.SongCreatorRepository;
 import melonproject.melon.repository.artist.song.SongFileRepository;
 import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
+import melonproject.melon.vo.song.ArtistSongVO;
 import melonproject.melon.vo.song.SongAddVO;
 import melonproject.melon.vo.song.SongDetailVO;
 import melonproject.melon.vo.song.Creator.SongCreatorAddVO;
@@ -42,6 +47,7 @@ public class SongService {
     private final SongFileRepository sfRepo;
     private final MemberInfoRepository mRepo;
     private final HistoryPlayRepository hpRepo;
+    private final SongArtistConnectionRepository sacRepo;
 
     public Map<String, Object> songAdd(SongAddVO data){
         System.out.println(data);
@@ -177,6 +183,28 @@ public class SongService {
         SongDetailVO songVO = new SongDetailVO(song);
         map.put("status", true);
         map.put("message", "성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", songVO);
+        return map;
+    }
+    public Map<String, Object> artistSongParticipation(Long seq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        ArtistInfoEntity artist = artRepo.findById(seq).orElse(null);
+        if(artist==null){
+            map.put("status", false);
+            map.put("message", "아티스트 번호 오류입니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        List<SongArtistConnection> songs = sacRepo.findByArtist(artist);
+        List<ArtistSongVO> songVO = new ArrayList<>();
+        for(SongArtistConnection s : songs){
+            SongInfoEntity song = s.getSong();
+            SongFileEntity file = sfRepo.findBySongAndSfQuality(song, SoundQuality.MP3);
+            songVO.add(new ArtistSongVO(song, file!=null?file.getSfUri():null));
+        }
+        map.put("status", true);
+        map.put("message", "조회성공.");
         map.put("code", HttpStatus.OK);
         map.put("data", songVO);
         return map;

@@ -11,5 +11,7 @@ public interface SongInfoRepository extends JpaRepository<SongInfoEntity, Long>{
 
     List<SongInfoEntity> findByAlbum(AlbumInfoEntity album);
 
+    SongInfoEntity findTop1ByAlbumAndSiTitle(AlbumInfoEntity album, Boolean title);
+
     
 }

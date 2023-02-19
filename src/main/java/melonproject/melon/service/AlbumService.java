@@ -34,6 +34,7 @@ import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.vo.album.AlbumAddVO;
 import melonproject.melon.vo.album.AlbumDetailVO;
 import melonproject.melon.vo.album.AlbumNewListVO;
+import melonproject.melon.vo.album.ArtistAlbumVO;
 
 @Service
 @RequiredArgsConstructor
@@ -181,7 +182,7 @@ public class AlbumService {
             return map;
         }
         AlbumDetailVO albumVo = new AlbumDetailVO(album);
-        List<SongInfoEntity> songs = songRepo.findByAlbum(album);
+        // List<SongInfoEntity> songs = songRepo.findByAlbum(album);
         
         map.put("status", true);
         map.put("message", "조회성공");
@@ -191,4 +192,27 @@ public class AlbumService {
         return map;
     }
     
+    public Map<String, Object> artistAlbum(Long seq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        ArtistInfoEntity artist = artRepo.findById(seq).orElse(null);
+        if(artist==null){
+            map.put("status", false);
+            map.put("message", "앨범 번호 오류입니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+
+        List<AlbumInfoEntity> albums = albumRepo.findByArtist(artist);
+        List<ArtistAlbumVO> result = new ArrayList<>();
+        for(AlbumInfoEntity a : albums){
+            SongInfoEntity song = songRepo.findTop1ByAlbumAndSiTitle(a, true);
+            result.add(new ArtistAlbumVO(a, song));
+        }
+        map.put("status", true);
+        map.put("message", "조회성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", result);
+
+        return map;
+    }
 }

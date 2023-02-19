@@ -2,6 +2,7 @@ package melonproject.melon.controller;
 
 import java.util.Map;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,5 +54,14 @@ public class SongController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         
     }
+    
+    @GetMapping("artist/part/{seq}")
+    public ResponseEntity<Object> artistSongPart(@PathVariable Long seq){
+        Map<String, Object> map = songService.artistSongParticipation(seq);
+    
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+        
+    }
+    
 
 }

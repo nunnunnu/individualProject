@@ -1,6 +1,7 @@
 package melonproject.melon.repository.artist.album;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 
 public interface AlbumInfoRepository extends JpaRepository<AlbumInfoEntity, Long> {
@@ -20,5 +22,7 @@ public interface AlbumInfoRepository extends JpaRepository<AlbumInfoEntity, Long
 
     @Query("select a from AlbumInfoEntity a join fetch a.publisher join fetch a.agency left join fetch a.artist left join fetch a.songList left join fetch a.genreList left join fetch a.commentList where a.albumSeq = :seq")
     AlbumInfoEntity findAllFetch(@Param("seq") Long albumSeq);
+
+    List<AlbumInfoEntity> findByArtist(ArtistInfoEntity artist);
     
 }
