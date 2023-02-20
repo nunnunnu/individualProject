@@ -68,5 +68,11 @@ public class AlbumController {
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
+    @GetMapping("/new/two")
+    public ResponseEntity<Object> getNewAlum(){
+        Map<String, Object> map = aService.newAlbumTwo();
+        
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
     
 }

@@ -17,7 +17,6 @@ import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumGenreConnection;
 import melonproject.melon.entity.artist.album.AlbumGradeEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
-import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.info.AgencyInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.info.PublisherInfoEntity;
@@ -35,6 +34,7 @@ import melonproject.melon.vo.album.AlbumAddVO;
 import melonproject.melon.vo.album.AlbumDetailVO;
 import melonproject.melon.vo.album.AlbumNewListVO;
 import melonproject.melon.vo.album.ArtistAlbumVO;
+import melonproject.melon.vo.album.NewAlbum;
 
 @Service
 @RequiredArgsConstructor
@@ -209,6 +209,19 @@ public class AlbumService {
         map.put("code", HttpStatus.OK);
         map.put("data", result);
 
+        return map;
+    }
+    public Map<String, Object> newAlbumTwo(){
+        Map<String, Object> map = new LinkedHashMap<>();
+        List<AlbumInfoEntity> newAlbums = albumRepo.findTop2ByOrderByAlbumRegDtDesc();
+        List<NewAlbum> result = new ArrayList<>();
+        for(AlbumInfoEntity a : newAlbums){
+            result.add(new NewAlbum(a));
+        }
+        map.put("status", true);
+        map.put("message", "조회성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", result);
         return map;
     }
 }
