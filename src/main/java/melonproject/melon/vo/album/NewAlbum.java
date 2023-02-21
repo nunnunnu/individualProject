@@ -23,6 +23,6 @@ public class NewAlbum {
         this.name = album.getAlbumName();
         this.artist = new ArtistInfoVO(album.getArtist());
         this.regDt = album.getAlbumRegDt();
-        this.uri = album.getAlbumUri();
+        this.uri = "http://localhost:8250/image/album/"+album.getAlbumUri();
     }
 }

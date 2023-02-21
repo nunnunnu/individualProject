@@ -7,17 +7,17 @@
             aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button> -->
-          <a class="navbar-brand" href="#">Water Melon</a>
+          <router-link to="/">Water Melon</router-link>
           <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
+                <a class="nav-link active" aria-current="page" href="#">최신앨범</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#">일간차트</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link disabled">Disabled</a>
+                <a class="nav-link disabled">최신음악</a>
               </li>
             </ul>
             <form class="d-flex" role="search">
@@ -47,6 +47,6 @@
   }
 
   nav a.router-link-exact-active {
-    color: #7bff9a;
+    color: #87fff5;
   }
 </style>
