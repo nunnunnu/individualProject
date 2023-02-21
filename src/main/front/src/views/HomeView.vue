@@ -114,7 +114,7 @@
     },
     methods: {
       loadNewAlbum() {
-        axios.get("http://localhost:8250/album/new/two", {})
+        axios.get("http://localhost:8250/album/new/two")
           .then((e) => {
             this.newAlbumList = e.data.data
           })
