@@ -8,21 +8,22 @@
         </div>
       </div>
 
+    <tr v-for="item in newAlbumList" :key="item.seq">
       <div class="row mb-2">
         <div class="col-md-6">
           <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
               <strong class="d-inline-block mb-2 text-primary">신규앨범</strong>
-              <h3 class="mb-0">Best Friend Ever</h3>
-              <div class="mb-1 text-muted">2023.02.28</div>
+              <h3 class="mb-0">{{item.name}}</h3>
+              <div class="mb-1 text-muted">{{item.regDt}}</div>
               <a href="#" class="stretched-link">상세보기</a>
             </div>
             <div class="col-auto d-none d-lg-block">
-              <img src="http://localhost:8250/image/album/BestFriendEver" width="250" height="250">
+              <img src="http://localhost:8250/image/album/{{ item.uri }}" width="250" height="250">
             </div>
           </div>
         </div>
-        <div class="col-md-6">
+        <!-- <div class="col-md-6">
           <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col p-4 d-flex flex-column position-static">
               <strong class="d-inline-block mb-2 text-success">신규앨범</strong>
@@ -34,8 +35,9 @@
               <img src="http://localhost:8250/image/album/nctdream_candy" width="250" height="250">
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
+    </tr>
 
       <div class="row g-5">
         <div class="col-md-8">
@@ -105,14 +107,14 @@ export default {
     }
   },
   created(){
-    // loadNewAlbum()
+    this.loadNewAlbum()
   },
   methods:{
     loadNewAlbum(){
       axios.get("http://localhost:8250/album/new/two", {
       })
       .then((e)=>{
-      this.newAlbumList = e.data
+      this.newAlbumList = e.data.data
       })
     }
   }

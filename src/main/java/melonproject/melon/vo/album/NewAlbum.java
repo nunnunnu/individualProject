@@ -16,11 +16,13 @@ public class NewAlbum {
     private String name;
     private ArtistInfoVO artist;
     private LocalDate regDt;
+    private String uri;
 
     public NewAlbum(AlbumInfoEntity album){
         this.seq = album.getAlbumSeq();
         this.name = album.getAlbumName();
         this.artist = new ArtistInfoVO(album.getArtist());
         this.regDt = album.getAlbumRegDt();
+        this.uri = album.getAlbumUri();
     }
 }
