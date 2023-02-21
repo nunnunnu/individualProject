@@ -9,9 +9,10 @@ const routes = [
     component: HomeView
   },
   {
-    path: '/album/detail',
+    path: '/album/detail:seq',
     name: 'albumDetail',
-    component: AlbumDetail
+    component: AlbumDetail,
+    props:true
   }
  
 ]

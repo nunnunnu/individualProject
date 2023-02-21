@@ -33,6 +33,7 @@ public class AlbumDetailVO {
     private List<SongInfoVO> song = new ArrayList<>();
     private String uri;
     private String explan;
+    private Double grade;
 
     public AlbumDetailVO(AlbumInfoEntity album){
         this.type = album.getAlbumType();

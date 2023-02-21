@@ -182,6 +182,7 @@ public class AlbumService {
             return map;
         }
         AlbumDetailVO albumVo = new AlbumDetailVO(album);
+        albumVo.setGrade(gradeRepo.albumGrade(album));
         // List<SongInfoEntity> songs = songRepo.findByAlbum(album);
         
         map.put("status", true);
