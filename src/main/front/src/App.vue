@@ -33,6 +33,8 @@
 </template>
 
 <style>
+@import "@/assets/css/fonts.css";
+@import "@/assets/css/reset.css";
   #app {
     text-align: center;
   }

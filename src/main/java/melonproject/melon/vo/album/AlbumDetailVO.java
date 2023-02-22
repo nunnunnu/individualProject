@@ -51,7 +51,7 @@ public class AlbumDetailVO {
         this.comment = album.getCommentList().size();
         this.regDt = album.getAlbumRegDt();
         this.uri = album.getAlbumUri();
-        this.explan = album.getAlbumExplan();
+        this.explan = album.getAlbumExplan().replace("\\n", "<br />");
         artistVOsetting(new ArtistInfoVO(album.getArtist()));
         addSongList(album.getSongList());
     }

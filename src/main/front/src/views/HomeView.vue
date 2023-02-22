@@ -8,8 +8,9 @@
       </div>
     </div>
 
-    <div class="row mb-2">
+    <div class="newAlbum">
       <tr v-for="item in newAlbumList" :key="item.seq">
+        <div class="row mb-2">
       <div class="col-md-6">
           <div class="row">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -27,6 +28,7 @@
             </div>
           </div>
         </div>
+        </div>
       </tr>
       <!-- <div class="col-md-6">
         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -41,6 +43,7 @@
           </div>
         </div>
       </div> -->
+    <!-- </div> -->
     </div>
     <div class="row g-5">
       <div class="col-md-8">
@@ -204,4 +207,7 @@
       transform: rotate(360deg)
     }
   }
+  .newAlbum{
+    display: flex;
+}
 </style>

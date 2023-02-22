@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AlbumDetail from '../components/AlbumDetail.vue'
+import ArtistChanel from '../components/ArtistChanel.vue'
+import ArtistDetail from '../components/ArtistDetail.vue'
 
 const routes = [
   {
@@ -13,8 +15,21 @@ const routes = [
     name: 'albumDetail',
     component: AlbumDetail,
     props:true
+  },
+  {
+    path: '/artist/chanel:seq',
+    name: 'artistChanel',
+    component: ArtistChanel,
+    props:true,
+    children:[
+      { 
+        path: 'detail',
+        name: 'artistDetail',
+        component: ArtistDetail,
+        props:true
+      }
+    ]
   }
- 
 ]
 
 const router = createRouter({

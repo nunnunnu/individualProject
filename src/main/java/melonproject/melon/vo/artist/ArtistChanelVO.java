@@ -1,5 +1,6 @@
 package melonproject.melon.vo.artist;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,8 @@ public class ArtistChanelVO {
     private String agency;
     private Integer fan;
     private List<ArtistInfoVO> artists = new ArrayList<>();
+    private String uri;
+    private LocalDate debut;
 
     public ArtistChanelVO(ArtistInfoEntity entity){
         this.name = entity.getArtName();
@@ -29,6 +32,8 @@ public class ArtistChanelVO {
             this.agency = entity.getAgency().getAiName();
         }
         this.fan = entity.getFanList().size();
+        this.uri = entity.getArtUri();
+        this.debut = entity.getArtDebut();
     }
     public void soloSetting(ArtistSoloInfoEntity solo){
         artists.add(new ArtistInfoVO(solo));
