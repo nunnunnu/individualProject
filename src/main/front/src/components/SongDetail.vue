@@ -13,7 +13,7 @@
                     <!-- <p align="left">[{{ data.type }}]</p> -->
                     <h2 align="left">{{ data.name }}</h2>
                     <tr v-for="item in data.artists" :key="item.seq">
-                        <router-link :to="{name:'artistChanel', params:{seq:item.seq}}" style="font-size:25px">
+                        <router-link :to="{name:'artistChannel', params:{seq:item.seq}}" style="font-size:25px">
                             {{ item.name }}</router-link>
                     </tr>
                     <br>
@@ -46,7 +46,7 @@
                         <div class="card-body">
                             <p class="card-title">{{creator.name}}</p>
                             <p class="card-text">{{creator.type}}</p>
-                            <router-link :to="{name:'artistChanel', params:{seq:creator.seq}}">상세보기</router-link>
+                            <router-link :to="{name:'artistChannel', params:{seq:creator.seq}}">상세보기</router-link>
                         </div>
                     </div>
                 </tr>

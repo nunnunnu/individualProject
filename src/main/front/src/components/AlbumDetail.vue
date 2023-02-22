@@ -10,10 +10,10 @@
                         class="rounded float-start">
                 </div>
                 <div class="col-5">
-                    <p align="left">[{{ data.type }}]</p>
+                    <p align="left" class="typeInfo">[{{ data.type }}]</p>
                     <p align="left">{{ data.name }}</p>
                 <div align="left">
-                    <router-link :to="{name:'artistChanel', params:{seq:data.artist.seq}}">가수명 : {{ data.artist.name }}</router-link>
+                    <router-link :to="{name:'artistChannel', params:{seq:data.artist.seq}}" style="font-size: 20px">가수명 : {{ data.artist.name }}</router-link>
                 </div>
                     <p align="left"></p>
                     <p align="left">장르 : {{ data.genreList }}</p>
@@ -49,11 +49,11 @@
                                 <svg v-if="item.title" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
 </svg>
-                                {{ item.name }}
+                                <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
                                 <br>
                                 <tr v-for="artist in item.artists" :key="artist.seq">
                                     <!-- <p style="font-size:12px">{{ artist.name }} </p> -->
-                                    <router-link :to="{name:'artistChanel', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
+                                    <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
                                 </tr>
                             </td>
                             <td>{{item.likes}}</td>
@@ -150,4 +150,8 @@
 </script>
 
 <style>
+.typeInfo{
+    font-size: 15px; color: gray;
+}
+p{font-size:20px}
 </style>

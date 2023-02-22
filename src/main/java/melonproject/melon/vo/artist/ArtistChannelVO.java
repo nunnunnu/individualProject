@@ -16,7 +16,7 @@ import melonproject.melon.entity.artist.ArtistSoloInfoEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ArtistChanelVO {
+public class ArtistChannelVO {
     private String name;
     private String type;
     private String agency;
@@ -25,7 +25,7 @@ public class ArtistChanelVO {
     private String uri;
     private LocalDate debut;
 
-    public ArtistChanelVO(ArtistInfoEntity entity){
+    public ArtistChannelVO(ArtistInfoEntity entity){
         this.name = entity.getArtName();
         this.type = entity.isType(entity);
         if(entity.getAgency()!=null){

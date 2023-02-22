@@ -24,6 +24,7 @@ public class ArtistDetailVO {
     private LocalDate birth;
     private String constellation;
     private LocalDate split;
+    private String realname;
 
     public ArtistDetailVO(ArtistSoloInfoEntity entity){
         this.introduce = entity.getArtIntroduce();
@@ -35,6 +36,7 @@ public class ArtistDetailVO {
         this.country = entity.getArtCountry();
         this.birth = entity.getAsiBirth();
         this.constellation = entity.getAsiConstellation();
+        this.realname = entity.getAsiRealName();
     }
     public ArtistDetailVO(ArtistGroupInfoEntity entity){
         this.introduce = entity.getArtIntroduce();

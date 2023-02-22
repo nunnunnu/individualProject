@@ -29,9 +29,9 @@ public class ArtistController {
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
-    @GetMapping("/chanel/{artist}")
-    public ResponseEntity<Object> artistChanel(@PathVariable Long artist){
-        Map<String, Object> map = artService.artistChanel(artist);
+    @GetMapping("/channel/{artist}")
+    public ResponseEntity<Object> artistChannel(@PathVariable Long artist){
+        Map<String, Object> map = artService.artistChannel(artist);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));    
     }

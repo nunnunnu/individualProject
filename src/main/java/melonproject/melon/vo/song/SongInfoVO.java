@@ -15,15 +15,17 @@ import melonproject.melon.vo.artist.ArtistInfoVO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SongInfoVO {
+    private Long seq;
     private Integer order;
     private Boolean title;
     private String name;
     private List<ArtistInfoVO> artists = new ArrayList<>();
     private Integer likes; 
     private String movie;
-    private List<SongFileVO> files = new ArrayList<>();;
+    private List<SongFileVO> files = new ArrayList<>();
 
     public SongInfoVO(SongInfoEntity entity){
+        this.seq = entity.getSiSeq();
         this.order = entity.getSiOrder();
         this.title = entity.getSiTitle();
         this.name = entity.getSiName();

@@ -13,10 +13,10 @@
                 <div class="col-5">
                     <h2 align="left">{{ data.name }}</h2>
                     <br>
-                    <p align="left">데뷔 : {{ data.debut }}</p>
-                    <p align="left">활동 유형 : {{ data.type }}</p>
-                    <p align="left">소속사 : {{ data.agency }}</p>
-                    <p align="left">팬 수 : {{data.fan}}</p>
+                    <p v-if="data.debut!=null" align="left">데뷔 : {{ data.debut }}</p>
+                    <p v-if="data.type!=null" align="left">활동 유형 : {{ data.type }}</p>
+                    <p v-if="data.agency!=null" align="left">소속사 : {{ data.agency }}</p>
+                    <p v-if="data.fan!=null" align="left">팬 수 : {{data.fan}}</p>
                 </div>
                 <div class="col-1">
                     <hr class="rowhr">
@@ -26,7 +26,7 @@
                     <h5 v-if="data.type=='솔로'">소속 그룹</h5>
                     <tr v-for="artist in data.artists" :key="artist.seq">
                         <div align="left">
-                            <router-link :to="{name:'artistChanel', params:{seq:artist.seq}}" @click="changeArtist(artist.seq)">{{ artist.name }}</router-link>
+                            <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" @click="changeArtist(artist.seq)">{{ artist.name }}</router-link>
                         </div>
                     </tr>
                     <br>
@@ -37,9 +37,9 @@
             <div>
                 <nav class="router_area">
                     <!-- <router-link to="/main">메인화면</router-link> a태그임 -->
-                    <router-link :to="`/artist/chanel${this.seq}/detail`">상세정보 </router-link>
-                    <!-- <router-link :to="`/artist/chanel${this.seq}/detail`">곡 </router-link> -->
-                    <!-- <router-link :to="`/artist/chanel${this.seq}/detail`">앨범 </router-link> -->
+                    <router-link :to="`/artist/channel${this.seq}/detail`">상세정보 </router-link>
+                    <!-- <router-link :to="`/artist/channel${this.seq}/detail`">곡 </router-link> -->
+                    <!-- <router-link :to="`/artist/channel${this.seq}/detail`">앨범 </router-link> -->
                 </nav>
             </div>
             <router-view :key="$route.fullPath"/>
@@ -49,7 +49,7 @@
 <script>
     import axios from 'axios'
     export default {
-        name: 'artistChanel',
+        name: 'artistChannel',
         props: {},
         data() {
             return {
@@ -64,7 +64,7 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/artist/chanel/" + seq)
+                axios.get("http://localhost:8250/artist/channel/" + seq)
                     .then((e) => {
                         this.data = e.data.data
                     })
@@ -75,7 +75,6 @@
             changeArtist(changeSeq){
                 this.seq = changeSeq;
                 this.loadPage(changeSeq)
-                // this.$router.go(changeSeq)
             }
         }
     }

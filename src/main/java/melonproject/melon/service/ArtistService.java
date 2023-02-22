@@ -20,7 +20,7 @@ import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.ArtistSoloInfoRepository;
 import melonproject.melon.repository.info.AgencyInfoRepository;
 import melonproject.melon.vo.artist.ArtistAddVO;
-import melonproject.melon.vo.artist.ArtistChanelVO;
+import melonproject.melon.vo.artist.ArtistChannelVO;
 import melonproject.melon.vo.artist.ArtistDetailVO;
 
 @Service
@@ -74,7 +74,7 @@ public class ArtistService {
         
     }
 
-    public Map<String, Object> artistChanel(Long artistSeq){
+    public Map<String, Object> artistChannel(Long artistSeq){
         Map<String, Object> map = new LinkedHashMap<>();
         ArtistInfoEntity artist = aRepo.findById(artistSeq).orElse(null);
         if(artist==null){
@@ -83,23 +83,23 @@ public class ArtistService {
             map.put("code",HttpStatus.BAD_REQUEST);
             return map;
         }
-        ArtistChanelVO chanelVO = new ArtistChanelVO(artist);
-        if(chanelVO.getType().equals("솔로")){
+        ArtistChannelVO channelVO = new ArtistChannelVO(artist);
+        if(channelVO.getType().equals("솔로")){
             List<ArtistConnectionEntity> connection = acRepo.findBySolo(artist);
             for(ArtistConnectionEntity ac : connection){
-                chanelVO.groupSetting(ac.getGroup());
+                channelVO.groupSetting(ac.getGroup());
             }
             
-        }else if(chanelVO.getType().equals("그룹")){
+        }else if(channelVO.getType().equals("그룹")){
             List<ArtistConnectionEntity> connection = acRepo.findByGroup(artist);
             for(ArtistConnectionEntity ac : connection){
-                chanelVO.soloSetting(ac.getSolo());
+                channelVO.soloSetting(ac.getSolo());
             }
         }
         map.put("status",true);
         map.put("message","조회성공");
         map.put("code",HttpStatus.OK);
-        map.put("data", chanelVO);
+        map.put("data", channelVO);
         return map;
     }
 
