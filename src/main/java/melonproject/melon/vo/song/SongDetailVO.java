@@ -28,16 +28,18 @@ public class SongDetailVO {
     private AlbumInfoVO album;
     private String lyrics;
     private List<CreatorInfoVO> creates = new ArrayList<>();
+    private String movie;
 
     public SongDetailVO(SongInfoEntity entity){
         this.name = entity.getSiName();
         this.regDt = entity.getSiRegDt();
         this.genre = entity.getGenre().getGiName();
         this.likes = entity.getLikes().size();
-        this.lyrics = entity.getSiLyrics();
+        this.lyrics = entity.getSiLyrics().replace("\n", "<br />");
         artistsAdd(entity.getArtists());
         createsAdd(entity.getCreators());
         this.album = new AlbumInfoVO(entity.getAlbum());
+        this.movie=entity.getSiMovie();
     }
     public void artistsAdd(List<SongArtistConnection> art){
         for(SongArtistConnection a : art){

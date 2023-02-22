@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import AlbumDetail from '../components/AlbumDetail.vue'
 import ArtistChanel from '../components/ArtistChanel.vue'
 import ArtistDetail from '../components/ArtistDetail.vue'
+import SongDetail from '../components/SongDetail.vue'
 
 const routes = [
   {
@@ -14,6 +15,12 @@ const routes = [
     path: '/album/detail:seq',
     name: 'albumDetail',
     component: AlbumDetail,
+    props:true
+  },
+  {
+    path: '/song/detail:seq',
+    name: 'songDetail',
+    component: SongDetail,
     props:true
   },
   {

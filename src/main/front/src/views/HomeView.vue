@@ -8,28 +8,25 @@
       </div>
     </div>
 
-    <div class="newAlbum">
-      <tr v-for="item in newAlbumList" :key="item.seq">
-        <div class="row mb-2">
-      <div class="col-md-6">
-          <div class="row">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-              <div class="col p-4 d-flex flex-column position-static">
-                <strong class="d-inline-block mb-2 text-success">신규앨범</strong>
-                <h3 class="mb-0">{{item.name}}</h3>
-                <div class="mb-1 text-muted">{{item.regDt}}</div>
-                <!-- <div @click="detailPage(newAlbumList[0].seq)"> -->
+      <div class="row">
+        <div class="col-6">
+        <tr v-for="item in newAlbumList" :key="item.seq">
+              <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                  <strong class="d-inline-block mb-2 text-success">신규앨범</strong>
+                  <h3 class="mb-0">{{item.name}}</h3>
+                  <div class="mb-1 text-muted">{{item.regDt}}</div>
+                  <!-- <div @click="detailPage(newAlbumList[0].seq)"> -->
                   <router-link :to="{name:'albumDetail', params:{seq:item.seq}}">상세보기</router-link>
-                <!-- </div> -->
+                  <!-- </div> -->
+                </div>
+                <div class="col-auto d-none d-lg-block">
+                  <img :src="`${item.uri}`" width="250" height="250">
+                </div>
               </div>
-              <div class="col-auto d-none d-lg-block">
-                <img :src="`${item.uri}`" width="250" height="250">
-              </div>
-            </div>
+            </tr>
           </div>
-        </div>
-        </div>
-      </tr>
+      </div>
       <!-- <div class="col-md-6">
         <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
           <div class="col p-4 d-flex flex-column position-static">
@@ -43,8 +40,7 @@
           </div>
         </div>
       </div> -->
-    <!-- </div> -->
-    </div>
+      <!-- </div> -->
     <div class="row g-5">
       <div class="col-md-8">
         <h3 class="pb-4 mb-4 fst-italic border-bottom">
@@ -121,15 +117,20 @@
           .then((e) => {
             this.newAlbumList = e.data.data
           })
-        },
-        albumDetail(seq){
-        axios.get("http://localhost:8250/album/detail/"+seq)
+      },
+      albumDetail(seq) {
+        axios.get("http://localhost:8250/album/detail/" + seq)
           .then((e) => {
             this.albumData = e
           })
       },
-      detailPage(albumSeq){
-        this.$router.push({name: 'AlbumDetail', params: {seq: albumSeq}})
+      detailPage(albumSeq) {
+        this.$router.push({
+          name: 'AlbumDetail',
+          params: {
+            seq: albumSeq
+          }
+        })
       }
     }
   }
@@ -207,7 +208,8 @@
       transform: rotate(360deg)
     }
   }
-  .newAlbum{
-    display: flex;
-}
+  a{text-decoration:none; color: black}
+  .col-6 {
+    display: flex; float: right; width: 100%;
+  }
 </style>

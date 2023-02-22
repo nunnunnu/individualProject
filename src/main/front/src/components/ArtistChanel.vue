@@ -13,20 +13,20 @@
                 <div class="col-5">
                     <h2 align="left">{{ data.name }}</h2>
                     <br>
-                    <p align="left">{{ data.debut }}</p>
+                    <p align="left">데뷔 : {{ data.debut }}</p>
                     <p align="left">활동 유형 : {{ data.type }}</p>
                     <p align="left">소속사 : {{ data.agency }}</p>
                     <p align="left">팬 수 : {{data.fan}}</p>
                 </div>
                 <div class="col-1">
-                    <div class='v-line' align="right"></div>
+                    <hr class="rowhr">
                 </div>
                 <div class="col-3">
                     <h5 v-if="data.type=='그룹'">그룹 멤버</h5>
                     <h5 v-if="data.type=='솔로'">소속 그룹</h5>
                     <tr v-for="artist in data.artists" :key="artist.seq">
                         <div align="left">
-                            <router-link :to="{name:'artistChanel', params:{seq:artist.seq}}">{{ artist.name }}</router-link>
+                            <router-link :to="{name:'artistChanel', params:{seq:artist.seq}}" @click="changeArtist(artist.seq)">{{ artist.name }}</router-link>
                         </div>
                     </tr>
                     <br>
@@ -42,7 +42,7 @@
                     <!-- <router-link :to="`/artist/chanel${this.seq}/detail`">앨범 </router-link> -->
                 </nav>
             </div>
-            <router-view/>
+            <router-view :key="$route.fullPath"/>
         </div>
     </b-container>
 </template>
@@ -71,16 +71,18 @@
             },
             explan() {    
                 return  this.data.explan
+            },
+            changeArtist(changeSeq){
+                this.seq = changeSeq;
+                this.loadPage(changeSeq)
+                // this.$router.go(changeSeq)
             }
         }
     }
 </script>
 
 <style>
-.v-line {
-  border-left : solid;
-  height : 280px;
-}
+
 .router_area{
     /* tac+p10+bb1 */
     text-align: center;
@@ -99,5 +101,15 @@
 /* 현태 표시되고있는 페이지의 링크스타일 */
 .router_area a.router-link-active{
   background-color: #000; color:#fff
+}
+hr.rowhr{
+    /* display: block; */
+    width:1px;
+    background-color:#000;
+    /* position:absolute; */
+    top:0;
+    bottom:0;
+    /* left:150px; */
+
 }
 </style>

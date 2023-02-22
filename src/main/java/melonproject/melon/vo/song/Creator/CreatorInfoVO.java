@@ -18,7 +18,7 @@ public class CreatorInfoVO {
     private String uri;
 
     public CreatorInfoVO(SongCreatorEntity entity){
-        this.seq = entity.getScSeq();
+        this.seq = entity.getArtist().getArtSeq();
         this.name = entity.getArtist().getArtName();
         this.type = entity.getScType();
         this.uri = entity.getArtist().getArtUri();

@@ -1,4 +1,5 @@
 <template>
+    <b-container>
     <div v-if="detail!=null">
         <h5 class="pb-4 mb-4 fst-italic border-bottom" align="left">아티스트 소개</h5>
         <p align="left">{{ detail.introduce }}</p>
@@ -64,7 +65,7 @@
         <div class="artists">
             <tr v-for="art in detail.artists" :key="art.seq">
             <!-- <div class="col"> -->
-            <div class="card" style="width: 10rem;">
+            <div class="card">
                 <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
                 <div class="card-body">
                     <p class="card-title">{{art.name}}</p>
@@ -76,6 +77,7 @@
         </div>
         <br>
     </div>
+    </b-container>
 </template>
 <script>
 import axios from 'axios'
@@ -109,6 +111,10 @@ import axios from 'axios'
 <style>
 .artists{
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    object-fit: cover;
+
 }
 .card-img-top{
     height:150px;
