@@ -21,8 +21,10 @@
               </li>
             </ul>
             <!-- <form class="d-flex" role="search"> -->
-              <input class="form-control me-2" type="search" placeholder="Search" name="key">
-              <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
+              <div>
+                <input class="form-control me-2" type="search" placeholder="Search" v-model="key">
+                <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
+              </div>
             <!-- </form> -->
           </div>
         </div>
@@ -37,17 +39,16 @@
     data() {
       return {
         keywordSearch: null,
+        this:null
       }
     },
     methods:{
       searchClick(key){
         console.log(key)
-        // this.keywordSearch = keyword
-        // this.$router.push("/search?"+this.keywordSearch);
-        // this.$router.push({
-        //   name: "searchPage",
-        //   params: { key: keyword },
-        // });
+        this.$router.push({
+          name: "searchPage",
+          params: { key: key },
+        });
       }
     }
    }
