@@ -18,5 +18,9 @@ public interface SongInfoRepository extends JpaRepository<SongInfoEntity, Long>{
 
     Page<SongInfoEntity> findBySiRegDtLessThanEqual(LocalDate date, Pageable page);
 
+    List<SongInfoEntity> findTop10BySiNameContains(String keyword);
+
+    List<SongInfoEntity> findTop10BySiLyricsContains(String keyword);
+
     
 }
