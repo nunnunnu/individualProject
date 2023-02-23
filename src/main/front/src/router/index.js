@@ -9,6 +9,8 @@ import ArtistSongList from '../components/ArtistSongList.vue'
 import ArtistAlbumList from '../components/ArtistAlbumList.vue'
 import NewAlbum from '../components/NewAlbumPage.vue'
 import NewSong from '../components/NewMusicPage.vue'
+import TotalSearch from '../components/TotalSearchPage.vue'
+import searchPage from '../views/SearchPage.vue'
 
 const routes = [
   {
@@ -66,6 +68,20 @@ const routes = [
         path: 'songList',
         name: 'artistSongList',
         component: ArtistSongList,
+        props:true
+      }
+    ]
+  },
+  {
+    path: '/search?key',
+    name: 'searchPage',
+    component: searchPage,
+    props:true,
+    children:[
+      {
+        path: '/search/total?key',
+        name: 'totalSearch',
+        component: TotalSearch,
         props:true
       }
     ]

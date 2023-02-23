@@ -20,10 +20,10 @@
                 <router-link to="/song/new">최신 음악</router-link>
               </li>
             </ul>
-            <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <!-- <form class="d-flex" role="search"> -->
+              <input class="form-control me-2" type="search" placeholder="Search" name="key">
+              <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
+            <!-- </form> -->
           </div>
         </div>
       </div>
@@ -31,7 +31,27 @@
     <router-view />
   </div>
 </template>
-
+<script>
+   export default {
+    // name: 'main',
+    data() {
+      return {
+        keywordSearch: null,
+      }
+    },
+    methods:{
+      searchClick(key){
+        console.log(key)
+        // this.keywordSearch = keyword
+        // this.$router.push("/search?"+this.keywordSearch);
+        // this.$router.push({
+        //   name: "searchPage",
+        //   params: { key: keyword },
+        // });
+      }
+    }
+   }
+</script>
 <style>
 @import "@/assets/css/fonts.css";
 @import "@/assets/css/reset.css";
