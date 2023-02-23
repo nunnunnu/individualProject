@@ -17,6 +17,7 @@ import melonproject.melon.vo.artist.ArtistInfoVO;
 @NoArgsConstructor
 @Builder
 public class ArtistSongVO {
+    private Long seq;
     private String name;
     private String uri;
     private Boolean title;
@@ -26,6 +27,7 @@ public class ArtistSongVO {
     private String movie;
 
     public ArtistSongVO(SongInfoEntity song, String uri){
+        this.seq = song.getSiSeq();
         this.name = song.getSiName();
         this.uri = uri;
         this.title = song.getSiTitle();

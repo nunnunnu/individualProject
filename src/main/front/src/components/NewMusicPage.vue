@@ -1,40 +1,13 @@
 <template>
     <b-container>
         <br>
-        <h2 class="pb-4 mb-4 fst-italic border-bottom">앨범 정보</h2>
-        <br>
-        <div v-if="data!=null">
-            <div class="row">
-                <div class="col-3">
-                    <img :src="`http://localhost:8250/image/album/${data.uri}`"  style="max-width: 100%; height: auto;" align="right" 
-                        class="rounded float-start">
-                </div>
-                <div class="col-5">
-                    <p align="left" class="typeInfo">[{{ data.type }}]</p>
-                    <p align="left">{{ data.name }}</p>
-                <div align="left">
-                    <router-link :to="{name:'artistChannel', params:{seq:data.artist.seq}}" style="font-size: 20px">가수명 : {{ data.artist.name }}</router-link>
-                </div>
-                    <p align="left"></p>
-                    <p align="left">장르 : {{ data.genreList }}</p>
-                    <p align="left">소속사 : {{ data.agencyName }}</p>
-                    <p align="left">발매사 : {{ data.pubName }}</p>
-                    <p align="left">발매일 : {{ data.regDt }}</p>
-                </div>
-                <div class="col-3">
-                    <p align="left">댓글 수 : {{ data.comment }}</p>
-                    <p align="left">평점 : {{ data.grade }}</p>
-                </div>
-            </div>
-            <br>
-            <hr>
-            <br>
-            <h5 class="pb-4 mb-4 fst-italic border-bottom">수록곡({{ data.songCount }})</h5>
-            <table class="table">
+        <h2 class="pb-4 mb-4 fst-italic border-bottom">최신 음악</h2>
+        <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">번호</th>
                         <th scope="col">곡정보</th>
+                        <th scope="col">앨범</th>
                         <th scope="col">좋아요</th>
                         <th scope="col">듣기</th>
                         <th scope="col">담기</th>
@@ -43,18 +16,20 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="item in data.song" :key="item.seq">
-                            <th scope="row">{{ item.order }}</th>
+                    <tr v-for="(item, index) in data" :key="item.seq">
+                            <th scope="row">{{ currentPage*size+(index+1) }}</th>
                             <td align="left">
                                 <span v-if="item.title" class="badge text-bg-primary">title</span>
                                 <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
                                 <br>
-                                <tr v-for="artist in item.artists" :key="artist.seq">
-                                    <!-- <p style="font-size:12px">{{ artist.name }} </p> -->
+                                <tr v-for="artist in item.artist" :key="artist.seq">
                                     <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
                                 </tr>
                             </td>
-                            <td>{{item.likes}}</td>
+                            <td>
+                                <router-link :to="{name:'albumDetail', params:{seq:item.album.seq}}" style="font-size:15px">{{ item.album.name }}</router-link>
+                            </td>
+                            <td>{{item.like}}</td>
                             <td>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
   <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
@@ -89,69 +64,76 @@
                     </tr>
                 </tbody>
             </table>
-            <br>
-            <h5 class="pb-4 mb-4 fst-italic border-bottom">앨범소개</h5>
-            <!-- <p v-html="explan"></p> -->
-            <details align="left">
-                <summary>펼치기</summary>
-                <div v-html="albumExplan"></div>
-            </details>
-            <br>
-            <hr>
-            <br>
-            <h5 class="pb-4 mb-4 fst-italic border-bottom">댓글</h5>
-            <br>
-            <div class="row">
-                <div class="col-11">
-                    <div class="input-group">
-                        <span class="input-group-text">댓글</span>
-                        <textarea class="form-control" aria-label="With textarea"></textarea>
-                    </div>
-                </div>
-                <div class="col-1">
-                    <button class="btn btn-success btn-lg">입력</button>
-                </div>
-            </div>
-            <br>
-            <p align="left">총 {{ data.comment }}개</p>
-            <hr>
-            
-        </div>
+            <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a v-if="currentPage==0" class="page-link">Previous</a>
+        </li>
+        <a v-if="currentPage!=0" class="page-link" @click="prePage()">Previous</a>
+            <tr v-for="page in totalPage" :key="page">
+                <li class="page-item">
+                    <a class="page-link" @click="pageClick(page-1)">{{ page }}</a>
+                </li>
+            </tr>
+            <li v-if="currentPage+1==totalPage" class="page-item disabled">
+            <a class="page-link">Next</a>
+            </li>
+            <li v-if="currentPage+1!=totalPage" class="page-item">
+            <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
     </b-container>
 </template>
 <script>
     import axios from 'axios'
     export default {
-        name: 'albumDetail',
-        props: {},
+        name: 'newSong',
         data() {
             return {
                 data: null,
-                albumExplan: ""
+                currentPage: 0,
+                totalPage: 0,
+                size: 0
             }
         },
         created() {
-            this.seq = this.$route.params.seq;
-            this.loadPage(this.seq)
+            this.loadPage()
+
         },
         methods: {
-            loadPage(seq) {
-                axios.get("http://localhost:8250/album/detail/" + seq)
+            loadPage() {
+                axios.get("http://localhost:8250/song/new?page="+this.currentPage)
                     .then((e) => {
-                        this.data = e.data.data
-                        this.albumExplan = e.data.data.explan
+                        this.data = e.data.data.content
+                        this.totalPage=e.data.data.totalPages
+                        this.size=e.data.data.size                        
                     })
             },
-            explan() {    
-                return  this.data.explan
+            pageClick(page){
+                this.currentPage=page
+                this.loadPage()
+            },
+            prePage(){
+                this.currentPage = this.currentPage-1
+                this.loadPage()
             }
         }
     }
 </script>
 
 <style>
-.typeInfo{
-    font-size: 15px; color: gray;
-}
-p{font-size:20px}
+    .typeInfo {
+        font-size: 15px;
+        color: gray;
+    }
+
+    p {
+        font-size: 15px;
+    }
+
+    .albums {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        object-fit: cover;
+    }
 </style>

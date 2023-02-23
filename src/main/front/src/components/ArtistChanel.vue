@@ -1,8 +1,11 @@
 <template>
     <b-container>
+        <div>
+            <!-- <Child v-on:parentChange="seqChange"/> -->
+        </div>
         <br>
         <h2 class="pb-4 mb-4 fst-italic border-bottom">아티스트 정보</h2>
-        <Header :seq = "seq" />
+        <!-- <Header :seq = "seq" /> -->
         <br>
         <div v-if="data!=null">
             <div class="row">
@@ -36,13 +39,12 @@
             <hr>
             <div>
                 <nav class="router_area">
-                    <!-- <router-link to="/main">메인화면</router-link> a태그임 -->
                     <router-link :to="`/artist/channel${this.seq}/detail`">상세정보 </router-link>
-                    <!-- <router-link :to="`/artist/channel${this.seq}/detail`">곡 </router-link> -->
-                    <!-- <router-link :to="`/artist/channel${this.seq}/detail`">앨범 </router-link> -->
+                    <router-link :to="`/artist/channel${this.seq}/songList`">곡정보</router-link>
+                    <router-link :to="`/artist/channel${this.seq}/albumList`">앨범정보</router-link>
                 </nav>
             </div>
-            <router-view :key="$route.fullPath"/>
+            <router-view />
         </div>
     </b-container>
 </template>
@@ -74,6 +76,10 @@
             },
             changeArtist(changeSeq){
                 this.seq = changeSeq;
+                this.loadPage(changeSeq)
+            },
+            seqChange(changeSeq){
+                this.seq = changeSeq
                 this.loadPage(changeSeq)
             }
         }

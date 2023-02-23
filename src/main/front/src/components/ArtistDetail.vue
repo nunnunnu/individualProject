@@ -73,16 +73,15 @@
             <h5 class="pb-4 mb-4 fst-italic border-bottom" align="left">그룹 멤버</h5>
         </div>
         <div class="artists">
-            <tr v-for="art in detail.artists" :key="art.seq">
+        <tr v-for="art in detail.artists" :key="art.seq">
             <!-- <div class="col"> -->
             <div class="card">
                 <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
                 <div class="card-body">
                     <p class="card-title">{{art.name}}</p>
-                    <router-link :to="{name:'artistChannel', params:{seq:art.seq}}" @click="changeArtist(art.seq)">상세보기</router-link>
+                    <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a>
                 </div>
             </div>
-            <!-- </div> -->
         </tr>
         </div>
         <br>
@@ -105,6 +104,11 @@ import axios from 'axios'
             this.childSeq = this.seq;
             this.loadPage(this.childSeq)
         },
+        // watch: {
+        //     '$route' (to, from) {
+        //     console.log(to)
+        //     }
+        // },
         methods: {
             loadPage(seq) {
                 axios.get("http://localhost:8250/artist/detail/" + seq)
@@ -116,11 +120,14 @@ import axios from 'axios'
                 return  this.data.explan
             },
             changeArtist(changeSeq){
-                this.childSeq = changeSeq;
-                this.loadPage(changeSeq)
+                // this.childSeq = changeSeq;
+                // this.loadPage(changeSeq)
                 // this.$router.go(-1)
                 // this.$router.push('/artist/channel' + changeSeq);
-                Object.assign(changeSeq)
+                // Object.assign(changeSeq)
+                // this.$emit('parentChange', changeSeq)
+                console.log(changeSeq)
+                
             }
         }
     }

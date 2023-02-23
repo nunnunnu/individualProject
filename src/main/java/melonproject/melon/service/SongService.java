@@ -1,13 +1,11 @@
 package melonproject.melon.service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -204,6 +202,21 @@ public class SongService {
         Page<ArtistSongVO> result = songs.map(
             s->new ArtistSongVO(s.getSong(),
             sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3).getSfUri():null));
+        map.put("status", true);
+        map.put("message", "조회성공.");
+        map.put("code", HttpStatus.OK);
+        map.put("data", result);
+        return map;
+    }
+
+    public Map<String, Object> newSongList(Pageable page){
+        Map<String, Object> map = new LinkedHashMap<>();
+        LocalDate now = LocalDate.now().minusMonths(1);
+        Page<SongInfoEntity> entity = songRepo.findBySiRegDtLessThanEqual(now, page);
+        Page<ArtistSongVO> result = entity.map(
+            s->new ArtistSongVO(s,
+            sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
+
         map.put("status", true);
         map.put("message", "조회성공.");
         map.put("code", HttpStatus.OK);

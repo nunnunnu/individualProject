@@ -11,13 +11,13 @@
           <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">최신앨범</a>
+                <router-link to="/album/new">최신 앨범</router-link>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">일간차트</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link disabled">최신음악</a>
+                <router-link to="/song/new">최신 음악</router-link>
               </li>
             </ul>
             <form class="d-flex" role="search">

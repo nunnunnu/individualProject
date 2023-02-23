@@ -50,11 +50,12 @@
                         </div>
                     </div>
                 </tr>
-                <br>
             </div>
+            <br>
             <div v-if="data.movie!=null">
             <h3 class="pb-4 mb-4 fst-italic border-bottom">뮤직비디오</h3>
             <div v-html="movie()"></div>
+            <br>
         </div>
     </div>
 
@@ -64,15 +65,16 @@
     import axios from 'axios'
     export default {
         name: 'albumDetail',
-        props: {},
+        props : ['seq'],
         data() {
             return {
                 data: null,
             }
         },
         created() {
-            this.seq = this.$route.params.seq;
+            // this.seq = this.$route.params.seq;
             this.loadPage(this.seq)
+            console.log(this.seq)
         },
         methods: {
             loadPage(seq) {

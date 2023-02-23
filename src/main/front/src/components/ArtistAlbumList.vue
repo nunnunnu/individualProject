@@ -1,0 +1,62 @@
+<template>
+    <b-container>
+        <div class="albums">
+        <tr v-for="album in data" :key="album.seq">
+                <div class="card" style="width: 13rem; height: 30rem">
+                    <img :src="`http://localhost:8250/image/album/${album.uri}`">
+                    <div class="card-body">
+                        <p class="typeInfo">[{{ album.type }}]</p>
+                        <h6 class="card-title">{{album.name}}</h6>
+                        <p class="card-text">title-{{ album.songName }}</p>
+                        <p class="card-text">{{ album.regDt }}</p>
+                        <p class="card-text">{{ album.songCount }}곡</p>
+                        <router-link :to="{name:'albumDetail', params:{seq:album.seq}}" style="font-size:20px">
+                            상세보기</router-link>
+                    </div>
+                </div>
+            </tr>
+        </div>
+
+    </b-container>
+</template>
+<script>
+    import axios from 'axios'
+    export default {
+        name: 'artistAlbumList',
+        props : ['seq'],
+        data() {
+            return {
+                data: null,
+            }
+        },
+        created() {
+            // this.seq = this.$route.params.seq;
+            this.loadPage(this.seq)
+            console.log(this.seq)
+        },
+        methods: {
+            loadPage(seq) {
+                axios.get("http://localhost:8250/album/artist/" + seq)
+                    .then((e) => {
+                        this.data = e.data.data.content
+                        console.log(this.data)
+                    })
+            }
+        }
+    }
+</script>
+
+<style>
+.typeInfo{
+    font-size: 15px; color: gray;
+}
+p{
+    font-size: 15px;
+}
+.albums{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    object-fit: cover;
+}
+</style>

@@ -4,6 +4,11 @@ import AlbumDetail from '../components/AlbumDetail.vue'
 import ArtistChannel from '../components/ArtistChanel.vue'
 import ArtistDetail from '../components/ArtistDetail.vue'
 import SongDetail from '../components/SongDetail.vue'
+import Movie from '../components/MoviePage.vue'
+import ArtistSongList from '../components/ArtistSongList.vue'
+import ArtistAlbumList from '../components/ArtistAlbumList.vue'
+import NewAlbum from '../components/NewAlbumPage.vue'
+import NewSong from '../components/NewMusicPage.vue'
 
 const routes = [
   {
@@ -24,6 +29,22 @@ const routes = [
     props:true
   },
   {
+    path: '/song/movie:tag',
+    name: 'movie',
+    component: Movie,
+    props:true
+  },
+  {
+    path: '/album/new',
+    name: 'newAlbum',
+    component: NewAlbum,
+  },
+  {
+    path: '/song/new',
+    name: 'newSong',
+    component: NewSong,
+  },
+  {
     path: '/artist/channel:seq',
     name: 'artistChannel',
     component: ArtistChannel,
@@ -33,6 +54,18 @@ const routes = [
         path: 'detail',
         name: 'artistDetail',
         component: ArtistDetail,
+        props:true
+      },
+      { 
+        path: 'albumList',
+        name: 'artistAblumList',
+        component: ArtistAlbumList,
+        props:true
+      },
+      { 
+        path: 'songList',
+        name: 'artistSongList',
+        component: ArtistSongList,
         props:true
       }
     ]
