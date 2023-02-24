@@ -18,8 +18,11 @@
                 <tr v-for="(item, index) in songName" :key="item.seq">
                     <th scope="row">{{ index+1 }}</th>
                     <td align="left">
-                        <span v-if="item.title" class="badge text-bg-primary">title</span>
-                        <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
+                        
+                        <router-link :to="{name:'songDetail', params:{seq:item.seq}}">
+                            <span v-if="item.title" class="badge text-bg-primary">title</span>
+                            <span v-html="keywordTag(item.name)"></span>
+                        </router-link>
                         <br>
                 <tr v-for="artist in item.artist" :key="artist.seq">
                     <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">
@@ -87,19 +90,21 @@
                 <div class="card">
                     <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
                     <div class="card-body">
-                        <p class="card-title">{{art.name}}</p>
+                        <div class="card-title"><div v-html="keywordTag(art.name)"></div></div>
                         <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a>
                     </div>
                 </div>
             </tr>
         </div>
-        <p align="right">아티스트 이름 검색 전체 보기 ></p>
+        <div align="right">
+            <router-link :to="{name:'searchArtistName', params:{key:this.childKeyword}}">아티스트 이름 검색 전체 보기 ></router-link>
+        </div>
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">가사로 검색</h4>
         <tr v-for="song in songLyrics" :key="song.seq">
         <div align="left">
                 <router-link :to="{name:'songDetail', params:{seq:song.seq}}">{{ song.name }}</router-link>
                 <br>
-                <router-link :to="{name:'songDetail', params:{seq:song.seq}}">{{ this.stringFind(song.lyrics) }}
+                <router-link :to="{name:'songDetail', params:{seq:song.seq}}"><div v-html="stringFind(song.lyrics)"></div>
                 </router-link>
                 <div>
                 <tr v-for="art in song.artist" :key="art.seq">
@@ -125,7 +130,7 @@
                         <div class="col-md-8">
                             <div class="card-body">
 
-                                <h6 class="card-title">{{ data.name }}</h6>
+                                <h6 class="card-title"><span v-html="keywordTag(data.name)"></span></h6>
                                 <!-- <router-link :to="{name:'artistChannel', params:{seq:data.artistSeq}}"
                                     style="font-size:15px">{{ data.artistName }}</router-link> -->
                                 <!-- <br>
@@ -187,10 +192,17 @@
                 console.log(this.childKeyword)
                 var pos = lyrics.indexOf(this.childKeyword);
                 console.log(pos)
-                return lyrics.substr(pos, 200)+'...'
+                var subLyrics = lyrics.substr(pos, 200)+'...'
+                return subLyrics.replace(new RegExp(this.childKeyword, 'gi'), match => `<span class="highlight">${match}</span>`)
+            },
+            keywordTag(str){
+                return str.replace(new RegExp(this.childKeyword, 'gi'), match => `<span class="highlight">${match}</span>`)
             }
         }
     }
 </script>
 <style>
+.highlight {
+  color: red;
+}
 </style>

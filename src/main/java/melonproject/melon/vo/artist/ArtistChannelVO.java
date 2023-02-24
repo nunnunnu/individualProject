@@ -17,6 +17,7 @@ import melonproject.melon.entity.artist.ArtistSoloInfoEntity;
 @AllArgsConstructor
 @Builder
 public class ArtistChannelVO {
+    private Long seq;
     private String name;
     private String type;
     private String agency;
@@ -26,6 +27,7 @@ public class ArtistChannelVO {
     private LocalDate debut;
 
     public ArtistChannelVO(ArtistInfoEntity entity){
+        this.seq = entity.getArtSeq();
         this.name = entity.getArtName();
         this.type = entity.isType(entity);
         if(entity.getAgency()!=null){

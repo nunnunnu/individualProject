@@ -127,6 +127,7 @@ public class AlbumService {
         Map<String, Object> map = new LinkedHashMap<>();
 
         Page<AlbumInfoEntity> albums = albumRepo.findByalbumRegDtLessThanEqual(page,date);
+        
         Page<AlbumNewListVO> result = albums.map(a->new AlbumNewListVO(a));
 
         map.put("status", true);

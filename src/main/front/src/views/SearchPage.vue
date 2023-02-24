@@ -3,9 +3,9 @@
             <div>
                 <nav class="router_area">
                   <router-link :to="{name:'totalSearch', params:{key:this.keyword}}">통합검색</router-link>
-                    <!-- <router-link :to="{name:'songNameSearch', params:{key:this.keyword}}">곡제목 검색</router-link> -->
-                    <!-- <router-link :to="`/artist/channel${this.seq}/albumList`">아티스트</router-link>
-                    <router-link :to="`/artist/channel${this.seq}/albumList`">앨범</router-link>
+                  <router-link :to="{name:'songNameSearch', params:{key:this.keyword}}">곡제목</router-link>
+                    <router-link :to="{name:'searchArtistName', params:{key:this.keyword}}">아티스트</router-link>
+                    <!-- <router-link :to="`/artist/channel${this.seq}/albumList`">앨범</router-link>
                     <router-link :to="`/artist/channel${this.seq}/albumList`">가사</router-link>  -->
                 </nav>
             </div>

@@ -20,6 +20,7 @@ import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.artist.song.SongFileRepository;
 import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.vo.album.AlbumInfoVO;
+import melonproject.melon.vo.artist.ArtistChannelVO;
 import melonproject.melon.vo.artist.ArtistListVO;
 import melonproject.melon.vo.song.ArtistSongVO;
 
@@ -59,6 +60,7 @@ public class SearchService {
         map.put("songLyrics", songLyricsVO);
         map.put("albums", albumsVO);
         map.put("artist", artistVO);
+        map.put("status", false);
         return map;
     }
 
@@ -73,6 +75,20 @@ public class SearchService {
             map.put("message", "조회성공");
             map.put("code", HttpStatus.OK);
             map.put("data", songNameVO);
+        return map;
+    }
+
+    public Map<String, Object> artistNameSearch(String keyword, Pageable page){
+        Map<String, Object> map = new LinkedHashMap<>();
+        Page<ArtistInfoEntity> entity = artistRepo.findByArtNameContains(keyword, page);
+        Page<ArtistChannelVO> artisNameVO = entity.map(
+            s-> new ArtistChannelVO(s));
+            
+        map.put("status", false);
+        map.put("message", "조회성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", artisNameVO);
+
         return map;
     }
 }

@@ -29,8 +29,14 @@ public class SearchController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
     @GetMapping("songName")
-    public ResponseEntity<Object> songNameSearch(@RequestParam String keyword,  @PageableDefault(size=5, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page){
+    public ResponseEntity<Object> songNameSearch(@RequestParam String keyword,  @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page){
         Map<String, Object> map = sService.searchSongName(keyword, page);
+        
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @GetMapping("artistName")
+    public ResponseEntity<Object> artistNameSearch(@RequestParam String keyword,  @PageableDefault(size=10, sort="artDebut",direction = Sort.Direction.ASC) @Nullable Pageable page){
+        Map<String, Object> map = sService.artistNameSearch(keyword, page);
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }

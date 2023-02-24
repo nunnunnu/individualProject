@@ -13,17 +13,21 @@
               <li class="nav-item">
                 <router-link to="/album/new">최신 앨범</router-link>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">일간차트</a>
-              </li>
+              <!-- <li class="nav-item"> -->
+                <!-- <a class="nav-link" href="#">일간차트</a> -->
+              <!-- </li> -->
               <li class="nav-item">
                 <router-link to="/song/new">최신 음악</router-link>
               </li>
             </ul>
             <!-- <form class="d-flex" role="search"> -->
-              <div>
-                <input class="form-control me-2" type="search" placeholder="Search" v-model="key">
-                <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
+              <div class="row">
+                <div class="col-10">
+                  <input class="form-control me-2" type="search" placeholder="Search" v-model="key">
+                </div>
+                <div class="col-2">
+                  <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
+                </div>
               </div>
             <!-- </form> -->
           </div>
@@ -45,7 +49,7 @@
     methods:{
       searchClick(keyword){
         this.$router.push({
-          name: "searchPage",
+          name: "totalSearch",
           params: { key: keyword },
         });
       }

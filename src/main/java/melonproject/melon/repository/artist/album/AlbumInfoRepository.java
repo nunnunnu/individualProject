@@ -17,7 +17,7 @@ public interface AlbumInfoRepository extends JpaRepository<AlbumInfoEntity, Long
 
     AlbumInfoEntity findByAlbumUri(String uri);
     
-    @EntityGraph(attributePaths = {"publisher","agency","artist","songList"})
+    // @EntityGraph(attributePaths = {"publisher","agency","artist","songList"})
     Page<AlbumInfoEntity> findByalbumRegDtLessThanEqual(Pageable page, LocalDate date);
 
     @Query("select a from AlbumInfoEntity a join fetch a.publisher join fetch a.agency left join fetch a.artist left join fetch a.songList left join fetch a.genreList left join fetch a.commentList where a.albumSeq = :seq")

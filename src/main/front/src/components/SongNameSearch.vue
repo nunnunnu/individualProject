@@ -15,11 +15,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in songName" :key="item.seq">
+                <tr v-for="(item, index) in data" :key="item.seq">
                     <th scope="row">{{ currentPage*size+(index+1) }}</th>
                     <td align="left">
-                        <span v-if="item.title" class="badge text-bg-primary">title</span>
-                        <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
+                        <router-link :to="{name:'songDetail', params:{seq:item.seq}}">
+                            <span v-if="item.title" class="badge text-bg-primary">title</span>
+                            <span v-html="keywordTag(item.name)"></span>
+                        </router-link>
                         <br>
                 <tr v-for="artist in item.artist" :key="artist.seq">
                     <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">
@@ -84,14 +86,17 @@
         <a v-if="currentPage!=0" class="page-link" @click="prePage()">Previous</a>
             <tr v-for="page in totalPage" :key="page">
                 <li class="page-item">
-                    <a class="page-link" @click="pageClick(page-1)">{{ page }}</a>
+                    <a class="page-link" @click="pageClick(page-1)">
+                        <font color="red" v-if="page-1==currentPage">{{ page }}</font>
+                        <font v-if="page-1!=currentPage">{{ page }}</font>
+                    </a>
                 </li>
             </tr>
             <li v-if="currentPage+1==totalPage" class="page-item disabled">
             <a class="page-link">Next</a>
             </li>
             <li v-if="currentPage+1!=totalPage" class="page-item">
-            <a class="page-link" href="#">Next</a>
+            <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
             </li>
         </ul>
     </b-container>
@@ -117,13 +122,24 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/songName?keyword=" + this.childKeyword)
+                axios.get("http://localhost:8250/search/songName?keyword=" + this.childKeyword+"&page="+this.currentPage)
                     .then((e) => {
-                        this.data = e.data.data
+                        this.data = e.data.data.content
                         console.log(this.data)
                         this.totalPage=e.data.data.totalPages
                         this.size=e.data.data.size        
                     })
+            },
+            pageClick(page){
+                this.currentPage=page
+                this.loadPage()
+            },
+            prePage(){
+                this.currentPage = this.currentPage-1
+                this.loadPage()
+            },
+            keywordTag(str){
+                return str.replace(new RegExp(this.childKeyword, 'gi'), match => `<span class="highlight">${match}</span>`)
             }
         }
     }

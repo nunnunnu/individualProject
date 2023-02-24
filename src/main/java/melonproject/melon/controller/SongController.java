@@ -69,7 +69,7 @@ public class SongController {
     }
     @GetMapping("/new")
     public ResponseEntity<Object> newSongList(
-        @PageableDefault(size=10, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page
+        @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page
     ){
         Map<String, Object> map = songService.newSongList(page);
 

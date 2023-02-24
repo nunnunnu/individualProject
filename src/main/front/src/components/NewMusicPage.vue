@@ -64,21 +64,24 @@
                     </tr>
                 </tbody>
             </table>
-            <ul class="pagination justify-content-center">
+        <ul class="pagination justify-content-center">
         <li class="page-item disabled">
             <a v-if="currentPage==0" class="page-link">Previous</a>
         </li>
         <a v-if="currentPage!=0" class="page-link" @click="prePage()">Previous</a>
             <tr v-for="page in totalPage" :key="page">
                 <li class="page-item">
-                    <a class="page-link" @click="pageClick(page-1)">{{ page }}</a>
+                    <a class="page-link" @click="pageClick(page-1)">
+                        <font color="red" v-if="page-1==currentPage">{{ page }}</font>
+                        <font v-if="page-1!=currentPage">{{ page }}</font>
+                    </a>
                 </li>
             </tr>
             <li v-if="currentPage+1==totalPage" class="page-item disabled">
             <a class="page-link">Next</a>
             </li>
             <li v-if="currentPage+1!=totalPage" class="page-item">
-            <a class="page-link" href="#">Next</a>
+            <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
             </li>
         </ul>
     </b-container>
