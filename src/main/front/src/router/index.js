@@ -11,6 +11,7 @@ import NewAlbum from '../components/NewAlbumPage.vue'
 import NewSong from '../components/NewMusicPage.vue'
 import TotalSearch from '../components/TotalSearchPage.vue'
 import searchPage from '../views/SearchPage.vue'
+import SongNameSearch from '../components/SongNameSearch.vue'
 
 const routes = [
   {
@@ -73,15 +74,21 @@ const routes = [
     ]
   },
   {
-    path: '/search?key',
+    path: '/search:key',
     name: 'searchPage',
     component: searchPage,
     props:true,
     children:[
       {
-        path: '/search/total?key',
+        path: '/search/total:key',
         name: 'totalSearch',
         component: TotalSearch,
+        props:true
+      },
+      {
+        path: '/search/songname:key',
+        name: 'songNameSearch',
+        component: SongNameSearch,
         props:true
       }
     ]

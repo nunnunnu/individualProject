@@ -25,6 +25,7 @@ public class ArtistSongVO {
     private AlbumInfoVO album;
     private Integer like;
     private String movie;
+    private String lyrics;
 
     public ArtistSongVO(SongInfoEntity song, String uri){
         this.seq = song.getSiSeq();
@@ -37,6 +38,7 @@ public class ArtistSongVO {
         this.album = new AlbumInfoVO(song.getAlbum());
         this.like = song.getLikes().size();
         this.movie = song.getSiMovie();
+        this.lyrics = song.getSiLyrics();
     }
 
     

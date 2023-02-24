@@ -43,11 +43,10 @@
       }
     },
     methods:{
-      searchClick(key){
-        console.log(key)
+      searchClick(keyword){
         this.$router.push({
           name: "searchPage",
-          params: { key: key },
+          params: { key: keyword },
         });
       }
     }

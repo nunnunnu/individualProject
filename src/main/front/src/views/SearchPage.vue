@@ -2,11 +2,11 @@
     <b-container>
             <div>
                 <nav class="router_area">
-                    <router-link to="/search">통합검색</router-link>
-                    <!-- <router-link :to="`/artist/channel${this.seq}/songList`">곡</router-link>
-                    <router-link :to="`/artist/channel${this.seq}/albumList`">아티스트</router-link>
+                  <router-link :to="{name:'totalSearch', params:{key:this.keyword}}">통합검색</router-link>
+                    <!-- <router-link :to="{name:'songNameSearch', params:{key:this.keyword}}">곡제목 검색</router-link> -->
+                    <!-- <router-link :to="`/artist/channel${this.seq}/albumList`">아티스트</router-link>
                     <router-link :to="`/artist/channel${this.seq}/albumList`">앨범</router-link>
-                    <router-link :to="`/artist/channel${this.seq}/albumList`">가사</router-link> -->
+                    <router-link :to="`/artist/channel${this.seq}/albumList`">가사</router-link>  -->
                 </nav>
             </div>
             <router-view />
@@ -16,7 +16,14 @@
     import axios from 'axios'
     export default {
         name: 'searchPage',
-        
+        data(){
+          return{
+            keyword:null
+          }
+        },
+        created(){
+          this.keyword = this.$route.params.key;
+        }
         
     }
 </script>

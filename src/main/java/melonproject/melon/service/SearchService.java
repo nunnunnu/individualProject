@@ -5,6 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -56,6 +59,20 @@ public class SearchService {
         map.put("songLyrics", songLyricsVO);
         map.put("albums", albumsVO);
         map.put("artist", artistVO);
+        return map;
+    }
+
+    public Map<String, Object> searchSongName(String keyword, Pageable page){
+        Map<String, Object> map = new LinkedHashMap<>();
+        Page<SongInfoEntity> songs = songRepo.findBySiNameContains(keyword, page);
+        Page<ArtistSongVO> songNameVO = songs.map(
+            s->new ArtistSongVO(s,
+            sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
+
+            map.put("status", false);
+            map.put("message", "조회성공");
+            map.put("code", HttpStatus.OK);
+            map.put("data", songNameVO);
         return map;
     }
 }

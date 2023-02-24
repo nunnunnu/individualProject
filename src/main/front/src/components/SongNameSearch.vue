@@ -16,7 +16,7 @@
             </thead>
             <tbody>
                 <tr v-for="(item, index) in songName" :key="item.seq">
-                    <th scope="row">{{ index+1 }}</th>
+                    <th scope="row">{{ currentPage*size+(index+1) }}</th>
                     <td align="left">
                         <span v-if="item.title" class="badge text-bg-primary">title</span>
                         <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
@@ -77,94 +77,37 @@
                 </tr>
             </tbody>
         </table>
-        <div align="right">
-            <router-link :to="{name:'songNameSearch', params:{key:this.childKeyword}}">곡 명으로 검색 전체 보기 ></router-link>
-        </div>
-        <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">아티스트 명으로 검색</h4>
-        <div class="artists">
-            <tr v-for="art in artist" :key="art.seq">
-                <!-- <div class="col"> -->
-                <div class="card">
-                    <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
-                    <div class="card-body">
-                        <p class="card-title">{{art.name}}</p>
-                        <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a>
-                    </div>
-                </div>
+        <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a v-if="currentPage==0" class="page-link">Previous</a>
+        </li>
+        <a v-if="currentPage!=0" class="page-link" @click="prePage()">Previous</a>
+            <tr v-for="page in totalPage" :key="page">
+                <li class="page-item">
+                    <a class="page-link" @click="pageClick(page-1)">{{ page }}</a>
+                </li>
             </tr>
-        </div>
-        <p align="right">아티스트 이름 검색 전체 보기 ></p>
-        <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">가사로 검색</h4>
-        <tr v-for="song in songLyrics" :key="song.seq">
-        <div align="left">
-                <router-link :to="{name:'songDetail', params:{seq:song.seq}}">{{ song.name }}</router-link>
-                <br>
-                <router-link :to="{name:'songDetail', params:{seq:song.seq}}">{{ this.stringFind(song.lyrics) }}
-                </router-link>
-                <div>
-                <tr v-for="art in song.artist" :key="art.seq">
-                    <router-link :to="{name:'artistChannel', params:{seq:art.seq}}" style="font-size:12px">
-                        {{ art.name }}</router-link>
-                </tr>
-                </div >
-                <router-link :to="{name:'albumDetail', params:{seq:song.album.seq}}" style="font-size:12px">
-                    {{ song.album.name }}</router-link>
-                </div>
-            <hr>
-        </tr>
-        <p align="right">가사 검색 전체 보기 ></p>
-        <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">앨범 명으로 검색</h4>
-        <div class="albums">
-            <tr v-for="data in albums" :key="data.seq">
-                <div class="card mb-3" style="max-width: 423px;">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img :src="`http://localhost:8250/image/album/${data.uri}`"
-                                style="max-width: 100%; height: auto;" align="right" class="rounded float-start">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-
-                                <h6 class="card-title">{{ data.name }}</h6>
-                                <!-- <router-link :to="{name:'artistChannel', params:{seq:data.artistSeq}}"
-                                    style="font-size:15px">{{ data.artistName }}</router-link> -->
-                                <!-- <br>
-                                <br> -->
-                                <!-- <div class="row"> -->
-                                <!-- <div class="col-5" align="center">
-                                        <p class="card-text"><small class="text-muted">{{ data.regDt }}</small></p>
-                                    </div>
-                                    <div class="col-3" align="center">
-                                        <p class="card-text"><small class="text-muted">{{ data.songCount }}곡</small></p>
-                                    </div>
-                                    <div class="col-4" align="center">
-                                        <p class="card-text"><small class="text-muted">[{{ data.type }}]</small></p>
-                                    </div> -->
-                                <!-- </div> -->
-                                <!-- <br> -->
-                                <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
-                                    상세보기</router-link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </tr>
-        </div>
-        <p align="right">앨범 검색 전체 보기 ></p>
+            <li v-if="currentPage+1==totalPage" class="page-item disabled">
+            <a class="page-link">Next</a>
+            </li>
+            <li v-if="currentPage+1!=totalPage" class="page-item">
+            <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
     </b-container>
 </template>
 <script>
     import axios from 'axios'
     export default {
-        name: 'totalSearch',
+        name: 'songNameSearch',
         // props : ['key'],
         data() {
             return {
-                songName: null,
-                songLyrics: null,
-                albums: null,
-                artist: null,
-                childKeyword: null
+                data:null,
+                childKeyword: null,
+                currentPage: 0,
+                totalPage: 0,
+                size: 0
             }
         },
         created() {
@@ -174,20 +117,13 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/total?keyword=" + this.childKeyword)
+                axios.get("http://localhost:8250/search/songName?keyword=" + this.childKeyword)
                     .then((e) => {
-                        this.songName = e.data.songName
-                        this.songLyrics = e.data.songLyrics
-                        console.log(this.songLyrics)
-                        this.albums = e.data.albums
-                        this.artist = e.data.artist
+                        this.data = e.data.data
+                        console.log(this.data)
+                        this.totalPage=e.data.data.totalPages
+                        this.size=e.data.data.size        
                     })
-            },
-            stringFind(lyrics) {
-                console.log(this.childKeyword)
-                var pos = lyrics.indexOf(this.childKeyword);
-                console.log(pos)
-                return lyrics.substr(pos, 200)+'...'
             }
         }
     }
