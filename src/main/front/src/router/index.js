@@ -13,6 +13,8 @@ import TotalSearch from '../components/TotalSearchPage.vue'
 import searchPage from '../views/SearchPage.vue'
 import SongNameSearch from '../components/SongNameSearch.vue'
 import ArtistNameSearch from '../components/SearchArtistName.vue'
+import SongLyricsSearch from '../components/SearchSongLyrics.vue'
+import AlbumNameSearch from '../components/SearchAlbumName.vue'
 
 const routes = [
   {
@@ -96,6 +98,18 @@ const routes = [
         path: '/search/artistname:key',
         name: 'searchArtistName',
         component: ArtistNameSearch,
+        props:true
+      },
+      {
+        path: '/search/songlyrics:key',
+        name: 'searchSongLyrics',
+        component: SongLyricsSearch,
+        props:true
+      },
+      {
+        path: '/search/albumName:key',
+        name: 'searchAlbumName',
+        component: AlbumNameSearch,
         props:true
       }
     ]

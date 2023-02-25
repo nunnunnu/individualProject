@@ -71,7 +71,7 @@ public class SearchService {
             s->new ArtistSongVO(s,
             sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
 
-            map.put("status", false);
+            map.put("status", true);
             map.put("message", "조회성공");
             map.put("code", HttpStatus.OK);
             map.put("data", songNameVO);
@@ -84,11 +84,39 @@ public class SearchService {
         Page<ArtistChannelVO> artisNameVO = entity.map(
             s-> new ArtistChannelVO(s));
             
-        map.put("status", false);
+        map.put("status", true);
         map.put("message", "조회성공");
         map.put("code", HttpStatus.OK);
         map.put("data", artisNameVO);
 
+        return map;
+    }
+
+    public Map<String, Object> songLyricsSearch(String keyword, Pageable page){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        Page<SongInfoEntity> songs = songRepo.findBySiLyricsContains(keyword, page);
+        Page<ArtistSongVO> songLyricsVO = songs.map(
+            s-> new ArtistSongVO(s, sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
+
+        map.put("status", true);
+        map.put("message", "조회성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", songLyricsVO);
+        return map;
+    }
+
+    public Map<String, Object> albumSearch(String keyword, Pageable page){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        Page<AlbumInfoEntity> albums = albumRepo.findByAlbumNameContains(keyword, page);
+        Page<AlbumInfoVO> albumVO = albums.map(
+            s-> new AlbumInfoVO(s));
+
+        map.put("status", true);
+        map.put("message", "조회성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", albumVO);
         return map;
     }
 }

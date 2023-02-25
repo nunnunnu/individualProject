@@ -1,23 +1,23 @@
 <template>
     <b-container>
-        <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">곡 명으로 검색</h4>
-        <div class="artists">
-            <tr v-for="data in data" :key="data.seq">
-                <div class="card">
-                    <img :src="`http://localhost:8250/image/artist/${data.uri}`"
-                                style="max-width: 100%; height: 240px;" align="right" class="rounded float-start">
-                    <div class="card-body">
-                    <router-link :to="{name:'artistChannel', params:{seq:data.seq}}"
-                                    style="font-size:15px"><span v-html="keywordTag(data.name)"></span></router-link>
-                    <p class="card-text"><small class="text-muted">{{ data.debut }}</small></p>
-                    <p class="card-text"><small class="text-muted">{{ data.agency }}</small></p>
-                    <p class="card-text"><small class="text-muted">[{{ data.type }}]</small></p>
-                    <router-link :to="{name:'artistChannel', params:{seq:data.seq}}" style="font-size:15px">
-                                    상세보기</router-link>
-                    </div>
+        <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">가사로 검색</h4>
+        <tr v-for="song in data" :key="song.seq">
+        <div align="left">
+                <router-link :to="{name:'songDetail', params:{seq:song.seq}}">{{ song.name }}</router-link>
+                <br>
+                <router-link :to="{name:'songDetail', params:{seq:song.seq}}"><div v-html="stringFind(song.lyrics)"></div>
+                </router-link>
+                <div>
+                <tr v-for="art in song.artist" :key="art.seq">
+                    <router-link :to="{name:'artistChannel', params:{seq:art.seq}}" style="font-size:12px">
+                        {{ art.name }}</router-link>
+                </tr>
+                </div >
+                <router-link :to="{name:'albumDetail', params:{seq:song.album.seq}}" style="font-size:12px">
+                    {{ song.album.name }}</router-link>
                 </div>
-            </tr>
-        </div>
+            <hr>
+        </tr>
         <br>
         <ul class="pagination justify-content-center">
         <li class="page-item disabled">
@@ -44,7 +44,7 @@
 <script>
     import axios from 'axios'
     export default {
-        name: 'searchArtistName',
+        name: 'searchSongLyrics',
         // props : ['key'],
         data() {
             return {
@@ -62,8 +62,9 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/artistName?keyword=" + this.childKeyword+"&page="+this.currentPage)
+                axios.get("http://localhost:8250/search/songLyrics?keyword=" + this.childKeyword+"&page="+this.currentPage)
                     .then((e) => {
+                        console.log(e)
                         this.data = e.data.data.content
                         console.log(this.data)
                         this.totalPage=e.data.data.totalPages
@@ -78,8 +79,12 @@
                 this.currentPage = this.currentPage-1
                 this.loadPage()
             },
-            keywordTag(str){
-                return str.replace(new RegExp(this.childKeyword, 'gi'), match => `<span class="highlight">${match}</span>`)
+            stringFind(lyrics) {
+                console.log(this.childKeyword)
+                var pos = lyrics.indexOf(this.childKeyword);
+                console.log(pos)
+                var subLyrics = lyrics.substr(pos, 200)+'...'
+                return subLyrics.replace(new RegExp(this.childKeyword, 'gi'), match => `<span class="highlight">${match}</span>`)
             }
         }
     }

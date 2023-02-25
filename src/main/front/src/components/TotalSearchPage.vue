@@ -117,7 +117,9 @@
                 </div>
             <hr>
         </tr>
-        <p align="right">가사 검색 전체 보기 ></p>
+        <div align="right">
+            <router-link :to="{name:'searchSongLyrics', params:{key:this.childKeyword}}">가사검색 전체 보기 ></router-link>
+        </div>
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">앨범 명으로 검색</h4>
         <div class="albums">
             <tr v-for="data in albums" :key="data.seq">
@@ -155,7 +157,10 @@
                 </div>
             </tr>
         </div>
-        <p align="right">앨범 검색 전체 보기 ></p>
+        <div align="right">
+            <router-link :to="{name:'searchAlbumName', params:{key:this.childKeyword}}">앨범 검색 전체 보기 ></router-link>
+        </div>
+        <br>
     </b-container>
 </template>
 <script>

@@ -28,5 +28,7 @@ public interface AlbumInfoRepository extends JpaRepository<AlbumInfoEntity, Long
     List<AlbumInfoEntity> findTop2ByOrderByAlbumRegDtDesc();
 
     List<AlbumInfoEntity> findTop10ByAlbumNameContains(String keyword);
+
+    Page<AlbumInfoEntity> findByAlbumNameContains(String keyword, Pageable page);
     
 }

@@ -5,8 +5,8 @@
                   <router-link :to="{name:'totalSearch', params:{key:this.keyword}}">통합검색</router-link>
                   <router-link :to="{name:'songNameSearch', params:{key:this.keyword}}">곡제목</router-link>
                     <router-link :to="{name:'searchArtistName', params:{key:this.keyword}}">아티스트</router-link>
-                    <!-- <router-link :to="`/artist/channel${this.seq}/albumList`">앨범</router-link>
-                    <router-link :to="`/artist/channel${this.seq}/albumList`">가사</router-link>  -->
+                    <router-link :to="{name:'searchSongLyrics', params:{key:this.keyword}}">가사</router-link>
+                    <router-link :to="{name:'searchAlbumName', params:{key:this.keyword}}">앨범</router-link>
                 </nav>
             </div>
             <router-view />

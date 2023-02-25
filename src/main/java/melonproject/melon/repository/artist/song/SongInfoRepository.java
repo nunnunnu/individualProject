@@ -24,5 +24,7 @@ public interface SongInfoRepository extends JpaRepository<SongInfoEntity, Long>{
 
     Page<SongInfoEntity> findBySiNameContains(String keyword, Pageable page);
 
+    Page<SongInfoEntity> findBySiLyricsContains(String keyword, Pageable page);
+
     
 }
