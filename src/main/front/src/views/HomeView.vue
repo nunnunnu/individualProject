@@ -96,6 +96,7 @@
     },
     created() {
       this.loadNewAlbum()
+      this.loadWeeklyChart()
     },
     methods: {
       loadNewAlbum() {
@@ -117,6 +118,28 @@
             seq: albumSeq
           }
         })
+      },
+      loadWeeklyChart(){
+        let today = new Date();
+
+        // 저번 주 월요일 구하기
+        let monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() - 6);
+
+        // 결과 출력
+        console.log(monday)
+        const year = monday.getFullYear()
+        const tmp = monday.getMonth()+1
+        const tmp2 = monday.getDate()
+        const month = tmp<10?'0'+tmp:tmp
+        const days= tmp2<10?'0'+tmp2:tmp2
+        console.log(year)
+        console.log(month)
+        console.log(days)
+
+        axios.get("http://dev.guyso.me/api/v3/chart/melon/weekly/20230213")
+        .then((e) => {
+            console.log(e)
+          })
       }
     }
   }
