@@ -112,6 +112,11 @@
   import router from '@/router'
   import Cookies from 'js-cookie'
   import axios from 'axios'
+
+//   const api = axios.create({
+//   baseURL: 'http://localhost:8250/',
+//   withCredentials: true, // 쿠키를 전송하기 위해 withCredentials를 true로 설정합니다.
+// });
   export default {
     // name: 'main',
     data() {
@@ -126,7 +131,7 @@
       this.loadWeeklyChart()
       if (Cookies.get('accessToken') != null) {
         this.isLogin = true
-        this.loadUserInfo()
+        this.loadUserInfo(Cookies.get('accessToken'))
       } else {
         this.isLogin = false
       }
@@ -181,11 +186,11 @@
         this.loadWeeklyChart()
         this.isLogin = false
       },
-      loadUserInfo(){
+      loadUserInfo(token){
         axios.get("http://localhost:8250/myInfo",
           {
             headers:{headers: {
-                Authorization: `Bearer ${Cookies.get('accessToken')}`
+                Authorization: 'Bearer ' + token
             }}
           }
         )
