@@ -19,6 +19,9 @@
               <li class="nav-item">
                 <router-link to="/song/new">최신 음악</router-link>
               </li>
+              <li class="nav-item">
+                <!-- <router-link :to="{name:'loginPage', params:{url:this.$router}}">로그인</router-link> -->
+              </li>
             </ul>
             <!-- <form class="d-flex" role="search"> -->
               <div class="row">
@@ -69,10 +72,10 @@
 
   nav a {
     font-weight: bold;
-    color: #2c3e50;
+    color: #000000;
   }
 
   nav a.router-link-exact-active {
-    color: #87fff5;
+    color: #097d11;
   }
 </style>

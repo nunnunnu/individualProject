@@ -15,6 +15,8 @@ import SongNameSearch from '../components/SongNameSearch.vue'
 import ArtistNameSearch from '../components/SearchArtistName.vue'
 import SongLyricsSearch from '../components/SearchSongLyrics.vue'
 import AlbumNameSearch from '../components/SearchAlbumName.vue'
+import LoginPage from '../views/Login.vue'
+import JoinMember from '../components/MemberJoinPage.vue'
 
 const routes = [
   {
@@ -113,6 +115,16 @@ const routes = [
         props:true
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'loginPage',
+    component: LoginPage,
+  },
+  {
+    path: '/join',
+    name: 'joinPage',
+    component: JoinMember,
   }
 ]
 

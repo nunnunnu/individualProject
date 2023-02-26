@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.MemberService;
+import melonproject.melon.vo.Member.LoginVO;
 import melonproject.melon.vo.Member.MemberJoinVO;
 
 @RestController
@@ -23,6 +24,13 @@ public class MemberController {
     public ResponseEntity<Object> memberJoin(@RequestBody MemberJoinVO data) throws Exception{
         Map<String, Object> map = mService.memberJoin(data);
 
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @PostMapping("/login")
+    public ResponseEntity<Object> memberLogin(@RequestBody LoginVO data) throws Exception{
+        System.out.println(data);
+        Map<String, Object> map = mService.login(data);
+    
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
 }

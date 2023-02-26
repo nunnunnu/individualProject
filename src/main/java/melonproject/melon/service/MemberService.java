@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.repository.user.MemberInfoRepository;
+import melonproject.melon.security.provider.JwtTokenProvider;
 import melonproject.melon.util.AESAlgorithm;
 import melonproject.melon.vo.Member.LoginVO;
 import melonproject.melon.vo.Member.MemberJoinVO;
@@ -24,6 +25,7 @@ import melonproject.melon.vo.Member.MemberJoinVO;
 public class MemberService {
     private final MemberInfoRepository mRepo;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
     public Map<String, Object> memberJoin(MemberJoinVO data) throws Exception{
@@ -61,6 +63,12 @@ public class MemberService {
     @Transactional
     public Map<String, Object> login(LoginVO login) throws Exception{
         Map<String, Object> map = new LinkedHashMap<>();
+        if(!hasText(login.getId()) || !hasText(login.getPwd())){
+            map.put("status", false);
+            map.put("message", "아이디와 비밀번호 모두 입력해주세요.");
+            map.put("code", HttpStatus.UNAUTHORIZED);
+            return map;
+        }
 
         login.setPwd(AESAlgorithm.Encrypt(login.getPwd()));
         MemberInfoEntity member = mRepo.findByMiIdAndMiPwd(login.getId(), login.getPwd());
@@ -76,11 +84,14 @@ public class MemberService {
             return map;
         }
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(member.getMiId(), member.getMiPwd());
-    
+        new UsernamePasswordAuthenticationToken(member.getMiId(), member.getMiPwd());
+        
         Authentication authentication =
-                authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-    
+        authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        map.put("status", true);
+        map.put("message", "성공");
+        map.put("code", HttpStatus.OK);
+        map.put("token", jwtTokenProvider.generateToken(authentication));
 
         return map;
     }

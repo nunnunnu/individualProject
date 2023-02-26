@@ -1,12 +1,26 @@
 <template>
-
   <b-container>
-
-    <div class="p-4 p-md-3 mb-4">
-      <div class="col-md-6 px-0">
+    <br>
+    <div class="row">
+      <div class="col-8 p-4">
+        <h1 align="left">Water Melon</h1>
+      </div>
+      <div v-if="!this.isLogin" class="col-4 p-5" style="background-color:#f2f2f2; border:1px solid gainsboro;">
+          <div class="d-grid gap-2 col-6 mx-auto">
+            <router-link to="/join" align="right">회원가입 ></router-link>
+            <!-- <a align="right">회원가입 ></a> -->
+            <button type="submit" class="btn btn-success" @click="loginPush">로그인</button>
+          </div>
+        </div>
+      </div>
+    <!-- <div class="p-4 p-md-3 mb-4">
+      <div class="col-md-4 px-0">
         <h1 class="display-4 fst-italic">Water Melon</h1>
       </div>
-    </div>
+      <div class="col-md-15 px-0">
+        <button type="submit" class="btn btn-success">로그인</button>
+      </div>
+    </div> -->
     <div align="left" style="font-size: 25px">
       <router-link to="/album/new">최신 앨범 > </router-link>
     </div>
@@ -85,18 +99,26 @@
 </template>
 
 <script>
-  import axios from 'axios'
+  import router from '@/router'
+  import Cookies from 'js-cookie'
+import axios from 'axios'
   export default {
     // name: 'main',
     data() {
       return {
-        newAlbumList: null
+        newAlbumList: null,
+        isLogin:null
 
       }
     },
     created() {
       this.loadNewAlbum()
       this.loadWeeklyChart()
+      if(Cookies.get('accessToken')!=null){
+        this.isLogin=true
+      }else{
+        this.isLogin=false
+      }
     },
     methods: {
       loadNewAlbum() {
@@ -132,14 +154,14 @@
         const tmp2 = monday.getDate()
         const month = tmp<10?'0'+tmp:tmp
         const days= tmp2<10?'0'+tmp2:tmp2
-        console.log(year)
-        console.log(month)
-        console.log(days)
 
-        axios.get("http://dev.guyso.me/api/v3/chart/melon/weekly/20230213")
-        .then((e) => {
-            console.log(e)
-          })
+        // axios.get("http://dev.guyso.me/api/v3/chart/melon/weekly/20230213")
+        // .then((e) => {
+        //     console.log(e)
+        //   })
+      },
+      loginPush(){
+        this.$router.push("/login")
       }
     }
   }
