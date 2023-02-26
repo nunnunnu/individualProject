@@ -16,7 +16,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="album_grade")
+@Table(name="ticket_info")
 public class TicketInfoEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="ti_seq") private Long tiSeq;
@@ -24,4 +24,6 @@ public class TicketInfoEntity {
     @Column(name="ti_down") private Integer tiDown;
     @Column(name="ti_streaming") private Integer tiStreaming;
     @Column(name="ti_term") private Integer tiTerm;
+    @Column(name="ti_name") private String name;
+
 }

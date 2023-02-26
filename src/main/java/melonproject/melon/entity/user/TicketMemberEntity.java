@@ -24,7 +24,7 @@ import melonproject.melon.entity.info.TicketInfoEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="album_grade")
+@Table(name="ticket_member")
 public class TicketMemberEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="tm_seq") private Long tmSeq;

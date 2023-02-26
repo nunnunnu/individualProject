@@ -2,6 +2,7 @@ package melonproject.melon.service;
 
 import static org.springframework.util.StringUtils.hasText;
 
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -10,15 +11,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.user.MemberInfoEntity;
+import melonproject.melon.entity.user.TicketMemberEntity;
 import melonproject.melon.repository.user.MemberInfoRepository;
+import melonproject.melon.repository.user.TicketMemberRepository;
 import melonproject.melon.security.provider.JwtTokenProvider;
 import melonproject.melon.util.AESAlgorithm;
 import melonproject.melon.vo.Member.LoginVO;
+import melonproject.melon.vo.Member.MemberInfo;
 import melonproject.melon.vo.Member.MemberJoinVO;
 
 @Service
@@ -27,6 +32,7 @@ public class MemberService {
     private final MemberInfoRepository mRepo;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final TicketMemberRepository tmRepo;
 
     @Transactional
     public Map<String, Object> memberJoin(MemberJoinVO data) throws Exception{
@@ -143,4 +149,25 @@ public class MemberService {
 
         return map;
     }
+
+    public Map<String, Object> findUser(UserDetails userDetail) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findByMiId(userDetail.getUsername());
+        if(member==null){
+            map.put("status", false);
+            map.put("message", "토큰정보 에러같음??");
+            map.put("code", HttpStatus.OK);
+            return map;
+        }
+        LocalDate start = LocalDate.now().withDayOfMonth(1);     
+        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());  
+        TicketMemberEntity ticket = tmRepo.findByMemberAndTmRegDtBetween(member, start, end);
+        MemberInfo result = new MemberInfo(member, ticket);
+        map.put("status", true);
+        map.put("message", "성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", result);
+        return map;
+    }
+
 }

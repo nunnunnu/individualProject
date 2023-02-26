@@ -117,8 +117,8 @@
     data() {
       return {
         newAlbumList: null,
-        isLogin: null
-
+        isLogin: null,
+        user : null
       }
     },
     created() {
@@ -126,6 +126,7 @@
       this.loadWeeklyChart()
       if (Cookies.get('accessToken') != null) {
         this.isLogin = true
+        this.loadUserInfo()
       } else {
         this.isLogin = false
       }
@@ -179,6 +180,18 @@
         this.loadNewAlbum();
         this.loadWeeklyChart()
         this.isLogin = false
+      },
+      loadUserInfo(){
+        axios.get("http://localhost:8250/myInfo",
+          {
+            headers:{headers: {
+                Authorization: `Bearer ${Cookies.get('accessToken')}`
+            }}
+          }
+        )
+          .then((e) => {
+            this.user = e.data.data
+          })
       }
     }
   }
