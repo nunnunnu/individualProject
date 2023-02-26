@@ -21,4 +21,5 @@ public class MemberJoinVO {
     private String email;
     private LocalDate birth;
     private LocalDateTime regDt;
+    private String nickName;
 }

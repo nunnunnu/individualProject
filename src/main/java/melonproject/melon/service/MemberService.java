@@ -4,6 +4,7 @@ import static org.springframework.util.StringUtils.hasText;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -30,18 +31,43 @@ public class MemberService {
     @Transactional
     public Map<String, Object> memberJoin(MemberJoinVO data) throws Exception{
         Map<String, Object> map = new LinkedHashMap<>();
-        
+        String emailPattern = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        String phonePattern = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
+        String passwordPattern = "^[a-zA-Z\\d`~!@#$%^&*()-_=+]{6,}$";
         if(!hasText(data.getId()) || !hasText(data.getPwd())){
             map.put("status", false);
             map.put("message", "아이디 혹은 비밀번호 누락");
-            map.put("code", HttpStatus.BAD_GATEWAY);
+            map.put("code", HttpStatus.OK);
             return map;
         }
-        
+        if(!hasText(data.getNickName())){
+            map.put("status", false);
+            map.put("message", "닉네임을 입력하지 않으셨습니다.");
+            map.put("code", HttpStatus.OK);
+            return map;
+        }
+        if(!Pattern.matches(passwordPattern, data.getPwd())){ //공백없이 특수문자 가능 6자리 이상
+            map.put("status", false);
+            map.put("message", "비밀번호는 공백없이 6자리 이상 가능합니다.");
+            map.put("code", HttpStatus.OK);
+            return map;
+        }
+        if(data.getEmail()!=null && !Pattern.matches(emailPattern, data.getEmail())){
+            map.put("status", false);
+            map.put("message", "올바른 이메일 형식이 아닙니다. 이메일을 다시 확인해주세요.");
+            map.put("code", HttpStatus.OK);
+            return map;
+        }
+        if(data.getPhone()!=null && !Pattern.matches(phonePattern, data.getPhone())){
+            map.put("status", false);
+            map.put("message", "올바른 전화번호 형식이 아닙니다. 번호를 다시 확인해주세요.");
+            map.put("code", HttpStatus.OK);
+            return map;
+        }
         if(mRepo.countByMiId(data.getId())>=1){
             map.put("status", false);
             map.put("message", "이미 가입된 아이디입니다.");
-            map.put("code", HttpStatus.BAD_GATEWAY);
+            map.put("code", HttpStatus.OK);
             return map;
         }
         MemberInfoEntity member = MemberInfoEntity.builder().miId(data.getId())
@@ -55,7 +81,7 @@ public class MemberService {
                         .build();
         mRepo.save(member);
         map.put("status", true);
-        map.put("message", "성공.");
+        map.put("message", "회원가입 완료. 로그인페이지로 이동합니다.");
         map.put("code", HttpStatus.OK);
         return map;
     }
@@ -63,6 +89,7 @@ public class MemberService {
     @Transactional
     public Map<String, Object> login(LoginVO login) throws Exception{
         Map<String, Object> map = new LinkedHashMap<>();
+        
         if(!hasText(login.getId()) || !hasText(login.getPwd())){
             map.put("status", false);
             map.put("message", "아이디와 비밀번호 모두 입력해주세요.");
@@ -89,9 +116,30 @@ public class MemberService {
         Authentication authentication =
         authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         map.put("status", true);
-        map.put("message", "성공");
+        map.put("message", "로그인 완료");
         map.put("code", HttpStatus.OK);
         map.put("token", jwtTokenProvider.generateToken(authentication));
+
+        return map;
+    }
+
+    public Map<String, Object> isDuplicate(String id) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        if(!hasText(id)){
+            map.put("status", false);
+            map.put("message", "아이디를 입력하지 않으셨습니다.");
+            map.put("code", HttpStatus.OK);
+            return map;
+        }
+        if(mRepo.countByMiId(id)>=1){
+            map.put("status", false);
+            map.put("message", "중복 아이디입니다.");
+            map.put("code", HttpStatus.OK);
+            return map;    
+        }
+        map.put("status", true);
+        map.put("message", "사용가능한 아이디입니다.");
+        map.put("code", HttpStatus.OK);
 
         return map;
     }

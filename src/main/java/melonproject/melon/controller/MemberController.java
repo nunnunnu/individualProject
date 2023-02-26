@@ -4,9 +4,11 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class MemberController {
 
     @PostMapping("/join")
     public ResponseEntity<Object> memberJoin(@RequestBody MemberJoinVO data) throws Exception{
+        System.out.println(data);
         Map<String, Object> map = mService.memberJoin(data);
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
@@ -31,6 +34,12 @@ public class MemberController {
         System.out.println(data);
         Map<String, Object> map = mService.login(data);
     
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @GetMapping("/id")
+    public ResponseEntity<Object> duplicate(@RequestParam String id){
+        Map<String, Object> map = mService.isDuplicate(id);
+        
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
 }

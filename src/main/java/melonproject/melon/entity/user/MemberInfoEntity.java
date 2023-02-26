@@ -38,6 +38,7 @@ public class MemberInfoEntity {
     @Column(name="mi_reg_dt") private LocalDateTime miRegDt;
     @Column(name="mi_role") private String miRole;
     @Column(name="mi_status") private Integer miStatus;
+    @Column(name="mi_nickname") private String miNickName;
 
     public boolean isEnabled() {
         return this.miStatus==1?true:false;

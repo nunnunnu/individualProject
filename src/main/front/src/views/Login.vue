@@ -46,7 +46,11 @@
                         const token = response.data.token
                         Cookies.set('accessToken', token.accessToken)
                         Cookies.set('refreshToken', token.refreshToken)
-                        this.$router.go(-1);
+                        if(Cookies.get('beforePage')!=null){
+                            this.$router.push("/");
+                        }else{
+                            this.$router.go(-1);
+                        }
                     })
                     .catch(error => {
                         alert(error.response.data.message);

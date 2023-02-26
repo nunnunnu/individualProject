@@ -6,13 +6,22 @@
         <h1 align="left">Water Melon</h1>
       </div>
       <div v-if="!this.isLogin" class="col-4 p-5" style="background-color:#f2f2f2; border:1px solid gainsboro;">
-          <div class="d-grid gap-2 col-6 mx-auto">
-            <router-link to="/join" align="right">회원가입 ></router-link>
-            <!-- <a align="right">회원가입 ></a> -->
-            <button type="submit" class="btn btn-success" @click="loginPush">로그인</button>
-          </div>
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <router-link to="/join" align="right">회원가입 ></router-link>
+          <!-- <a align="right">회원가입 ></a> -->
+          <button type="submit" class="btn btn-success" @click="loginPush">로그인</button>
         </div>
       </div>
+      <div v-if="this.isLogin" class="col-4 p-5" style="background-color:#f2f2f2; border:1px solid gainsboro;">
+        <div class="d-grid gap-2 col-6 mx-auto">
+          <p></p>
+          <p>마이페이지</p>
+          <!-- <router-link to="/join" align="right">회원가입 ></router-link> -->
+          <!-- <a align="right">회원가입 ></a> -->
+          <!-- <button type="submit" class="btn btn-success" @click="loginPush">로그인</button> -->
+        </div>
+      </div>
+    </div>
     <!-- <div class="p-4 p-md-3 mb-4">
       <div class="col-md-4 px-0">
         <h1 class="display-4 fst-italic">Water Melon</h1>
@@ -24,23 +33,23 @@
     <div align="left" style="font-size: 25px">
       <router-link to="/album/new">최신 앨범 > </router-link>
     </div>
-      <div class="row">
-        <div class="col-6">
+    <div class="row">
+      <div class="col-6">
         <tr v-for="item in newAlbumList" :key="item.seq">
-              <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                  <strong class="d-inline-block mb-2 text-success">신규앨범</strong>
-                  <h3 class="mb-0">{{item.name}}</h3>
-                  <div class="mb-1 text-muted">{{item.regDt}}</div>
-                  <router-link :to="{name:'albumDetail', params:{seq:item.seq}}">상세보기</router-link>
-                </div>
-                <div class="col-auto d-none d-lg-block">
-                  <img :src="`${item.uri}`" width="250" height="250">
-                </div>
-              </div>
-            </tr>
+          <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col p-4 d-flex flex-column position-static">
+              <strong class="d-inline-block mb-2 text-success">신규앨범</strong>
+              <h3 class="mb-0">{{item.name}}</h3>
+              <div class="mb-1 text-muted">{{item.regDt}}</div>
+              <router-link :to="{name:'albumDetail', params:{seq:item.seq}}">상세보기</router-link>
+            </div>
+            <div class="col-auto d-none d-lg-block">
+              <img :src="`${item.uri}`" width="250" height="250">
+            </div>
           </div>
+        </tr>
       </div>
+    </div>
     <div class="row g-5">
       <div class="col-md-8">
         <h3 class="pb-4 mb-4 fst-italic border-bottom">
@@ -101,23 +110,23 @@
 <script>
   import router from '@/router'
   import Cookies from 'js-cookie'
-import axios from 'axios'
+  import axios from 'axios'
   export default {
     // name: 'main',
     data() {
       return {
         newAlbumList: null,
-        isLogin:null
+        isLogin: null
 
       }
     },
     created() {
       this.loadNewAlbum()
       this.loadWeeklyChart()
-      if(Cookies.get('accessToken')!=null){
-        this.isLogin=true
-      }else{
-        this.isLogin=false
+      if (Cookies.get('accessToken') != null) {
+        this.isLogin = true
+      } else {
+        this.isLogin = false
       }
     },
     methods: {
@@ -141,7 +150,7 @@ import axios from 'axios'
           }
         })
       },
-      loadWeeklyChart(){
+      loadWeeklyChart() {
         let today = new Date();
 
         // 저번 주 월요일 구하기
@@ -150,17 +159,17 @@ import axios from 'axios'
         // 결과 출력
         console.log(monday)
         const year = monday.getFullYear()
-        const tmp = monday.getMonth()+1
+        const tmp = monday.getMonth() + 1
         const tmp2 = monday.getDate()
-        const month = tmp<10?'0'+tmp:tmp
-        const days= tmp2<10?'0'+tmp2:tmp2
+        const month = tmp < 10 ? '0' + tmp : tmp
+        const days = tmp2 < 10 ? '0' + tmp2 : tmp2
 
         // axios.get("http://dev.guyso.me/api/v3/chart/melon/weekly/20230213")
         // .then((e) => {
         //     console.log(e)
         //   })
       },
-      loginPush(){
+      loginPush() {
         this.$router.push("/login")
       }
     }
@@ -239,8 +248,15 @@ import axios from 'axios'
       transform: rotate(360deg)
     }
   }
-  a{text-decoration:none; color: black}
+
+  a {
+    text-decoration: none;
+    color: black
+  }
+
   .col-6 {
-    display: flex; float: right; width: 100%;
+    display: flex;
+    float: right;
+    width: 100%;
   }
 </style>
