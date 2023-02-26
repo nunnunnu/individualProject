@@ -13,14 +13,15 @@
         </div>
       </div>
       <div v-if="this.isLogin" class="col-4 p-5" style="background-color:#f2f2f2; border:1px solid gainsboro;">
-        <div class="d-grid gap-2 col-6 mx-auto">
+        <!-- <div class="d-grid gap-2 col-6 mx-auto"> -->
           <p></p>
           <p>마이페이지</p>
+          <button type="submit" class="btn btn-success" @click="logout">로그아웃</button>
           <!-- <router-link to="/join" align="right">회원가입 ></router-link> -->
           <!-- <a align="right">회원가입 ></a> -->
           <!-- <button type="submit" class="btn btn-success" @click="loginPush">로그인</button> -->
         </div>
-      </div>
+      <!-- </div> -->
     </div>
     <!-- <div class="p-4 p-md-3 mb-4">
       <div class="col-md-4 px-0">
@@ -171,6 +172,13 @@
       },
       loginPush() {
         this.$router.push("/login")
+      },
+      logout(){
+        Cookies.remove('refreshToken')
+        Cookies.remove('accessToken')
+        this.loadNewAlbum();
+        this.loadWeeklyChart()
+        this.isLogin = false
       }
     }
   }

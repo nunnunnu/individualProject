@@ -47,6 +47,7 @@
                         Cookies.set('accessToken', token.accessToken)
                         Cookies.set('refreshToken', token.refreshToken)
                         if(Cookies.get('beforePage')!=null){
+                            Cookies.remove('beforePage')
                             this.$router.push("/");
                         }else{
                             this.$router.go(-1);
