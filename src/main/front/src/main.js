@@ -17,3 +17,5 @@ const app = createApp(App).use(router)
 app.use(BootstrapVue3)
 app.config.globalProperties.$http = axios 
 app.mount('#app')
+
+app.config.globalProperties.$userToken = null;
