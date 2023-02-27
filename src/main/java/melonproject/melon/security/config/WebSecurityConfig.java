@@ -9,9 +9,6 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.reactive.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.security.filter.JwtAuthenticationFilter;
@@ -26,11 +23,13 @@ public class WebSecurityConfig {
     private final PermitSettings permitSettings;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.httpBasic().disable().csrf().disable()
+        http.cors().and()
+                .httpBasic().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeHttpRequests()
-                .requestMatchers(permitSettings.getPermitAllUrls()).permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers(permitSettings.getPermitAllUrls()) //원래 목록을 써야하는데 yaml에 적어놓으면 이렇게해도됨
+                .permitAll()
+                .anyRequest().authenticated() //requestMatchers~authenticated까지 중요 허용링크만 적는것이아니라 불가능한 링크만 적는거도 가능함. 순서바꾸면됨
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -38,12 +37,5 @@ public class WebSecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
-
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
     }
 }

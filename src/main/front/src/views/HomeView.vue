@@ -12,15 +12,30 @@
           <button type="submit" class="btn btn-success" @click="loginPush">로그인</button>
         </div>
       </div>
-      <div v-if="this.isLogin" class="col-4 p-5" style="background-color:#f2f2f2; border:1px solid gainsboro;">
+      <div v-if="this.isLogin && this.user!=null" class="col-4 p-4"
+        style="background-color:#f2f2f2; border:1px solid gainsboro;">
         <!-- <div class="d-grid gap-2 col-6 mx-auto"> -->
-          <p></p>
-          <p>마이페이지</p>
-          <button type="submit" class="btn btn-success" @click="logout">로그아웃</button>
-          <!-- <router-link to="/join" align="right">회원가입 ></router-link> -->
-          <!-- <a align="right">회원가입 ></a> -->
-          <!-- <button type="submit" class="btn btn-success" @click="loginPush">로그인</button> -->
+        <p></p>
+        <div class="row">
+          <div class="col-3">
+            <p>{{ user.nickname }}님</p>
+          </div>
+          <div class="col-4">
+            <p>마이페이지</p>
+          </div>
+          <div class="col-5">
+            <button type="submit" class="btn btn-success"
+            style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" @click="logout">로그아웃</button>
+          </div>
         </div>
+        <hr>
+        <div v-if="user.ticket!=null">
+          <p>{{ user.ticket }} 사용중</p>
+          <div v-if="user.ticket==null">
+            <p>현재 이용중인 이용권이 없습니다.</p>
+          </div>
+        </div>
+      </div>
       <!-- </div> -->
     </div>
     <!-- <div class="p-4 p-md-3 mb-4">
@@ -113,17 +128,17 @@
   import Cookies from 'js-cookie'
   import axios from 'axios'
 
-//   const api = axios.create({
-//   baseURL: 'http://localhost:8250/',
-//   withCredentials: true, // 쿠키를 전송하기 위해 withCredentials를 true로 설정합니다.
-// });
+  //   const api = axios.create({
+  //   baseURL: 'http://localhost:8250/',
+  //   withCredentials: true, // 쿠키를 전송하기 위해 withCredentials를 true로 설정합니다.
+  // });
   export default {
     // name: 'main',
     data() {
       return {
         newAlbumList: null,
         isLogin: null,
-        user : null
+        user: null
       }
     },
     created() {
@@ -179,22 +194,21 @@
       loginPush() {
         this.$router.push("/login")
       },
-      logout(){
+      logout() {
         Cookies.remove('refreshToken')
         Cookies.remove('accessToken')
         this.loadNewAlbum();
         this.loadWeeklyChart()
         this.isLogin = false
       },
-      loadUserInfo(token){
-        axios.get("http://localhost:8250/myInfo",
-          {
-            headers:{
-                Authorization: 'Bearer ' + token
+      loadUserInfo(token) {
+        axios.get("http://localhost:8250/myInfo", {
+            headers: {
+              Authorization: 'Bearer ' + token
             }
-          }
-        )
+          })
           .then((e) => {
+            console.log(e)
             this.user = e.data.data
           })
       }

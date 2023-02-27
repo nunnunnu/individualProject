@@ -28,8 +28,8 @@ import melonproject.melon.security.vo.TokenVO;
 @Component
 public class JwtTokenProvider {
     private final Key key;
-    private final Integer tokenExpireMinutes = 10;
-    private final Integer refreshExpireMinutes = 60;
+    private final Integer tokenExpireMinutes = 60*24*7 ; //토근 만료시간 (현재 일주일)
+    private final Integer refreshExpireMinutes = 60*24*30; //리프레쉬 토큰 만료시간(현재 한달) 자동로그인도 풀리는경우
     public JwtTokenProvider(@Value("${jwt.secretKey}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -67,18 +67,18 @@ public class JwtTokenProvider {
         }
     }
 
-    public boolean validateToken(String token) {
+    public boolean validateToken(String token) { //토큰이 유효한지 검사
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch(SecurityException | MalformedJwtException e) {
-            System.out.println("Invalid JWT Token"+e);
+            System.out.println("Invalid JWT Token"+e); //등록안됨
         } catch(ExpiredJwtException e) {
             System.out.println("Expired JWT Token"+e);
         } catch(UnsupportedJwtException e) {
-            System.out.println("Unsupported JWT Token"+e);
+            System.out.println("Unsupported JWT Token"+e); //토큰형태가 아님
         } catch(IllegalArgumentException e) {
-            System.out.println("JWT claims string is empty."+e);
+            System.out.println("JWT claims string is empty."+e); //없는 토큰임
         }
         return false;
     }
