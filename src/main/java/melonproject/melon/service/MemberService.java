@@ -84,6 +84,7 @@ public class MemberService {
                         .miEmail(data.getEmail())
                         .miBirth(data.getBirth())
                         .miRegDt(data.getRegDt())
+                        .miNickName(data.getNickName())
                         .build();
         mRepo.save(member);
         map.put("status", true);

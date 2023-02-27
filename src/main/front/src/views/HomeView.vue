@@ -189,9 +189,9 @@
       loadUserInfo(token){
         axios.get("http://localhost:8250/myInfo",
           {
-            headers:{headers: {
+            headers:{
                 Authorization: 'Bearer ' + token
-            }}
+            }
           }
         )
           .then((e) => {

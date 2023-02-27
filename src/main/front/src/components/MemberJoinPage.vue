@@ -171,7 +171,7 @@ export default {
                     birth: this.birth,
                     nickName: this.nickname
                 }
-                axios.post("http://localhost:8250/member/join", data)
+                axios.put("http://localhost:8250/member/join", data)
                     .then((e) => {
                         alert(e.data.message)
                                 if(e.data.status){
