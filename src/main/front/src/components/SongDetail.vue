@@ -57,24 +57,57 @@
             <div v-html="movie()"></div>
             <br>
         </div>
+        <div v-if="isLogin">
+            <div class="box">
+                <h3 class="pb-4 mb-4 fst-italic border-bottom">스트리밍 리포트</h3>
+                <div v-if="user.count==0">
+                    <p>아직 곡을 감상하지 않으셨습니다.</p>
+                </div>
+                <div v-if="user.count!=0">
+                    <div class="row">
+                        <div class="col-auto">
+                            내가 처음 들은 날 : 
+                        </div>
+                        <div class="col-4">
+                            {{ user.date }}
+                        </div>
+                        <div class="col-auto">
+                            총 감상 횟수 : 
+                        </div>
+                        <div class="col-4">
+                            {{ user.count}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
+<br>
     </b-container>
 </template>
 <script>
     import axios from 'axios'
+    import Cookies from 'js-cookie'
     export default {
         name: 'albumDetail',
         props : ['seq'],
         data() {
             return {
                 data: null,
-            }
+                isLogin:null,
+                user:null
+                }
         },
         created() {
             // this.seq = this.$route.params.seq;
             this.loadPage(this.seq)
             console.log(this.seq)
+            if (Cookies.get('accessToken') != null) {
+                this.isLogin = true
+                this.listenCount()
+            } else {
+                this.isLogin = false
+            }
         },
         methods: {
             loadPage(seq) {
@@ -85,6 +118,17 @@
             },
             movie() {    
                 return this.data.movie
+            },
+            listenCount(){
+                axios.get("http://localhost:8250/listen/song/"+this.seq, {
+                    headers: {
+                    Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((e) => {
+                    console.log(e)
+                    this.user = e.data.data
+                })
             }
         }
     }
@@ -106,5 +150,8 @@
     .card-img-top {
         height: 150px;
         overflow: hidden;
+    }
+    .box{
+        font-size: 23px;
     }
 </style>

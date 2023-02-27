@@ -46,7 +46,7 @@
         <button type="submit" class="btn btn-success">로그인</button>
       </div>
     </div> -->
-    <div align="left" style="font-size: 25px">
+    <div align="left" style="font-size: 20px">
       <router-link to="/album/new">최신 앨범 > </router-link>
     </div>
     <div class="row">
@@ -66,8 +66,6 @@
         </tr>
       </div>
     </div>
-    <div class="row g-5">
-      <div class="col-md-8">
         <h3 class="pb-4 mb-4 fst-italic border-bottom">
           일간차트
         </h3>
@@ -95,9 +93,8 @@
           </tbody>
         </table>
 
-      </div>
 
-      <div class="col-md-4">
+      <!-- <div class="col-md-4">
         <h3 class="pb-4 mb-4 fst-italic border-bottom">
           player
         </h3>
@@ -106,7 +103,6 @@
               src="http://localhost:8250/image/album/nctdream_candy" /></div>
           <div class="player-content">
             <div class="player-info">
-              <!-- <a class="song-name" target="_blank" href="https://youtu.be/BWdZjZV6bEk">Kontinuum - Aware [NCS Release]</a> -->
               <a class="song-name" target="_blank">Candy</a>
               <a class="artist" href="#">NCT Dream</a>
             </div>
@@ -118,20 +114,14 @@
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div> -->
   </b-container>
 </template>
 
 <script>
-  import router from '@/router'
   import Cookies from 'js-cookie'
   import axios from 'axios'
 
-  //   const api = axios.create({
-  //   baseURL: 'http://localhost:8250/',
-  //   withCredentials: true, // 쿠키를 전송하기 위해 withCredentials를 true로 설정합니다.
-  // });
   export default {
     // name: 'main',
     data() {
@@ -216,78 +206,7 @@
   }
 </script>
 <style>
-  .HTML_Audio_player {
-    z-index: 10;
-    background: linear-gradient(135deg, #f4f8ff 0, #f4f8ff 49%, #e5efff 49%, #e9e8f2 100%);
-    color: inherit;
-    min-height: 120px;
-    max-height: 150px;
-    display: flex;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
-    flex-direction: row;
-    padding: 20px 10px 20px;
-  }
 
-  .Audio_Player_image {
-    width: 150px;
-    display: flex;
-    justify-content: center;
-  }
-
-  .player-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .player-info {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding-left: 10px;
-  }
-
-  .song-name {
-    font-size: 18px;
-    font-weight: 600;
-  }
-
-  .k2_audio_player {
-    display: flex;
-  }
-
-  audio {
-    flex-grow: 1;
-    height: 40px;
-  }
-
-  audio::-webkit-media-controls-play-button {
-    background-color: #B1D4E0;
-    border-radius: 50%;
-  }
-
-  audio::-webkit-media-controls-play-button:hover {
-    background-color: rgba(177, 212, 224, .7);
-  }
-
-  audio::-webkit-media-controls-panel {
-    background: #e9e8f2;
-  }
-
-  .Audio_Player_image img:hover {
-    animation: rotating 3s linear infinite
-  }
-
-  @keyframes rotating {
-    from {
-      transform: rotate(0deg)
-    }
-
-    to {
-      transform: rotate(360deg)
-    }
-  }
 
   a {
     text-decoration: none;

@@ -16,8 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.entity.user.TicketMemberEntity;
+import melonproject.melon.repository.artist.song.SongInfoRepository;
+import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.repository.user.TicketMemberRepository;
 import melonproject.melon.security.provider.JwtTokenProvider;
@@ -25,6 +28,7 @@ import melonproject.melon.util.AESAlgorithm;
 import melonproject.melon.vo.Member.LoginVO;
 import melonproject.melon.vo.Member.MemberInfo;
 import melonproject.melon.vo.Member.MemberJoinVO;
+import melonproject.melon.vo.Member.MemberListenSong;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +37,8 @@ public class MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final JwtTokenProvider jwtTokenProvider;
     private final TicketMemberRepository tmRepo;
+    private final SongInfoRepository sRepo;
+    private final HistoryPlayRepository hpRepo;
 
     @Transactional
     public Map<String, Object> memberJoin(MemberJoinVO data) throws Exception{
@@ -166,6 +172,31 @@ public class MemberService {
         MemberInfo result = new MemberInfo(member, ticket);
         map.put("status", true);
         map.put("message", "성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", result);
+        return map;
+    }
+    public Map<String, Object> songListen(Long seq, UserDetails userDetails){
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        System.out.println(userDetails);
+        System.out.println(member);
+        if(member==null){
+            map.put("status", false);
+            map.put("message", "정상적인 접근이 아닙니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        SongInfoEntity song = sRepo.findById(seq).orElse(null);
+        if(song==null){
+            map.put("status", false);
+            map.put("message", "곡 번호 에러");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        MemberListenSong result = hpRepo.listenCount(member, song);
+        map.put("status", true);
+        map.put("message", "조회완료");
         map.put("code", HttpStatus.OK);
         map.put("data", result);
         return map;

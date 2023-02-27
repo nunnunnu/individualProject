@@ -79,7 +79,7 @@
                 <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
                 <div class="card-body">
                     <p class="card-title">{{art.name}}</p>
-                    <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a>
+                    <!-- <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a> -->
                 </div>
             </div>
         </tr>
