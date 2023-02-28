@@ -1,16 +1,19 @@
 <template>
     <b-container>
-        <h2 class="pb-4 mb-4 fst-italic border-bottom">마이 뮤직</h2>
-        <div class="area">
-            <h4 class="pb-4 mb-4 fst-italic border-bottom">선호 장르</h4>
-            <Pie :data="chartDataReturn()" :options="options" />
-        </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <br>
+    <div class="myPage">
+            
+            <h2 class="pb-4 mb-4 fst-italic border-bottom">마이 뮤직</h2>
+            <div class="area">
+                <h4 class="pb-4 mb-4 fst-italic border-bottom">선호 장르</h4>
+                <Pie :data="chartDataReturn()" :options="options" />
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
         <h4 class="pb-4 mb-4 fst-italic border-bottom">플레이이스트</h4>
+    </div>
     </b-container>
 </template>
 <script>
@@ -94,4 +97,7 @@
         object-fit: cover;
     }
     .area {height:300px;}
+    .myPage{
+        padding-bottom: 102px;
+    }
 </style>

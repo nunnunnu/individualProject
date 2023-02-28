@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <div class="search">
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">곡 명으로 검색</h4>
         <table class="table">
             <thead>
@@ -25,7 +26,7 @@
                         </router-link>
                         <br>
                 <tr v-for="artist in item.artist" :key="artist.seq">
-                    <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">
+                    <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
                         {{ artist.name }}</router-link>
                 </tr>
                 </td>
@@ -108,7 +109,7 @@
                 </router-link>
                 <div>
                 <tr v-for="art in song.artist" :key="art.seq">
-                    <router-link :to="{name:'artistChannel', params:{seq:art.seq}}" style="font-size:12px">
+                    <router-link :to="{name:'artistDetail', params:{seq:art.seq}}" style="font-size:12px">
                         {{ art.name }}</router-link>
                 </tr>
                 </div >
@@ -161,6 +162,7 @@
             <router-link :to="{name:'searchAlbumName', params:{key:this.childKeyword}}">앨범 검색 전체 보기 ></router-link>
         </div>
         <br>
+    </div>
     </b-container>
 </template>
 <script>
@@ -209,5 +211,8 @@
 <style>
 .highlight {
   color: red;
+}
+.search{
+    padding-bottom: 102px;
 }
 </style>

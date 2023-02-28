@@ -126,11 +126,13 @@ const routes = [
     path: '/login',
     name: 'loginPage',
     component: LoginPage,
+    meta: { hideNavbar: true, hideFooter: true }
   },
   {
     path: '/join',
     name: 'joinPage',
     component: JoinMember,
+    meta: { hideNavbar: true, hideFooter: true }
   }
 ]
 

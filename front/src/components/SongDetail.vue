@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <div class="songDetail">
         <br>
         <h2 class="pb-4 mb-4 fst-italic border-bottom">곡 정보</h2>
         <br>
@@ -13,7 +14,7 @@
                     <!-- <p align="left">[{{ data.type }}]</p> -->
                     <h2 align="left">{{ data.name }}</h2>
                     <tr v-for="item in data.artists" :key="item.seq">
-                        <router-link :to="{name:'artistChannel', params:{seq:item.seq}}" style="font-size:25px">
+                        <router-link :to="{name:'artistDetail', params:{seq:item.seq}}" style="font-size:25px">
                             {{ item.name }}</router-link>
                     </tr>
                     <br>
@@ -46,7 +47,7 @@
                         <div class="card-body">
                             <p class="card-title">{{creator.name}}</p>
                             <p class="card-text">{{creator.type}}</p>
-                            <router-link :to="{name:'artistChannel', params:{seq:creator.seq}}">상세보기</router-link>
+                            <router-link :to="{name:'artistDetail', params:{seq:creator.seq}}">상세보기</router-link>
                         </div>
                     </div>
                 </tr>
@@ -57,7 +58,7 @@
             <div v-html="movie()"></div>
             <br>
         </div>
-        <div v-if="isLogin">
+        <div v-if="user!=null">
             <div class="box">
                 <h3 class="pb-4 mb-4 fst-italic border-bottom">스트리밍 리포트</h3>
                 <div v-if="user.count==0">
@@ -83,6 +84,7 @@
         </div>
     </div>
 <br>
+</div>
     </b-container>
 </template>
 <script>
@@ -153,5 +155,8 @@
     }
     .box{
         font-size: 23px;
+    }
+    .songDetail{
+        padding-bottom: 102px;
     }
 </style>

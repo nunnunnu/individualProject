@@ -1,9 +1,12 @@
 <template>
     <b-container>
-        <br>
-        <h2 class="pb-4 mb-4 fst-italic border-bottom">뮤직비디오</h2>
-        <div v-html="movie()"></div>
-        
+        <div class="movie">
+            
+            <br>
+            <h2 class="pb-4 mb-4 fst-italic border-bottom">뮤직비디오</h2>
+            <div v-html="movie()"></div>
+            
+        </div>
     </b-container>
 </template>
 <script>
@@ -46,5 +49,8 @@
     .card-img-top {
         height: 150px;
         overflow: hidden;
+    }
+    .movie{
+        padding-bottom: 102px;
     }
 </style>

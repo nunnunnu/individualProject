@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav class="navbar navbar-expand-lg bg-light">
+    <nav v-if="!$route.meta.hideNavbar" class="navbar navbar-expand-lg bg-light">
       <div class="container">
         <div class="container-fluid">
           <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03"
@@ -38,7 +38,7 @@
       </div>
     </nav>
     <router-view />
-    <footer>
+    <footer v-if="!$route.meta.hideNavbar" class="pt-5">
       <div class="HTML_Audio_player">
             <div class="Audio_Player_image"><img style="border-radius: 60px;"
                     src="http://localhost:8250/image/album/nctdream_candy" /></div>
@@ -100,7 +100,7 @@
     color: #097d11;
   }
   .HTML_Audio_player {
-    z-index: 10;
+    z-index: 99999;
     background: linear-gradient(135deg, #f4f8ff 0, #f4f8ff 49%, #e5efff 49%, #e9e8f2 100%);
     color: inherit;
     min-height: 120px;
@@ -109,6 +109,9 @@
     box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
     flex-direction: row;
     padding: 20px 10px 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
   }
 
   .Audio_Player_image {

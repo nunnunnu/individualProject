@@ -21,6 +21,7 @@ import melonproject.melon.vo.song.SongInfoVO;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AlbumDetailVO {
+    private Long seq;
     private AlbumType type;
     private String name;
     private String genreList;
@@ -36,6 +37,7 @@ public class AlbumDetailVO {
     private Double grade;
 
     public AlbumDetailVO(AlbumInfoEntity album){
+        this.seq = album.getAlbumSeq();
         this.type = album.getAlbumType();
         this.name = album.getAlbumName();
         this.genreList="";

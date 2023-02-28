@@ -139,7 +139,7 @@ import axios from 'axios'
     flex-direction: row;
     flex-wrap: wrap;
     object-fit: cover;
-
+    padding-bottom: 102px;
 }
 .card-img-top{
     height:150px;

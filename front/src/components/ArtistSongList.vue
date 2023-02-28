@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <div class="songList">
         <table class="table">
             <thead>
                 <tr>
@@ -19,12 +20,12 @@
                                 <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
                                 <br>
                                 <tr v-for="artist in item.artists" :key="artist.seq">
-                                    <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
+                                    <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
                                 </tr>
                             </td>
                 <td>
                     <tr v-for="artist in item.artist" :key="artist.seq">
-                        <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}">{{ artist.name }}</router-link>
+                        <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}">{{ artist.name }}</router-link>
                     </tr>
                 </td>
                 <td>
@@ -48,29 +49,38 @@
                 </tr>
             </tbody>
         </table>
+        <div v-if="dataLength==0">
+            <p>곡정보가 없습니다.</p>
+        </div>
+    </div>
     </b-container>
 </template>
 <script>
-    import axios from 'axios'
+    import axios, { HttpStatusCode } from 'axios'
     export default {
         name: 'artistSongList',
         props: {},
         data() {
             return {
                 seq: null,
-                data: null
+                data: null,
+                dataLength:null
             }
         },
         created() {
             this.seq = this.$route.params.seq;
             this.loadPage(this.seq)
+            console.log(this.dataLength);
         },
         methods: {
             loadPage(seq) {
                 axios.get("http://localhost:8250/song/artist/part/" + seq)
                     .then((e) => {
-                        this.data = e.data.data.content
-                        console.log(this.data)
+                        if(!e.data.status){
+                            this.dataLength=0
+                        }else{
+                            this.data = e.data.data.content
+                        }
 
                     })
             }
@@ -79,4 +89,7 @@
 </script>
 
 <style>
+.songList{
+    padding-bottom: 102px;
+}
 </style>

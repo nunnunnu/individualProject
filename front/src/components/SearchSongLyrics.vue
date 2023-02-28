@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <div class="search">
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">가사로 검색</h4>
         <tr v-for="song in data" :key="song.seq">
         <div align="left">
@@ -9,7 +10,7 @@
                 </router-link>
                 <div>
                 <tr v-for="art in song.artist" :key="art.seq">
-                    <router-link :to="{name:'artistChannel', params:{seq:art.seq}}" style="font-size:12px">
+                    <router-link :to="{name:'artistDetail', params:{seq:art.seq}}" style="font-size:12px">
                         {{ art.name }}</router-link>
                 </tr>
                 </div >
@@ -39,6 +40,7 @@
             <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
             </li>
         </ul>
+        </div>
     </b-container>
 </template>
 <script>
@@ -96,5 +98,8 @@
     flex-wrap: wrap;
     object-fit: cover;
 
+}
+.search{
+    padding-bottom: 102px;
 }
 </style>

@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -142,9 +143,9 @@ public class AlbumService {
         return map;
     }
 
-    public Map<String, Object> setAlbumGrade(Long memberSeq, Long albumSeq, Double grade){
+    public Map<String, Object> setAlbumGrade(UserDetails userdetails, Long albumSeq, Double grade){
         Map<String, Object> map = new LinkedHashMap<>();
-        MemberInfoEntity member = mRepo.findById(memberSeq).orElse(null);
+        MemberInfoEntity member = mRepo.findByMiId(userdetails.getUsername());
         if(member==null){
             map.put("status", false);
             map.put("message", "회원 번호 오류입니다.");
@@ -158,6 +159,7 @@ public class AlbumService {
             map.put("code", HttpStatus.BAD_REQUEST);
             return map;
         }
+        System.out.println(gradeRepo.countByAlbumAndMember(album, member));
         if(gradeRepo.countByAlbumAndMember(album, member) >=1){
             map.put("status", false);
             map.put("message", "이미 평점을 등록한 앨범입니다.");
@@ -205,6 +207,12 @@ public class AlbumService {
         }
 
         Page<AlbumInfoEntity> albums = albumRepo.findByArtist(artist, page);
+        if(albums.getContent().size()==0){
+            map.put("status", false);
+            map.put("message", "조회할 값이 없음");
+            map.put("code", HttpStatus.NO_CONTENT);
+            return map;
+        }
         Page<ArtistAlbumVO> result = albums.map(a->new ArtistAlbumVO(a, songRepo.findTop1ByAlbumAndSiTitle(a, true)));
         map.put("status", true);
         map.put("message", "조회성공");

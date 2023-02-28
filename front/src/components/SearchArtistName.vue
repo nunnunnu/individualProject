@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <div class="search">
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">곡 명으로 검색</h4>
         <div class="artists">
             <tr v-for="data in data" :key="data.seq">
@@ -7,12 +8,12 @@
                     <img :src="`http://localhost:8250/image/artist/${data.uri}`"
                                 style="max-width: 100%; height: 240px;" align="right" class="rounded float-start">
                     <div class="card-body">
-                    <router-link :to="{name:'artistChannel', params:{seq:data.seq}}"
+                    <router-link :to="{name:'artistDetail', params:{seq:data.seq}}"
                                     style="font-size:15px"><span v-html="keywordTag(data.name)"></span></router-link>
                     <p class="card-text"><small class="text-muted">{{ data.debut }}</small></p>
                     <p class="card-text"><small class="text-muted">{{ data.agency }}</small></p>
                     <p class="card-text"><small class="text-muted">[{{ data.type }}]</small></p>
-                    <router-link :to="{name:'artistChannel', params:{seq:data.seq}}" style="font-size:15px">
+                    <router-link :to="{name:'artistDetail', params:{seq:data.seq}}" style="font-size:15px">
                                     상세보기</router-link>
                     </div>
                 </div>
@@ -39,6 +40,7 @@
             <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
             </li>
         </ul>
+        </div>
     </b-container>
 </template>
 <script>
@@ -91,5 +93,8 @@
     flex-wrap: wrap;
     object-fit: cover;
 
+}
+.search{
+    padding-bottom: 102px;
 }
 </style>

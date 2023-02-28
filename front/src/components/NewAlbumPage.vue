@@ -14,7 +14,7 @@
                             <div class="card-body">
 
                                 <h6 class="card-title">{{ data.name }}</h6>
-                                <router-link :to="{name:'artistChannel', params:{seq:data.artistSeq}}"
+                                <router-link :to="{name:'artistDetail', params:{seq:data.artistSeq}}"
                                     style="font-size:15px">{{ data.artistName }}</router-link>
                                 <br>
                                 <br>
@@ -38,6 +38,7 @@
                 </div>
             </tr>
         </div>
+        <div class="pagearea">
         <ul class="pagination justify-content-center">
         <li class="page-item disabled">
             <a v-if="currentPage==0" class="page-link">Previous</a>
@@ -58,6 +59,7 @@
             <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
             </li>
         </ul>
+        </div>
     </b-container>
 </template>
 <script>
@@ -113,5 +115,8 @@
         flex-direction: row;
         flex-wrap: wrap;
         object-fit: cover;
+    }
+    .pagearea{
+        padding-bottom: 102px;
     }
 </style>

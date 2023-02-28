@@ -1,6 +1,7 @@
 <template>
   <b-container>
     <br>
+    <div class="home">
     <div class="row">
       <div class="col-8 p-4">
         <h1 align="left">Water Melon</h1>
@@ -116,6 +117,7 @@
           </div>
         </div>
       </div> -->
+      </div>
   </b-container>
 </template>
 
@@ -170,12 +172,12 @@
         let monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() - 6);
 
         // 결과 출력
-        console.log(monday)
-        const year = monday.getFullYear()
-        const tmp = monday.getMonth() + 1
-        const tmp2 = monday.getDate()
-        const month = tmp < 10 ? '0' + tmp : tmp
-        const days = tmp2 < 10 ? '0' + tmp2 : tmp2
+        // console.log(monday)
+        // const year = monday.getFullYear()
+        // const tmp = monday.getMonth() + 1
+        // const tmp2 = monday.getDate()
+        // const month = tmp < 10 ? '0' + tmp : tmp
+        // const days = tmp2 < 10 ? '0' + tmp2 : tmp2
 
         // axios.get("http://dev.guyso.me/api/v3/chart/melon/weekly/20230213")
         // .then((e) => {
@@ -219,5 +221,8 @@
     display: flex;
     float: right;
     width: 100%;
+  }
+  .home{
+    padding-bottom: 102px;
   }
 </style>

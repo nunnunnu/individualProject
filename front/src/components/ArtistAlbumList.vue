@@ -15,8 +15,10 @@
                     </div>
                 </div>
             </tr>
+            <div v-if="dataLength==0">
+                <p>앨범정보가 없습니다.</p>
+            </div>
         </div>
-
     </b-container>
 </template>
 <script>
@@ -27,6 +29,7 @@
         data() {
             return {
                 data: null,
+                dataLength:null
             }
         },
         created() {
@@ -38,8 +41,12 @@
             loadPage(seq) {
                 axios.get("http://localhost:8250/album/artist/" + seq)
                     .then((e) => {
-                        this.data = e.data.data.content
-                        console.log(this.data)
+                        console.log(e.data.status);
+                        if(!e.data.status){
+                            this.dataLength=0
+                        }else{
+                            this.data = e.data.data.content
+                        }
                     })
             }
         }
@@ -58,5 +65,6 @@ p{
     flex-direction: row;
     flex-wrap: wrap;
     object-fit: cover;
+    padding-bottom: 102px;
 }
 </style>

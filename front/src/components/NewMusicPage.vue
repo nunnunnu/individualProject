@@ -64,6 +64,7 @@
                     </tr>
                 </tbody>
             </table>
+    <div class="pagearea">
         <ul class="pagination justify-content-center">
         <li class="page-item disabled">
             <a v-if="currentPage==0" class="page-link">Previous</a>
@@ -84,6 +85,7 @@
             <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
             </li>
         </ul>
+    </div>
     </b-container>
 </template>
 <script>
@@ -138,5 +140,8 @@
         flex-direction: row;
         flex-wrap: wrap;
         object-fit: cover;
+    }
+    .pagearea{
+        padding-bottom: 102px;
     }
 </style>

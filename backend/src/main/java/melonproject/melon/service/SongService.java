@@ -198,6 +198,12 @@ public class SongService {
             return map;
         }
         Page<SongArtistConnection> songs = sacRepo.findByArtist(artist, page);
+        if(songs.getContent().size()==0){
+            map.put("status", false);
+            map.put("message", "조회할 값이 없음");
+            map.put("code", HttpStatus.NO_CONTENT);
+            return map;
+        }
         // List<ArtistSongVO> songVO = new ArrayList<>();
         Page<ArtistSongVO> result = songs.map(
             s->new ArtistSongVO(s.getSong(),

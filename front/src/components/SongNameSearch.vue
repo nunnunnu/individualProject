@@ -1,5 +1,6 @@
 <template>
     <b-container>
+        <div class="search">
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">곡 명으로 검색</h4>
         <table class="table">
             <thead>
@@ -24,7 +25,7 @@
                         </router-link>
                         <br>
                 <tr v-for="artist in item.artist" :key="artist.seq">
-                    <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">
+                    <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
                         {{ artist.name }}</router-link>
                 </tr>
                 </td>
@@ -99,6 +100,7 @@
             <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
             </li>
         </ul>
+        </div>
     </b-container>
 </template>
 <script>
@@ -145,4 +147,7 @@
     }
 </script>
 <style>
+.search{
+    padding-bottom: 102px;
+}
 </style>
