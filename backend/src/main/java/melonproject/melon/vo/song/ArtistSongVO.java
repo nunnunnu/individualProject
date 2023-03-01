@@ -26,6 +26,7 @@ public class ArtistSongVO {
     private Integer like;
     private String movie;
     private String lyrics;
+    private Boolean isLiked;
 
     public ArtistSongVO(SongInfoEntity song, String uri){
         this.seq = song.getSiSeq();
@@ -39,6 +40,20 @@ public class ArtistSongVO {
         this.like = song.getLikes().size();
         this.movie = song.getSiMovie();
         this.lyrics = song.getSiLyrics();
+    }
+    public ArtistSongVO(SongInfoEntity song, String uri, Boolean liked){
+        this.seq = song.getSiSeq();
+        this.name = song.getSiName();
+        this.uri = uri;
+        this.title = song.getSiTitle();
+        for(SongArtistConnection a : song.getArtists()){
+            artist.add(new ArtistInfoVO(a.getArtist()));
+        }
+        this.album = new AlbumInfoVO(song.getAlbum());
+        this.like = song.getLikes().size();
+        this.movie = song.getSiMovie();
+        this.lyrics = song.getSiLyrics();
+        this.isLiked = liked;
     }
 
     

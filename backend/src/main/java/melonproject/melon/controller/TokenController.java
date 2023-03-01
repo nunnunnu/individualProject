@@ -8,19 +8,24 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.AlbumService;
 import melonproject.melon.service.MemberService;
+import melonproject.melon.service.SongService;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("")
 public class TokenController {
     private final MemberService mService;
     private final AlbumService aService;
+    private final SongService sService;
 
     @GetMapping("/myInfo")
     public ResponseEntity<Object> findUser(@AuthenticationPrincipal UserDetails userDetails){
@@ -43,7 +48,18 @@ public class TokenController {
     @PutMapping("/grade/{album}")
     public ResponseEntity<Object> putGrade(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long album, @RequestParam Double grade){
         Map<String, Object> map = aService.setAlbumGrade(userDetails, album, grade);
-        System.out.println(map.get("message"));
+    
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @GetMapping("/like/{song}")
+    public ResponseEntity<Object> getAlbumDetail(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long song){
+        Map<String, Object> map = sService.checkLikeSong(userDetails, song);
+    
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @PostMapping("/likeUnlike/{song}")
+    public ResponseEntity<Object> LikedUnLiked(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long song){
+        Map<String, Object> map = sService.LikeUnLike(userDetails, song);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }

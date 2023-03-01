@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,7 @@ import melonproject.melon.entity.artist.song.SoundQuality;
 import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.user.HistoryPlayEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
+import melonproject.melon.entity.user.SongLikesEntity;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.artist.song.SongArtistConnectionRepository;
@@ -31,6 +33,7 @@ import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
+import melonproject.melon.repository.user.SongLikesRepository;
 import melonproject.melon.vo.song.ArtistSongVO;
 import melonproject.melon.vo.song.SongAddVO;
 import melonproject.melon.vo.song.SongDetailVO;
@@ -49,6 +52,7 @@ public class SongService {
     private final MemberInfoRepository mRepo;
     private final HistoryPlayRepository hpRepo;
     private final SongArtistConnectionRepository sacRepo;
+    private final SongLikesRepository slRepo;
 
     public Map<String, Object> songAdd(SongAddVO data){
         System.out.println(data);
@@ -150,26 +154,27 @@ public class SongService {
 
         return map;
     }
-    public void listenMusicList(Long memberSeq, Long songSeq){
-        MemberInfoEntity member = mRepo.findById(memberSeq).orElse(null);
+    public void listenMusicList(UserDetails userDetail, Long songSeq){
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findByMiId(userDetail.getUsername());
         if(member==null){
-            // map.put("status", false);
-            // map.put("message", "회원번호 오류");
-            // map.put("code", HttpStatus.BAD_GATEWAY);
+            map.put("status", false);
+            map.put("message", "회원번호 오류");
+            map.put("code", HttpStatus.BAD_GATEWAY);
             return ;
         }
         SongInfoEntity song = songRepo.findById(songSeq).orElse(null);
         if(song==null){
-            // map.put("status", false);
-            // map.put("message", "곡번호 오류");
-            // map.put("code", HttpStatus.BAD_GATEWAY);
+            map.put("status", false);
+            map.put("message", "곡번호 오류");
+            map.put("code", HttpStatus.BAD_GATEWAY);
             return ;
         }
         HistoryPlayEntity entity = new HistoryPlayEntity(null, song, member, LocalDateTime.now(), null);
         hpRepo.save(entity);
-        // map.put("status", true);
-        // map.put("message", "저장성공");
-        // map.put("code", HttpStatus.OK);
+        map.put("status", true);
+        map.put("message", "저장성공");
+        map.put("code", HttpStatus.OK);
         return ;
     }
     public Map<String, Object> songDetailShow(Long seq){
@@ -181,14 +186,15 @@ public class SongService {
             map.put("code", HttpStatus.BAD_GATEWAY);
             return map;
         }
+
         SongDetailVO songVO = new SongDetailVO(song);
+        map.put("data", songVO);
         map.put("status", true);
         map.put("message", "성공");
         map.put("code", HttpStatus.OK);
-        map.put("data", songVO);
         return map;
     }
-    public Map<String, Object> artistSongParticipation(Long seq, Pageable page){
+    public Map<String, Object> artistSongParticipation(Long seq, Pageable page, UserDetails userDetails){
         Map<String, Object> map = new LinkedHashMap<>();
         ArtistInfoEntity artist = artRepo.findById(seq).orElse(null);
         if(artist==null){
@@ -205,28 +211,119 @@ public class SongService {
             return map;
         }
         // List<ArtistSongVO> songVO = new ArrayList<>();
-        Page<ArtistSongVO> result = songs.map(
-            s->new ArtistSongVO(s.getSong(),
-            sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3).getSfUri():null));
+        if(userDetails!=null){
+            MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+            if(member==null){
+                map.put("status", false);
+                map.put("message", "정상적이지 않은 접근입니다.");
+                map.put("code", HttpStatus.BAD_REQUEST);
+            }
+            Page<ArtistSongVO> result = songs.map(
+                s->new ArtistSongVO(s.getSong(),
+                sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3).getSfUri():null,
+                slRepo.countBySongAndMember(s.getSong(), member)>=1?true:false
+                ));
+                map.put("data", result);
+        }else{
+            Page<ArtistSongVO> result = songs.map(
+                s->new ArtistSongVO(s.getSong(),
+                sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3).getSfUri():null)
+                );
+                map.put("data", result);
+        }
+        
         map.put("status", true);
         map.put("message", "조회성공.");
         map.put("code", HttpStatus.OK);
-        map.put("data", result);
         return map;
     }
 
-    public Map<String, Object> newSongList(Pageable page){
+    public Map<String, Object> newSongList(Pageable page, UserDetails userDetails){
         Map<String, Object> map = new LinkedHashMap<>();
         LocalDate now = LocalDate.now().minusMonths(1);
         Page<SongInfoEntity> entity = songRepo.findBySiRegDtLessThanEqual(now, page);
-        Page<ArtistSongVO> result = entity.map(
-            s->new ArtistSongVO(s,
-            sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
+        if(userDetails!=null){
+            MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+            if(member==null){
+                map.put("status", false);
+                map.put("message", "정상적이지 않은 접근입니다.");
+                map.put("code", HttpStatus.BAD_REQUEST);
+            }
+            Page<ArtistSongVO> result = entity.map(
+                s->new ArtistSongVO(s,
+                sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
+                slRepo.countBySongAndMember(s, member)>=1?true:false
+                ));
+                map.put("data", result);
+        }else{
+            Page<ArtistSongVO> result = entity.map(
+                s->new ArtistSongVO(s,
+                sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null)
+                );
+                map.put("data", result);
+        }
 
         map.put("status", true);
         map.put("message", "조회성공.");
         map.put("code", HttpStatus.OK);
-        map.put("data", result);
+        return map;
+    }
+    public Map<String, Object> checkLikeSong(UserDetails userDetails, Long seq) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        if(member==null){
+            map.put("status", false);
+            map.put("message", "정상적인 접근이 아닙니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        SongInfoEntity song = songRepo.findById(seq).orElse(null);
+        if(song==null){
+            map.put("status", false);
+            map.put("message", "곡번호 오류");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        if(slRepo.countBySongAndMember(song, member)>=1L){
+            map.put("status", true);
+            map.put("message", "조회성공");
+            map.put("code", HttpStatus.OK);
+            map.put("data", true);
+        }else{
+            map.put("status", true);
+            map.put("message", "조회성공");
+            map.put("code", HttpStatus.OK);
+            map.put("data", false);
+        }
+        return map;
+    }
+    public Map<String, Object> LikeUnLike(UserDetails userDetails, Long seq) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        if(member==null){
+            map.put("status", false);
+            map.put("message", "정상적인 접근이 아닙니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        SongInfoEntity song = songRepo.findById(seq).orElse(null);
+        if(song==null){
+            map.put("status", false);
+            map.put("message", "곡번호 오류");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        SongLikesEntity songlike = slRepo.findBySongAndMember(song, member);
+        if(songlike==null){
+            songlike = new SongLikesEntity(null, song, member);
+            slRepo.save(songlike);
+            map.put("message", "좋아요 성공");
+        }else{
+            slRepo.delete(songlike);
+            map.put("message", "좋아요 취소");
+        }
+        map.put("status", true);
+        map.put("code", HttpStatus.OK);
         return map;
     }
 }

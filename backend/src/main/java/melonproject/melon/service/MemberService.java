@@ -182,8 +182,6 @@ public class MemberService {
     public Map<String, Object> songListen(Long seq, UserDetails userDetails){
         Map<String, Object> map = new LinkedHashMap<>();
         MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-        System.out.println(userDetails);
-        System.out.println(member);
         if(member==null){
             map.put("status", false);
             map.put("message", "정상적인 접근이 아닙니다.");

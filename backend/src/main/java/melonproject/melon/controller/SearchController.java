@@ -8,6 +8,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,14 +25,17 @@ public class SearchController {
     private final SearchService sService;
     
     @GetMapping("/total")
-    public ResponseEntity<Object> totalKeyword(@RequestParam String keyword){
-        Map<String, Object> map = sService.searchTotal(keyword);
+    public ResponseEntity<Object> totalKeyword(@RequestParam String keyword, @AuthenticationPrincipal UserDetails userDetails){
+        Map<String, Object> map = sService.searchTotal(keyword, userDetails);
 
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
     @GetMapping("songName")
-    public ResponseEntity<Object> songNameSearch(@RequestParam String keyword,  @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page){
-        Map<String, Object> map = sService.searchSongName(keyword, page);
+    public ResponseEntity<Object> songNameSearch(@RequestParam String keyword,  
+        @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
+        @AuthenticationPrincipal UserDetails userDetails
+    ){
+        Map<String, Object> map = sService.searchSongName(keyword, page, userDetails);
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }

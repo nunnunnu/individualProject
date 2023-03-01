@@ -18,6 +18,7 @@ import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumGenreConnection;
 import melonproject.melon.entity.artist.album.AlbumGradeEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
+import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.info.AgencyInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.info.PublisherInfoEntity;
@@ -31,6 +32,7 @@ import melonproject.melon.repository.info.AgencyInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.info.PublisherInfoRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
+import melonproject.melon.repository.user.SongLikesRepository;
 import melonproject.melon.vo.album.AlbumAddVO;
 import melonproject.melon.vo.album.AlbumDetailVO;
 import melonproject.melon.vo.album.AlbumNewListVO;
@@ -50,6 +52,7 @@ public class AlbumService {
     private final MemberInfoRepository mRepo;
     private final AlbumGradeRepository gradeRepo;
     private final SongInfoRepository songRepo;
+    private final SongLikesRepository slRepo;
 
     public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file){
         Map<String, Object> map = new LinkedHashMap<>();
@@ -175,26 +178,27 @@ public class AlbumService {
         return map;
     }
 
-    public Map<String, Object> albumDetail(Long albumSeq){
-        Map<String, Object> map = new LinkedHashMap<>();
-        AlbumInfoEntity album = albumRepo.findAllFetch(albumSeq);
-        if(album==null){
-            map.put("status", false);
-            map.put("message", "앨범 번호 오류입니다.");
-            map.put("code", HttpStatus.BAD_REQUEST);
-            return map;
-        }
-        AlbumDetailVO albumVo = new AlbumDetailVO(album);
-        albumVo.setGrade(gradeRepo.albumGrade(album));
-        // List<SongInfoEntity> songs = songRepo.findByAlbum(album);
+    // public Map<String, Object> albumDetail(Long albumSeq){
+    //     Map<String, Object> map = new LinkedHashMap<>();
+    //     AlbumInfoEntity album = albumRepo.findAllFetch(albumSeq);
+    //     if(album==null){
+    //         map.put("status", false);
+    //         map.put("message", "앨범 번호 오류입니다.");
+    //         map.put("code", HttpStatus.BAD_REQUEST);
+    //         return map;
+    //     }
+    //     AlbumDetailVO albumVo = new AlbumDetailVO(album);
+    //     albumVo.addSongList(album.getSongList());
+    //     albumVo.setGrade(gradeRepo.albumGrade(album));
+    //     // List<SongInfoEntity> songs = songRepo.findByAlbum(album);
         
-        map.put("status", true);
-        map.put("message", "조회성공");
-        map.put("code", HttpStatus.OK);
-        map.put("data", albumVo);
+    //     map.put("status", true);
+    //     map.put("message", "조회성공");
+    //     map.put("code", HttpStatus.OK);
+    //     map.put("data", albumVo);
 
-        return map;
-    }
+    //     return map;
+    // }
     
     public Map<String, Object> artistAlbum(Long seq, Pageable page){
         Map<String, Object> map = new LinkedHashMap<>();
@@ -232,6 +236,39 @@ public class AlbumService {
         map.put("message", "조회성공");
         map.put("code", HttpStatus.OK);
         map.put("data", result);
+        return map;
+    }
+    public Map<String, Object> albumDetail(UserDetails userDetails, Long seq) {
+        Map<String, Object> map = new LinkedHashMap<>();
+        AlbumInfoEntity album = albumRepo.findAllFetch(seq);
+        if(album==null){
+            map.put("status", false);
+            map.put("message", "앨범 번호 오류입니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        AlbumDetailVO albumVo = new AlbumDetailVO(album);
+        albumVo.setGrade(gradeRepo.albumGrade(album));
+        if(userDetails!=null){
+            MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+            if(member==null){
+                map.put("status", false);
+                map.put("message", "정상적인 접근이 아닙니다.");
+                map.put("code", HttpStatus.BAD_REQUEST);
+                return map;
+            }
+            for(SongInfoEntity s : album.getSongList()){
+                Boolean songliked = slRepo.countBySongAndMember(s, member)>=1?true:false;
+                albumVo.putSongList(s, songliked);
+            }
+        }else{
+            albumVo.addSongList(album.getSongList());
+        }
+        
+        map.put("status", true);
+        map.put("message", "조회성공");
+        map.put("code", HttpStatus.OK);
+        map.put("data", albumVo);
         return map;
     }
 }

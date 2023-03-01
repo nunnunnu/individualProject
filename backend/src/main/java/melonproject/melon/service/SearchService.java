@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
@@ -15,10 +16,13 @@ import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.artist.song.SoundQuality;
+import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.artist.song.SongFileRepository;
 import melonproject.melon.repository.artist.song.SongInfoRepository;
+import melonproject.melon.repository.user.MemberInfoRepository;
+import melonproject.melon.repository.user.SongLikesRepository;
 import melonproject.melon.vo.album.AlbumInfoVO;
 import melonproject.melon.vo.artist.ArtistChannelVO;
 import melonproject.melon.vo.artist.ArtistListVO;
@@ -31,8 +35,10 @@ public class SearchService {
     private final ArtistInfoRepository artistRepo;
     private final AlbumInfoRepository albumRepo;
     private final SongFileRepository sfRepo;
+    private final SongLikesRepository slRepo;
+    private final MemberInfoRepository mRepo;
 
-    public Map<String, Object> searchTotal(String key){
+    public Map<String, Object> searchTotal(String key, UserDetails userDetails){
         Map<String, Object> map = new LinkedHashMap<>();
         List<SongInfoEntity> songNames = songRepo.findTop10BySiNameContains(key);
         List<SongInfoEntity> songLyrics = songRepo.findTop10BySiLyricsContains(key);
@@ -40,8 +46,29 @@ public class SearchService {
         List<ArtistInfoEntity> artist = artistRepo.findTop10ByArtNameContains(key);
 
         List<ArtistSongVO> songNameVO = new ArrayList<>();
-        for(SongInfoEntity s : songNames){
-            songNameVO.add(new ArtistSongVO(s, sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
+        if(userDetails!=null){
+            MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+            if(member==null){
+                map.put("status", false);
+                map.put("message", "정상적인 접근이 아닙니다.");
+                map.put("code", HttpStatus.BAD_REQUEST);
+                return map;
+            }
+            for(SongInfoEntity s : songNames){
+                songNameVO.add(new ArtistSongVO(
+                    s, 
+                    sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
+                    slRepo.countBySongAndMember(s, member)>=1?true:false
+                    ));
+            }
+            
+        }else{
+            for(SongInfoEntity s : songNames){
+                songNameVO.add(new ArtistSongVO(
+                    s, 
+                    sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null
+                    ));
+            }
         }
         List<ArtistSongVO> songLyricsVO = new ArrayList<>();
         for(SongInfoEntity s : songLyrics){
@@ -64,17 +91,33 @@ public class SearchService {
         return map;
     }
 
-    public Map<String, Object> searchSongName(String keyword, Pageable page){
+    public Map<String, Object> searchSongName(String keyword, Pageable page, UserDetails userDetails){
         Map<String, Object> map = new LinkedHashMap<>();
         Page<SongInfoEntity> songs = songRepo.findBySiNameContains(keyword, page);
-        Page<ArtistSongVO> songNameVO = songs.map(
-            s->new ArtistSongVO(s,
-            sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
+        if(userDetails!=null){
+            MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+            if(member==null){
+                map.put("status", false);
+                map.put("message", "정상적인 접근이 아닙니다.");
+                map.put("code", HttpStatus.BAD_REQUEST);
+                return map;
+            }
+            Page<ArtistSongVO> songNameVO = songs.map(
+                s->new ArtistSongVO(s,
+                sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
+                slRepo.countBySongAndMember(s, member)>=1?true:false
+                ));
+                map.put("data", songNameVO);
+        }else{
+            Page<ArtistSongVO> songNameVO = songs.map(
+                s->new ArtistSongVO(s,
+                sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
+                map.put("data", songNameVO);
+        }
 
             map.put("status", true);
             map.put("message", "조회성공");
             map.put("code", HttpStatus.OK);
-            map.put("data", songNameVO);
         return map;
     }
 

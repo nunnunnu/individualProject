@@ -41,18 +41,16 @@
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
       <div class="HTML_Audio_player">
             <div class="Audio_Player_image"><img style="border-radius: 60px;"
-                    src="http://localhost:8250/image/album/nctdream_candy" /></div>
+                    src="" /></div>
             <div class="player-content">
                 <div class="player-info">
                     <a class="song-name" target="_blank">Candy</a>
                     <a class="artist" href="#">NCT Dream</a>
                 </div>
-                <div class="k2_audio_player">
-                    <audio controls style="width: 80%;">
-                        <source
-                            src="http://localhost:8250/song/NCT DREAM-01-Candy-Candy - Winter Special Mini Album-320/1/1"
-                            type="audio/mpeg" />
-                    </audio>
+                <div v-if="mp3!=null" class="k2_audio_player">
+                  <audio controls style="width: 80%;">
+                    <source :src="mp3" type="audio/mpeg" />
+                  </audio>
                 </div>
             </div>
         </div>
@@ -60,23 +58,56 @@
   </div>
 </template>
 <script>
-   export default {
+  import axios from 'axios'
+  import Cookies from 'js-cookie'
+export default {
     // name: 'main',
-    data() {
-      return {
-        keywordSearch: null,
-        this:null
-      }
-    },
-    methods:{
-      searchClick(keyword){
-        this.$router.push({
-          name: "totalSearch",
-          params: { key: keyword },
-        });
-      }
+  data() {
+    return {
+      keywordSearch: null,
+      mp3:null,
+      seq:null
     }
-   }
+  },
+  created() {
+    this.nowPlaying()
+    this.seq = sessionStorage.getItem('nowplayingSeq');
+    // this.mp3 = this.nowPlaying()
+    console.log(this.mp3)
+  },
+  watch:{
+    seq(){
+      this.nowPlaying
+    }
+  },
+  methods:{
+    searchClick(keyword){
+      this.$router.push({
+        name: "totalSearch",
+        params: { key: keyword },
+      });
+    },
+    nowPlaying() {
+      const uri = sessionStorage.getItem('nowplayingUri');
+      const seq = sessionStorage.getItem('nowplayingSeq');
+      axios.get(`http://localhost:8250/songfile/${uri}/${seq}`, {
+        headers: {
+          Authorization: 'Bearer ' + Cookies.get('accessToken')
+        },
+        responseType: 'blob'
+      })
+      .then((response) => {
+        const blobUrl = URL.createObjectURL(response.data);
+        if (blobUrl) {
+          this.mp3 = blobUrl;
+        } 
+      })
+    }
+  },
+  // mounted() {
+  //   this.nowPlaying();
+  // }
+}
 </script>
 <style>
 @import "@/assets/css/fonts.css";

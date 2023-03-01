@@ -94,13 +94,30 @@
                                 {{ artist.name }}</router-link>
                         </tr>
                         </td>
-                        <td>{{item.likes}}</td>
                         <td>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-play-fill" viewBox="0 0 16 16">
-                                <path
-                                    d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
-                            </svg>
+                            <div @click="likeUnlike(item.seq)">
+                                <span v-if="item.isliked"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+    </svg></span>
+                                <span v-else><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+</svg></span>
+                                {{item.likes}}
+                            </div>
+                        </td>
+                        <td>
+                            <div v-if="item.files.length!=0">
+                                <svg @click="playSong(item.seq, item.files[0].uri)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-play-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                                </svg>
+                            </div>
+                            <div v-else>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+  <path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
+</svg>
+                            </div>
                         </td>
                         <td>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -189,19 +206,21 @@
         },
         created() {
             this.seq = this.$route.params.seq;
-            this.loadPage(this.seq)
             if (Cookies.get('accessToken') != null) {
                 this.isLogin = true
             } else {
                 this.isLogin = false
             }
-            console.log(this.isLogin)
+            this.loadPage(this.seq)
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/album/detail/" + seq)
+                axios.get("http://localhost:8250/album/detail/" + seq, {
+                    headers: {
+                        Authorization: `Bearer `+Cookies.get('accessToken')
+                    }
+                })
                     .then((e) => {
-                        console.log(e)
                         this.data = e.data.data
                         this.albumExplan = e.data.data.explan
                     })
@@ -227,18 +246,16 @@
                 }
             },
             gradeAdd(seq) {
-                console.log(Cookies.get('accessToken'))
                 if(this.rating==0){
                     alert("평점이 입력되지않았습니다. 평점은 1점부터 등록할 수 있습니다.")
                 }else{
                     const token = Cookies.get('accessToken');
-                    axios.put("http://localhost:8250/grade/"+seq+"?grade="+this.rating , {
+                    axios.put("http://localhost:8250/grade/"+seq+"?grade="+this.rating, {} , {
                         headers: {
                             Authorization: `Bearer `+token
                         }
                     })
                     .then((e) => {
-                        console.log(e)
                         if(e.data.status){
                             alert("등록되었습니다.")
                             this.rating=0;
@@ -253,6 +270,27 @@
                     alert("로그인 후 이용가능한 서비스입니다.")
                     this.$router.push("/login")
                 }
+            },
+            likeUnlike(seq){
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능한 서비스입니다.")
+                    this.$router.push("/login")
+                }else{
+                    axios.post("http://localhost:8250/likeUnlike/"+seq , {}, {
+                        headers: {
+                            Authorization: `Bearer `+Cookies.get('accessToken')
+                        }
+                    })
+                    .then((e)=>{
+                        alert(e.data.message)
+                        this.loadPage(this.seq)
+                    })
+                }
+            },
+            playSong(seq, uri){
+                console.log(uri)
+                sessionStorage.setItem("nowplayingSeq",seq)
+                sessionStorage.setItem("nowplayingUri",uri)
             }
         }
     }

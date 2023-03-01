@@ -201,9 +201,7 @@
             }
           })
           .then((e) => {
-            console.log(e)
             this.user = e.data.data
-            console.log(this.user)
           })
       }
     }

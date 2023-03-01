@@ -23,6 +23,7 @@ public class SongInfoVO {
     private Integer likes; 
     private String movie;
     private List<SongFileVO> files = new ArrayList<>();
+    private Boolean isliked;
 
     public SongInfoVO(SongInfoEntity entity){
         this.seq = entity.getSiSeq();
@@ -38,6 +39,23 @@ public class SongInfoVO {
             System.out.println("sss");
             this.files.add(new SongFileVO(file));
         }
+
+    }
+    public SongInfoVO(SongInfoEntity entity, Boolean liked){
+        this.seq = entity.getSiSeq();
+        this.order = entity.getSiOrder();
+        this.title = entity.getSiTitle();
+        this.name = entity.getSiName();
+        for(SongArtistConnection sac : entity.getArtists()){
+            this.artists.add(new ArtistInfoVO(sac.getArtist()));
+        }
+        this.likes = entity.getLikes().size();
+        this.movie = entity.getSiMovie();
+        for(SongFileEntity file : entity.getFiles()){
+            System.out.println("sss");
+            this.files.add(new SongFileVO(file));
+        }
+        this.isliked=liked;
 
     }
 }

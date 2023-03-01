@@ -9,6 +9,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,8 +51,9 @@ public class AlbumController {
     }
     
     @GetMapping("/detail/{seq}")
-    public ResponseEntity<Object> getAlbumDetail(@PathVariable Long seq){
-        Map<String, Object> map = aService.albumDetail(seq);
+    public ResponseEntity<Object> getAlbumDetail(@PathVariable Long seq, @AuthenticationPrincipal UserDetails userDetails){
+        System.out.println(userDetails);
+        Map<String, Object> map = aService.albumDetail(userDetails, seq);
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }

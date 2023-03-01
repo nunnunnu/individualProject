@@ -2,6 +2,8 @@ package melonproject.melon.controller;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,11 +25,10 @@ public class FileController {
         
         return fService.getImage(uri, type, request);
     }
-    @GetMapping("/song/{uri}/{member}/{song}")
-    public ResponseEntity<Resource> getSong ( @PathVariable String uri, @PathVariable Long song,
-            HttpServletRequest request, @PathVariable Long member ) throws Exception {
-                System.out.println("???");
-            songService.listenMusicList(member, song);
+    @GetMapping("/songfile/{uri}/{song}")
+    public ResponseEntity<Resource> getSong ( @PathVariable String uri, @PathVariable Long song, @AuthenticationPrincipal UserDetails userDetails,
+            HttpServletRequest request ) throws Exception {
+            songService.listenMusicList(userDetails, song);
 
         return fService.getSong(uri, request);
     }

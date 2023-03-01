@@ -55,7 +55,7 @@ public class AlbumDetailVO {
         this.uri = album.getAlbumUri();
         this.explan = album.getAlbumExplan().replace("\\n", "<br />");
         artistVOsetting(new ArtistInfoVO(album.getArtist()));
-        addSongList(album.getSongList());
+        // addSongList(album.getSongList());
     }
 
     public void artistVOsetting(ArtistInfoVO artist){
@@ -66,6 +66,9 @@ public class AlbumDetailVO {
         for(SongInfoEntity s : songs){
             this.song.add(new SongInfoVO(s));
         }
+    }
+    public void putSongList(SongInfoEntity song, Boolean liked){
+        this.song.add(new SongInfoVO(song, liked));
     }
     
 

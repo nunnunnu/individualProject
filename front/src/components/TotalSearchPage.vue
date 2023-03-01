@@ -34,7 +34,17 @@
                     <router-link :to="{name:'albumDetail', params:{seq:item.album.seq}}" style="font-size:15px">
                         {{ item.album.name }}</router-link>
                 </td>
-                <td>{{item.like}}</td>
+                <td>
+                    <div @click="likeUnlike(item.seq)">
+                                <span v-if="item.isLiked"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+    </svg></span>
+                                <span v-else><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+  <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+</svg></span>
+                    {{item.like}}
+</div>
+                </td>
                 <td>
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-play-fill" viewBox="0 0 16 16">
@@ -134,22 +144,6 @@
                             <div class="card-body">
 
                                 <h6 class="card-title"><span v-html="keywordTag(data.name)"></span></h6>
-                                <!-- <router-link :to="{name:'artistChannel', params:{seq:data.artistSeq}}"
-                                    style="font-size:15px">{{ data.artistName }}</router-link> -->
-                                <!-- <br>
-                                <br> -->
-                                <!-- <div class="row"> -->
-                                <!-- <div class="col-5" align="center">
-                                        <p class="card-text"><small class="text-muted">{{ data.regDt }}</small></p>
-                                    </div>
-                                    <div class="col-3" align="center">
-                                        <p class="card-text"><small class="text-muted">{{ data.songCount }}곡</small></p>
-                                    </div>
-                                    <div class="col-4" align="center">
-                                        <p class="card-text"><small class="text-muted">[{{ data.type }}]</small></p>
-                                    </div> -->
-                                <!-- </div> -->
-                                <!-- <br> -->
                                 <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
                                     상세보기</router-link>
                             </div>
@@ -167,6 +161,7 @@
 </template>
 <script>
     import axios from 'axios'
+    import Cookies from 'js-cookie'
     export default {
         name: 'totalSearch',
         // props : ['key'],
@@ -176,17 +171,27 @@
                 songLyrics: null,
                 albums: null,
                 artist: null,
-                childKeyword: null
+                childKeyword: null,
+                isLogin:null
             }
         },
         created() {
             // this.childKeyword = this.keyword
             this.childKeyword = this.$route.params.key;
             this.loadPage()
+            if(Cookies.get('accessToken')!=null){
+                this.isLogin=true
+            }else{
+                this.isLogin=false
+            }
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/total?keyword=" + this.childKeyword)
+                axios.get("http://localhost:8250/search/total?keyword=" + this.childKeyword, {
+                    headers: {
+                        Authorization: `Bearer `+Cookies.get('accessToken')
+                    }
+                })
                     .then((e) => {
                         this.songName = e.data.songName
                         this.songLyrics = e.data.songLyrics
@@ -204,6 +209,23 @@
             },
             keywordTag(str){
                 return str.replace(new RegExp(this.childKeyword, 'gi'), match => `<span class="highlight">${match}</span>`)
+            },
+            likeUnlike(seq){
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능한 서비스입니다.")
+                    this.$router.push("/login")
+                }else{
+                    axios.post("http://localhost:8250/likeUnlike/"+seq , {}, {
+                        headers: {
+                            Authorization: `Bearer `+Cookies.get('accessToken')
+                        }
+                    })
+                    .then((e)=>{
+                        alert(e.data.message)
+                        this.loadPage(this.seq)
+                    })
+                }
+
             }
         }
     }
