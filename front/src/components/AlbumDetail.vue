@@ -291,6 +291,7 @@
                 console.log(uri)
                 sessionStorage.setItem("nowplayingSeq",seq)
                 sessionStorage.setItem("nowplayingUri",uri)
+                this.$router.go();
             }
         }
     }

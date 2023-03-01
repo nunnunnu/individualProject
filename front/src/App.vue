@@ -41,14 +41,14 @@
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
       <div class="HTML_Audio_player">
             <div class="Audio_Player_image"><img style="border-radius: 60px;"
-                    src="" /></div>
+                    :src="imgLoad" /></div>
             <div class="player-content">
                 <div class="player-info">
                     <a class="song-name" target="_blank">Candy</a>
                     <a class="artist" href="#">NCT Dream</a>
                 </div>
                 <div v-if="mp3!=null" class="k2_audio_player">
-                  <audio controls style="width: 80%;">
+                  <audio controls autoplay style="width: 80%;">
                     <source :src="mp3" type="audio/mpeg" />
                   </audio>
                 </div>
@@ -66,7 +66,8 @@ export default {
     return {
       keywordSearch: null,
       mp3:null,
-      seq:null
+      seq: sessionStorage.getItem('nowplayingSeq'),
+      uri: sessionStorage.getItem('nowplayingUri')
     }
   },
   created() {
@@ -75,11 +76,16 @@ export default {
     // this.mp3 = this.nowPlaying()
     console.log(this.mp3)
   },
-  watch:{
-    seq(){
-      this.nowPlaying
+  computed: {
+    sessionValue() {
+      return sessionStorage.getItem('nowplayingSeq');
     }
   },
+  // watch:{
+  //   seq(){
+  //     this.nowPlaying
+  //   }
+  // },
   methods:{
     searchClick(keyword){
       this.$router.push({
@@ -102,6 +108,9 @@ export default {
           this.mp3 = blobUrl;
         } 
       })
+    },
+    imgLoad(){
+      return "http://localhost:8250/image/album/nctdream_candy"
     }
   },
   // mounted() {
