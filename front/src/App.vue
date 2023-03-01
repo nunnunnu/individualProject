@@ -41,7 +41,7 @@
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
       <div class="HTML_Audio_player">
             <div class="Audio_Player_image"><img style="border-radius: 60px;"
-                    :src="imgLoad" /></div>
+                    :src="imgLoad()" /></div>
             <div class="player-content">
                 <div class="player-info">
                     <a class="song-name" target="_blank">Candy</a>
@@ -67,7 +67,8 @@ export default {
       keywordSearch: null,
       mp3:null,
       seq: sessionStorage.getItem('nowplayingSeq'),
-      uri: sessionStorage.getItem('nowplayingUri')
+      uri: sessionStorage.getItem('nowplayingUri'),
+      album: sessionStorage.getItem('nowplayingAlbum')
     }
   },
   created() {
@@ -110,7 +111,7 @@ export default {
       })
     },
     imgLoad(){
-      return "http://localhost:8250/image/album/nctdream_candy"
+      return `http://localhost:8250/image/album/${this.album}`
     }
   },
   // mounted() {

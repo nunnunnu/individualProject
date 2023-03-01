@@ -193,6 +193,8 @@
         this.loadNewAlbum();
         this.loadWeeklyChart()
         this.isLogin = false
+        sessionStorage.clear()
+        this.$router.go()
       },
       loadUserInfo(token) {
         axios.get("http://localhost:8250/myInfo", {
