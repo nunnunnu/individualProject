@@ -22,8 +22,8 @@
                                 <span v-if="item.title" class="badge rounded-pill text-bg-success">title</span>
                                 <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
                                 <br>
-                                <tr v-for="artist in item.artist" :key="artist.seq">
-                                    <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
+                                <tr v-for="artist in item.artists" :key="artist.seq">
+                                    <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
                                 </tr>
                             </td>
                             <td>
@@ -31,19 +31,28 @@
                             </td>
                             <td>
                                 <div @click="likeUnlike(item.seq)">
-                                <span v-if="item.isLiked"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                                <span v-if="item.isliked"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
     </svg></span>
                                 <span v-else><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
   <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
 </svg></span>
-                                {{item.like}}
+                                {{item.likes}}
 </div>
                             </td>
                             <td>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-  <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                                <div v-if="item.uri!=0">
+                                <svg @click="playSong(item)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="bi bi-play-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                                </svg>
+                            </div>
+                            <div v-else>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play" viewBox="0 0 16 16">
+  <path d="M10.804 8 5 4.633v6.734L10.804 8zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692z"/>
 </svg>
+                            </div>
                             </td>
                             <td>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-square" viewBox="0 0 16 16">
@@ -112,14 +121,14 @@
                 isLogin:null
             }
         },
-        created() {
+        mounted() {
             this.loadPage()
             if(Cookies.get('accessToken')!=null){
                 this.isLogin=true
             }else{
                 this.isLogin=false
             }
-            console.log(this.isLogin)
+
 
         },
         methods: {
@@ -131,6 +140,7 @@
                 })
                     .then((e) => {
                         this.data = e.data.data.content
+                        console.log(this.data)
                         this.totalPage=e.data.data.totalPages
                         this.size=e.data.data.size                        
                     })
@@ -158,6 +168,19 @@
                     })
                 }
 
+            },
+            playSong(item){
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능합니다.")
+                    this.$router.push("/login")
+                }
+                // let songlist = []
+                let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                songlist.push(item)
+                sessionStorage.setItem('playlist',JSON.stringify(songlist))
+                sessionStorage.setItem('nowIndex',songlist.length-1)
+                this.$router.go();
+            
             }
         }
     }

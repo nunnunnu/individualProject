@@ -4,19 +4,19 @@
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">곡 명으로 검색</h4>
         <div class="artists">
             <tr v-for="data in data" :key="data.seq">
+                <router-link :to="{name:'artistDetail', params:{seq:data.seq}}" style="font-size:15px">
                 <div class="card">
                     <img :src="`http://localhost:8250/image/artist/${data.uri}`"
-                                style="max-width: 100%; height: 240px;" align="right" class="rounded float-start">
+                                style="max-width: 100%; height: 200px;" align="right" class="rounded float-start">
                     <div class="card-body">
                     <router-link :to="{name:'artistDetail', params:{seq:data.seq}}"
                                     style="font-size:15px"><span v-html="keywordTag(data.name)"></span></router-link>
                     <p class="card-text"><small class="text-muted">{{ data.debut }}</small></p>
                     <p class="card-text"><small class="text-muted">{{ data.agency }}</small></p>
                     <p class="card-text"><small class="text-muted">[{{ data.type }}]</small></p>
-                    <router-link :to="{name:'artistDetail', params:{seq:data.seq}}" style="font-size:15px">
-                                    상세보기</router-link>
                     </div>
                 </div>
+                </router-link>
             </tr>
         </div>
         <br>

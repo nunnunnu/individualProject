@@ -39,95 +39,22 @@
     </nav>
     <router-view />
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
-    <div v-if="songs!=null && songs.length!=0">
-      <div class="HTML_Audio_player">
-        <div class="Audio_Player_image"><img style="border-radius: 60px;" :src="img" /></div>
-        <div class="player-content">
-          <div class="player-info">
-              <a class="song-name" target="_blank">
-                <router-link :to="{name:'songDetail', params:{seq:songs[index].seq}}">{{ songs[index].name }}
-                </router-link>
-                <a class="btn btn-dark" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                  재생목록
-                </a>
-                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-                  <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">재생목록</h5>
-                    <hr>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                  </div>
-                  <div class="offcanvas-body">
-                    <tr v-for="(s, idx) in songs" :key="s.seq">
-                    <div @click="indexChange(idx)">
-                        <div class="row">
-                          <div class="col-auto">
-                            <img style="border-radius: 60px;" :src="imgLoad(s.albumUri)" width="40" />
-                          </div>
-                          <div class="col-auto">
-                          <p>{{s.name}}</p>
-                          </div>
-                        <div class="col-auto">
-                          <tr v-for="a in s.artists" :key="a.seq">
-                            <p>{{a.name}}</p>
-                          </tr>
-                        </div>
-                        <div class="col-auto">
-                          <div v-if="idx==index">
-                            재생중
-                          </div>
-                        </div>
-                      </div>
-                      <hr>
-                      </div>
-                    </tr>
-                    <div class="dropdown mt-3">
-                
-                    </div>
-                  </div>
-                </div>
-              </a>
-              <tr v-for="artist in songs[index].artists" :key="artist.seq">
-                <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
-                  {{ artist.name }}</router-link>
-              </tr>
-            </div>
-            <div v-if="mp3!=null" class="k2_audio_player">
-              <audio ref="myAudio" controls autoplay  style="width: 80%;">
-                <source :src="mp3"  :ended="nextTrack" type="audio/mpeg" />
-              </audio>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-else>
-      <div class="HTML_Audio_player">
-        <div class="Audio_Player_image"><img style="border-radius: 60px;" src="https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/abstract/26/fdb51ff613237395.jpg" /></div>
-        <div class="player-content">
-          <div class="player-info">
-            <p>재생할 곡이 없습니다.</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    
+      <playList />
     </footer>
   </div>
 </template>
 <script>
   import axios from 'axios'
   import Cookies from 'js-cookie'
+  import PlayList from './components/PlayList.vue'
 
   export default {
+  components: { PlayList },
     // name: 'main',
     data() {
       return {
-        keywordSearch: null,
-        mp3: null,
-        // song: JSON.parse(sessionStorage.getItem('nowPlayingSeq')),
-        // uri: sessionStorage.getItem('nowplayingUri'),
-        // album: sessionStorage.getItem('nowplayingAlbum'),
-        index: sessionStorage.getItem('nowIndex'),
-        songs: JSON.parse(sessionStorage.getItem('playlist')),
-        img:null
+        keywordSearch: null
       }
     },
     created() {

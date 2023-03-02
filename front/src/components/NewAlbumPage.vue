@@ -5,6 +5,7 @@
         <div class="albums">
             <tr v-for="data in data" :key="data.seq">
                 <div class="card mb-3" style="max-width: 640px;">
+                    <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
                     <div class="row g-0">
                         <div class="col-md-4">
                             <img :src="`http://localhost:8250/image/album/${data.uri}`"
@@ -30,11 +31,11 @@
                                     </div>
                                 </div>
                                 <br>
-                                <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
-                                    상세보기</router-link>
+                                
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        </router-link>
                 </div>
             </tr>
         </div>

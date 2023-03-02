@@ -97,14 +97,17 @@
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">아티스트 명으로 검색</h4>
         <div class="artists">
             <tr v-for="art in artist" :key="art.seq">
+                <router-link :to="{name:'artistDetail', params:{seq:art.seq}}"
+                                style="font-size: 15px">
                 <!-- <div class="col"> -->
                 <div class="card">
                     <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
                     <div class="card-body">
                         <div class="card-title"><div v-html="keywordTag(art.name)"></div></div>
-                        <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a>
+                        <!-- <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a> -->
                     </div>
                 </div>
+                </router-link>
             </tr>
         </div>
         <div align="right">
@@ -134,6 +137,7 @@
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">앨범 명으로 검색</h4>
         <div class="albums">
             <tr v-for="data in albums" :key="data.seq">
+                <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
                 <div class="card mb-3" style="max-width: 423px;">
                     <div class="row g-0">
                         <div class="col-md-4">
@@ -144,12 +148,13 @@
                             <div class="card-body">
 
                                 <h6 class="card-title"><span v-html="keywordTag(data.name)"></span></h6>
-                                <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
-                                    상세보기</router-link>
+                                
+                                    
                             </div>
                         </div>
                     </div>
                 </div>
+                </router-link>
             </tr>
         </div>
         <div align="right">

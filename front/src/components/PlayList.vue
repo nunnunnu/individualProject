@@ -1,0 +1,164 @@
+<template>
+    <div v-if="songs!=null && songs.length!=0">
+        <div class="HTML_Audio_player">
+            <div class="Audio_Player_image"><img style="border-radius: 60px;" :src="img" /></div>
+            <div class="player-content">
+                <div class="player-info">
+                    <a class="song-name" target="_blank">
+                        <!-- <div class="row"> -->
+                            <!-- <div class="col-auto" align="right"> -->
+                                <router-link :to="{name:'songDetail', params:{seq:songs[index].seq}}">{{ songs[index].name }}
+                                </router-link>
+                            <!-- </div> -->
+                            <!-- <div class="col-9"> -->
+                                <a class="btn btn-dark" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                                    aria-controls="offcanvasExample"
+                                    style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                                    재생목록
+                                </a>
+                            <!-- </div> -->
+                        <!-- </div> -->
+                        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+                            aria-labelledby="offcanvasExampleLabel">
+                            <div class="offcanvas-header">
+                                <h5 class="offcanvas-title" id="offcanvasExampleLabel">재생목록</h5>
+                                <hr>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="offcanvas-body">
+                                <tr v-for="(s, idx) in songs" :key="s.seq">
+                                    <div @click="indexChange(idx)">
+                                        <div class="row">
+                                            <div class="col-1">
+                                                <div class="Audio_Player_image"><img style="border-radius: 60px;" width="30" height="30" :src="`http://localhost:8250/image/album/${s.albumUri}`" /></div>
+                                            </div>
+                                            <div class="col-2">
+                                                <img style="border-radius: 60px;" :src="imgLoad(s.albumUri)"
+                                                    width="40" />
+                                            </div>
+                                            <div class="col-auto">
+                                                <p>{{s.name}}</p>
+                                            </div>
+                                            <div class="col-auto">
+                                <tr v-for="a in s.artists" :key="a.seq">
+                                    <p>{{a.name}}</p>
+                                </tr>
+                            </div>
+                            <div class="col-auto">
+                                <div v-if="idx==index">
+                                    재생중
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                </div>
+                </tr>
+                <div class="dropdown mt-3">
+
+                </div>
+            </div>
+        </div>
+        </a>
+        <tr v-for="artist in songs[index].artists" :key="artist.seq">
+            <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
+                {{ artist.name }}</router-link>
+        </tr>
+    </div>
+    <div v-if="mp3!=null" class="k2_audio_player">
+        <audio ref="audioPlayer" @ended="playNext()" controls autoplay style="width: 80%;">
+            <source :src="mp3" @ended="nextTrack" type="audio/mpeg" />
+        </audio>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div v-else>
+        <div class="HTML_Audio_player">
+            <div class="Audio_Player_image"><img style="border-radius: 60px;"
+                    src="https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/abstract/26/fdb51ff613237395.jpg" /></div>
+            <div class="player-content">
+                <div class="player-info">
+                    <p>재생할 곡이 없습니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+import axios from 'axios'
+import Cookies from 'js-cookie'
+    export default {
+        name: 'playList',
+        data() {
+            return {
+                mp3: null,
+                index: sessionStorage.getItem('nowIndex'),
+                songs: JSON.parse(sessionStorage.getItem('playlist')),
+                img: null
+            }
+        },
+        mounted() {
+            this.nowPlaying()
+            // this.$refs.audioPlayer.addEventListener('ended', this.playNext);
+        },
+        watch: {
+            mp3: function () {}
+        },
+        methods: {
+            searchClick(keyword) {
+                this.$router.push({
+                    name: "totalSearch",
+                    params: {
+                        key: keyword
+                    },
+                });
+            },
+            nowPlaying() {
+                if (this.songs != null && this.songs.length != 0) {
+                    axios.get(
+                            `http://localhost:8250/songfile/${this.songs[this.index].files[0].uri}/${this.songs[this.index].seq}`, {
+                                headers: {
+                                    Authorization: 'Bearer ' + Cookies.get('accessToken')
+                                },
+                                responseType: 'blob'
+                            })
+                        .then((response) => {
+                            const blobUrl = URL.createObjectURL(response.data);
+                            if (blobUrl) {
+                                this.mp3 = blobUrl;
+                                return blobUrl
+                            }
+                        })
+                }
+            },
+            imgLoad(albumUri) {
+                this.img = `http://localhost:8250/image/album/${albumUri}`
+            },
+            indexChange(idx) {
+                sessionStorage.setItem('nowIndex', idx)
+                this.index = idx
+                // this.nowPlaying()
+                this.mp3= this.nowPlaying()
+                // this.$router.go()
+                // this.$refs.audioPlayer.play();
+            },
+            playNext() {
+                if(this.songs.length-1<=this.index){
+                    this.index=0
+                }else{
+                    this.index++;
+                }
+                sessionStorage.setItem('nowIndex', this.index)
+                this.mp3= this.nowPlaying()
+                console.log(this.mp3)
+                // this.$refs.audioPlayer.src = this.mp3
+                this.$refs.audioPlayer.play();
+
+            },
+        }
+    }
+</script>
+<style>
+
+</style>

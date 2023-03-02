@@ -18,6 +18,7 @@ import AlbumNameSearch from '../components/SearchAlbumName.vue'
 import LoginPage from '../views/Login.vue'
 import JoinMember from '../components/MemberJoinPage.vue'
 import MyPage from '../components/MyPage.vue'
+import PlayList from '../components/PlayList.vue'
 
 const routes = [
   {
@@ -133,7 +134,14 @@ const routes = [
     name: 'joinPage',
     component: JoinMember,
     meta: { hideNavbar: true, hideFooter: true }
+  },
+  {
+    path: '/playlist',
+    name: 'playList',
+    component: PlayList,
+    props:true
   }
+
 ]
 
 const router = createRouter({

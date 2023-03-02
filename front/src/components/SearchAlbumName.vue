@@ -4,6 +4,7 @@
         <h4 align="left" class="pb-4 mb-4 fst-italic border-bottom">앨범 명으로 검색</h4>
         <div class="albums">
             <tr v-for="data in data" :key="data.seq">
+                <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
                 <div class="card mb-3" style="max-width: 423px;">
                     <div class="row g-0">
                         <div class="col-md-4">
@@ -12,30 +13,12 @@
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-
                                 <h6 class="card-title"><span v-html="keywordTag(data.name)"></span></h6>
-                                <!-- <router-link :to="{name:'artistChannel', params:{seq:data.artistSeq}}"
-                                    style="font-size:15px">{{ data.artistName }}</router-link> -->
-                                <!-- <br>
-                                <br> -->
-                                <!-- <div class="row"> -->
-                                <!-- <div class="col-5" align="center">
-                                        <p class="card-text"><small class="text-muted">{{ data.regDt }}</small></p>
-                                    </div>
-                                    <div class="col-3" align="center">
-                                        <p class="card-text"><small class="text-muted">{{ data.songCount }}곡</small></p>
-                                    </div>
-                                    <div class="col-4" align="center">
-                                        <p class="card-text"><small class="text-muted">[{{ data.type }}]</small></p>
-                                    </div> -->
-                                <!-- </div> -->
-                                <!-- <br> -->
-                                <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
-                                    상세보기</router-link>
                             </div>
                         </div>
                     </div>
                 </div>
+            </router-link>
             </tr>
         </div>
         <br>

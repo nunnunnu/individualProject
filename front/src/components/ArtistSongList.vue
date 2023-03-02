@@ -8,6 +8,7 @@
                     <th scope="col">곡명</th>
                     <th scope="col">아티스트</th>
                     <th scope="col">앨범</th>
+                    <th scope="col">듣기</th>
                     <th scope="col">좋아요</th>
                     <th scope="col">뮤비</th>
                 </tr>
@@ -31,6 +32,7 @@
                 <td>
                     <router-link :to="{name:'albumDetail', params:{seq:item.album.seq}}">{{ item.album.name }}</router-link>
                 </td>
+                <td>ss</td>
                 <td>
                     <div @click="likeUnlike(item.seq)">
                                 <span v-if="item.isLiked"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">

@@ -37,6 +37,7 @@ import melonproject.melon.repository.user.SongLikesRepository;
 import melonproject.melon.vo.song.ArtistSongVO;
 import melonproject.melon.vo.song.SongAddVO;
 import melonproject.melon.vo.song.SongDetailVO;
+import melonproject.melon.vo.song.SongInfoVO;
 import melonproject.melon.vo.song.Creator.SongCreatorAddVO;
 
 @Service
@@ -249,15 +250,15 @@ public class SongService {
                 map.put("message", "정상적이지 않은 접근입니다.");
                 map.put("code", HttpStatus.BAD_REQUEST);
             }
-            Page<ArtistSongVO> result = entity.map(
-                s->new ArtistSongVO(s,
+            Page<SongInfoVO> result = entity.map(
+                s->new SongInfoVO(s,
                 sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
                 slRepo.countBySongAndMember(s, member)>=1?true:false
                 ));
                 map.put("data", result);
         }else{
-            Page<ArtistSongVO> result = entity.map(
-                s->new ArtistSongVO(s,
+            Page<SongInfoVO> result = entity.map(
+                s->new SongInfoVO(s,
                 sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null)
                 );
                 map.put("data", result);

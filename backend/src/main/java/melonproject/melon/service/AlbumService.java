@@ -56,6 +56,12 @@ public class AlbumService {
 
     public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file){
         Map<String, Object> map = new LinkedHashMap<>();
+        if(data.getType()==null){
+            map.put("status", false);
+            map.put("message", "앨범 타입 오류");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
         if(data.getRegDt()==null || data.getAgency()==null || data.getName()==null || data.getPublisher()==null || data.getType()==null){
             map.put("status", false);
             map.put("message", "필수 값을 모두 입력해주세요");

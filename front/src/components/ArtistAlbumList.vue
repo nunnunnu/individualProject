@@ -2,6 +2,7 @@
     <b-container>
         <div class="albums">
         <tr v-for="album in data" :key="album.seq">
+            <router-link :to="{name:'albumDetail', params:{seq:album.seq}}" style="font-size:20px">
                 <div class="card" style="width: 13rem; height: 30rem">
                     <img :src="`http://localhost:8250/image/album/${album.uri}`">
                     <div class="card-body">
@@ -10,10 +11,10 @@
                         <p class="card-text">title-{{ album.songName }}</p>
                         <p class="card-text">{{ album.regDt }}</p>
                         <p class="card-text">{{ album.songCount }}곡</p>
-                        <router-link :to="{name:'albumDetail', params:{seq:album.seq}}" style="font-size:20px">
-                            상세보기</router-link>
+                        
                     </div>
                 </div>
+                </router-link>
             </tr>
             <div v-if="dataLength==0">
                 <p>앨범정보가 없습니다.</p>

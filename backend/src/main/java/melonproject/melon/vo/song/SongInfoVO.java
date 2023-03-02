@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import melonproject.melon.entity.artist.song.SongArtistConnection;
 import melonproject.melon.entity.artist.song.SongFileEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
+import melonproject.melon.vo.album.AlbumInfoVO;
 import melonproject.melon.vo.artist.ArtistInfoVO;
 
 @Data
@@ -25,6 +26,8 @@ public class SongInfoVO {
     private List<SongFileVO> files = new ArrayList<>();
     private Boolean isliked;
     private String albumUri;
+    private String lyrics;
+    private AlbumInfoVO album;
 
     public SongInfoVO(SongInfoEntity entity){
         this.seq = entity.getSiSeq();
@@ -58,6 +61,41 @@ public class SongInfoVO {
             this.files.add(new SongFileVO(file));
         }
         this.isliked=liked;
+        this.albumUri = entity.getAlbum().getAlbumUri();
+    }
+    public SongInfoVO(SongInfoEntity song, String uri, Boolean liked){
+        this.seq = song.getSiSeq();
+        this.name = song.getSiName();
+        this.albumUri = song.getAlbum().getAlbumUri();
+        this.title = song.getSiTitle();
+        for(SongArtistConnection a : song.getArtists()){
+            artists.add(new ArtistInfoVO(a.getArtist()));
+        }
+        for(SongFileEntity file : song.getFiles()){
+            System.out.println("sss");
+            this.files.add(new SongFileVO(file));
+        }
+        this.album = new AlbumInfoVO(song.getAlbum());
+        this.likes = song.getLikes().size();
+        this.movie = song.getSiMovie();
+        this.lyrics = song.getSiLyrics();
+        this.isliked = liked;
+    }
+    public SongInfoVO(SongInfoEntity entity, String uri){
+        this.seq = entity.getSiSeq();
+        this.order = entity.getSiOrder();
+        this.title = entity.getSiTitle();
+        this.name = entity.getSiName();
+        for(SongArtistConnection sac : entity.getArtists()){
+            this.artists.add(new ArtistInfoVO(sac.getArtist()));
+        }
+        this.likes = entity.getLikes().size();
+        this.movie = entity.getSiMovie();
+        for(SongFileEntity file : entity.getFiles()){
+            System.out.println("sss");
+            this.files.add(new SongFileVO(file));
+        }
+        // this.isliked=liked;
         this.albumUri = entity.getAlbum().getAlbumUri();
     }
 }
