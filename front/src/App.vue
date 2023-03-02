@@ -14,7 +14,7 @@
                 <router-link to="/album/new">최신 앨범</router-link>
               </li>
               <!-- <li class="nav-item"> -->
-                <!-- <a class="nav-link" href="#">일간차트</a> -->
+              <!-- <a class="nav-link" href="#">일간차트</a> -->
               <!-- </li> -->
               <li class="nav-item">
                 <router-link to="/song/new">최신 음악</router-link>
@@ -24,14 +24,14 @@
               </li>
             </ul>
             <!-- <form class="d-flex" role="search"> -->
-              <div class="row">
-                <div class="col-8">
-                  <input class="form-control me-2" type="search" placeholder="Search" v-model="key">
-                </div>
-                <div class="col-2">
-                  <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
-                </div>
+            <div class="row">
+              <div class="col-8">
+                <input class="form-control me-2" type="search" placeholder="Search" v-model="key">
               </div>
+              <div class="col-2">
+                <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
+              </div>
+            </div>
             <!-- </form> -->
           </div>
         </div>
@@ -39,97 +39,183 @@
     </nav>
     <router-view />
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
+    <div v-if="songs!=null && songs.length!=0">
       <div class="HTML_Audio_player">
-            <div class="Audio_Player_image"><img style="border-radius: 60px;"
-                    :src="imgLoad()" /></div>
-            <div class="player-content">
-                <div class="player-info">
-                    <a class="song-name" target="_blank">Candy</a>
-                    <a class="artist" href="#">NCT Dream</a>
+        <div class="Audio_Player_image"><img style="border-radius: 60px;" :src="img" /></div>
+        <div class="player-content">
+          <div class="player-info">
+              <a class="song-name" target="_blank">
+                <router-link :to="{name:'songDetail', params:{seq:songs[index].seq}}">{{ songs[index].name }}
+                </router-link>
+                <a class="btn btn-dark" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                  재생목록
+                </a>
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                  <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">재생목록</h5>
+                    <hr>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  </div>
+                  <div class="offcanvas-body">
+                    <tr v-for="(s, idx) in songs" :key="s.seq">
+                    <div @click="indexChange(idx)">
+                        <div class="row">
+                          <div class="col-auto">
+                            <img style="border-radius: 60px;" :src="imgLoad(s.albumUri)" width="40" />
+                          </div>
+                          <div class="col-auto">
+                          <p>{{s.name}}</p>
+                          </div>
+                        <div class="col-auto">
+                          <tr v-for="a in s.artists" :key="a.seq">
+                            <p>{{a.name}}</p>
+                          </tr>
+                        </div>
+                        <div class="col-auto">
+                          <div v-if="idx==index">
+                            재생중
+                          </div>
+                        </div>
+                      </div>
+                      <hr>
+                      </div>
+                    </tr>
+                    <div class="dropdown mt-3">
+                
+                    </div>
+                  </div>
                 </div>
-                <div v-if="mp3!=null" class="k2_audio_player">
-                  <audio controls autoplay style="width: 80%;">
-                    <source :src="mp3" type="audio/mpeg" />
-                  </audio>
-                </div>
+              </a>
+              <tr v-for="artist in songs[index].artists" :key="artist.seq">
+                <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
+                  {{ artist.name }}</router-link>
+              </tr>
             </div>
+            <div v-if="mp3!=null" class="k2_audio_player">
+              <audio ref="myAudio" controls autoplay  style="width: 80%;">
+                <source :src="mp3"  :ended="nextTrack" type="audio/mpeg" />
+              </audio>
+            </div>
+          </div>
         </div>
+      </div>
+      <div v-else>
+      <div class="HTML_Audio_player">
+        <div class="Audio_Player_image"><img style="border-radius: 60px;" src="https://downloadwap.com/thumbs2/wallpapers/p2ls/2019/abstract/26/fdb51ff613237395.jpg" /></div>
+        <div class="player-content">
+          <div class="player-info">
+            <p>재생할 곡이 없습니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
     </footer>
   </div>
 </template>
 <script>
   import axios from 'axios'
   import Cookies from 'js-cookie'
-export default {
+
+  export default {
     // name: 'main',
-  data() {
-    return {
-      keywordSearch: null,
-      mp3:null,
-      seq: sessionStorage.getItem('nowplayingSeq'),
-      uri: sessionStorage.getItem('nowplayingUri'),
-      album: sessionStorage.getItem('nowplayingAlbum')
-    }
-  },
-  created() {
-    this.nowPlaying()
-    this.seq = sessionStorage.getItem('nowplayingSeq');
-    // this.mp3 = this.nowPlaying()
-    console.log(this.mp3)
-  },
-  computed: {
-    sessionValue() {
-      return sessionStorage.getItem('nowplayingSeq');
-    }
-  },
-  // watch:{
-  //   seq(){
-  //     this.nowPlaying
-  //   }
-  // },
-  methods:{
-    searchClick(keyword){
-      this.$router.push({
-        name: "totalSearch",
-        params: { key: keyword },
-      });
+    data() {
+      return {
+        keywordSearch: null,
+        mp3: null,
+        // song: JSON.parse(sessionStorage.getItem('nowPlayingSeq')),
+        // uri: sessionStorage.getItem('nowplayingUri'),
+        // album: sessionStorage.getItem('nowplayingAlbum'),
+        index: sessionStorage.getItem('nowIndex'),
+        songs: JSON.parse(sessionStorage.getItem('playlist')),
+        img:null
+      }
     },
-    nowPlaying() {
-      const uri = sessionStorage.getItem('nowplayingUri');
-      const seq = sessionStorage.getItem('nowplayingSeq');
-      axios.get(`http://localhost:8250/songfile/${uri}/${seq}`, {
-        headers: {
-          Authorization: 'Bearer ' + Cookies.get('accessToken')
-        },
-        responseType: 'blob'
-      })
-      .then((response) => {
-        const blobUrl = URL.createObjectURL(response.data);
-        if (blobUrl) {
-          this.mp3 = blobUrl;
-        } 
-      })
+    created() {
+      // console.log(this.songs[this.index])
+      this.nowPlaying()
+
+      // this.seq = sessionStorage.getItem('nowplayingSeq');
+      // this.mp3 = this.nowPlaying()
     },
-    imgLoad(){
-      return `http://localhost:8250/image/album/${this.album}`
+    watch:{
+      mp3: function(){
+        // this.nowPlaying();
+        // this.$refs.myAudio
+      }
+    },
+    // computed: {
+    //   sessionValue() {
+    //     return sessionStorage.getItem('nowplayingSeq');
+    //   }
+    // },
+    // watch:{
+    //   seq(){
+    //     this.nowPlaying
+    //   }
+    // },
+    methods: {
+      searchClick(keyword) {
+        this.$router.push({
+          name: "totalSearch",
+          params: {
+            key: keyword
+          },
+        });
+      },
+      nowPlaying() {
+        if (this.songs!=null && this.songs.length != 0) {
+          axios.get(`http://localhost:8250/songfile/${this.songs[this.index].files[0].uri}/${this.songs[this.index].seq}`, {
+              headers: {
+                Authorization: 'Bearer ' + Cookies.get('accessToken')
+              },
+              responseType: 'blob'
+            })
+            .then((response) => {
+              const blobUrl = URL.createObjectURL(response.data);
+              if (blobUrl) {
+                this.mp3 = blobUrl;
+              }
+            })
+        }
+      },
+      imgLoad(albumUri) {
+        this.img = `http://localhost:8250/image/album/${albumUri}`
+      },
+      indexChange(idx){
+        sessionStorage.setItem('nowIndex', idx)
+        this.index = idx
+        this.nowPlaying()
+        this.$router.go()
+      },
+      nextTrack(){
+        console.log("???")
+        if(this.songs.length<=this.index-1){
+          sessionStorage.setItem('nowIndex', 0)
+          this.index= 0
+        }else{
+          sessionStorage.setItem('nowIndex', this.index+1)
+          this.index= this.index+1
+        }
+        
+      }
     }
-  },
-  // mounted() {
-  //   this.nowPlaying();
-  // }
-}
+    // mounted() {
+    //   this.nowPlaying();
+    // }
+  }
 </script>
 <style>
-@import "@/assets/css/fonts.css";
-@import "@/assets/css/reset.css";
+  @import "@/assets/css/fonts.css";
+  @import "@/assets/css/reset.css";
+
   #app {
     text-align: center;
   }
 
-  nav-item{
-    padding-left:10px;
+  nav-item {
+    padding-left: 10px;
 
-  padding-right:10px;
+    padding-right: 10px;
   }
 
   nav a {
@@ -140,6 +226,7 @@ export default {
   nav a.router-link-exact-active {
     color: #097d11;
   }
+
   .HTML_Audio_player {
     z-index: 99999;
     background: linear-gradient(135deg, #f4f8ff 0, #f4f8ff 49%, #e5efff 49%, #e9e8f2 100%);

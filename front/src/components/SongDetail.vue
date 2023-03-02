@@ -42,10 +42,20 @@
             <hr>
             <br>
             <h3 class="pb-4 mb-4 fst-italic border-bottom">가사</h3>
-            <details align="left">
+            <!-- <details align="left">
                 <summary>펼치기</summary>
                 <div v-html="data.lyrics"></div>
-            </details>
+            </details> -->
+            <p>
+                <a class="btn btn-success" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    펼치기
+                </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+                    <div v-html="data.lyrics"></div>
+                </div>
+                </div>
             <br>
             <h3 class="pb-4 mb-4 fst-italic border-bottom">작사/작곡</h3>
             <div class="creator">
@@ -166,7 +176,7 @@
                         }
                     })
                     .then((e)=>{
-                        alert(e.data.message)
+                        this.checkLiked()
                         this.loadPage(this.seq)
                     })
                 }

@@ -16,7 +16,7 @@
                 <tr v-for="(item, index ) in data" :key="item.seq">
                 <th scope="row">{{ index+1 }}</th>
                 <td>
-                                <span v-if="item.title" class="badge text-bg-primary">title</span>
+                                <span v-if="item.title" class="badge rounded-pill text-bg-success">title</span>
                                 <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
                                 <br>
                                 <tr v-for="artist in item.artists" :key="artist.seq">
@@ -116,7 +116,6 @@
                         }
                     })
                     .then((e)=>{
-                        alert(e.data.message)
                         this.loadPage(this.seq)
                     })
                 }

@@ -24,6 +24,7 @@ public class SongInfoVO {
     private String movie;
     private List<SongFileVO> files = new ArrayList<>();
     private Boolean isliked;
+    private String albumUri;
 
     public SongInfoVO(SongInfoEntity entity){
         this.seq = entity.getSiSeq();
@@ -39,6 +40,7 @@ public class SongInfoVO {
             System.out.println("sss");
             this.files.add(new SongFileVO(file));
         }
+        this.albumUri = entity.getAlbum().getAlbumUri();
 
     }
     public SongInfoVO(SongInfoEntity entity, Boolean liked){
@@ -56,6 +58,6 @@ public class SongInfoVO {
             this.files.add(new SongFileVO(file));
         }
         this.isliked=liked;
-
+        this.albumUri = entity.getAlbum().getAlbumUri();
     }
 }

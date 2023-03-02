@@ -21,7 +21,7 @@
                     <td align="left">
                         
                         <router-link :to="{name:'songDetail', params:{seq:item.seq}}">
-                            <span v-if="item.title" class="badge text-bg-primary">title</span>
+                            <span v-if="item.title" class="badge rounded-pill text-bg-success">title</span>
                             <span v-html="keywordTag(item.name)"></span>
                         </router-link>
                         <br>
@@ -221,7 +221,6 @@
                         }
                     })
                     .then((e)=>{
-                        alert(e.data.message)
                         this.loadPage(this.seq)
                     })
                 }

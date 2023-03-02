@@ -84,7 +84,7 @@
                         <tr v-for="item in data.song" :key="item.seq">
                             <th scope="row">{{ item.order }}</th>
                             <td align="left">
-                                <span v-if="item.title" class="badge text-bg-primary">title</span>
+                                <span v-if="item.title" class="badge rounded-pill text-bg-success">title</span>
                                 <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}
                                 </router-link>
                                 <br>
@@ -107,7 +107,7 @@
                         </td>
                         <td>
                             <div v-if="item.files.length!=0">
-                                <svg @click="playSong(item.seq, item.files[0].uri, data.uri)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                <svg @click="playSong(item, data.uri)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-play-fill" viewBox="0 0 16 16">
                                     <path
                                         d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
@@ -160,11 +160,16 @@
                 </table>
                 <br>
                 <h5 class="pb-4 mb-4 fst-italic border-bottom">앨범소개</h5>
-                <!-- <p v-html="explan"></p> -->
-                <details align="left">
-                    <summary>펼치기</summary>
+                <p>
+                <a class="btn btn-success" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                    펼치기
+                </a>
+                </p>
+                <div class="collapse" id="collapseExample">
+                <div class="card card-body">
                     <div v-html="albumExplan"></div>
-                </details>
+                </div>
+                </div>
                 <br>
                 <hr>
                 <br>
@@ -184,7 +189,6 @@
                 <br>
                 <p align="left">총 {{ data.comment }}개</p>
                 <hr>
-
             </div>
         </div>
     </b-container>
@@ -282,17 +286,22 @@
                         }
                     })
                     .then((e)=>{
-                        alert(e.data.message)
                         this.loadPage(this.seq)
                     })
                 }
             },
-            playSong(seq, uri, album){
-                console.log(uri)
-                sessionStorage.setItem("nowplayingSeq",seq)
-                sessionStorage.setItem("nowplayingUri",uri)
-                sessionStorage.setItem("nowplayingAlbum",album)
+            playSong(item, album){
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능합니다.")
+                    this.$router.push("/login")
+                }
+                // let songlist = []
+                let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                songlist.push(item)
+                sessionStorage.setItem('playlist',JSON.stringify(songlist))
+                sessionStorage.setItem('nowIndex',songlist.length-1)
                 this.$router.go();
+            
             }
         }
     }
