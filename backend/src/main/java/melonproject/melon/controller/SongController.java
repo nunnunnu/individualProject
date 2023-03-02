@@ -79,6 +79,12 @@ public class SongController {
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
+    @GetMapping("/spotify")
+    public String spotify(
+    ){
+
+        return "d42434663ee841a580ad0e943421cf93";
+    }
 
     
     

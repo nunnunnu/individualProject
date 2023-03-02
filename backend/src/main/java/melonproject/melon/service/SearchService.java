@@ -27,6 +27,7 @@ import melonproject.melon.vo.album.AlbumInfoVO;
 import melonproject.melon.vo.artist.ArtistChannelVO;
 import melonproject.melon.vo.artist.ArtistListVO;
 import melonproject.melon.vo.song.ArtistSongVO;
+import melonproject.melon.vo.song.SongInfoVO;
 
 @Service
 @RequiredArgsConstructor
@@ -45,7 +46,7 @@ public class SearchService {
         List<AlbumInfoEntity> albums = albumRepo.findTop10ByAlbumNameContains(key);
         List<ArtistInfoEntity> artist = artistRepo.findTop10ByArtNameContains(key);
 
-        List<ArtistSongVO> songNameVO = new ArrayList<>();
+        List<SongInfoVO> songNameVO = new ArrayList<>();
         if(userDetails!=null){
             MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
             if(member==null){
@@ -55,7 +56,7 @@ public class SearchService {
                 return map;
             }
             for(SongInfoEntity s : songNames){
-                songNameVO.add(new ArtistSongVO(
+                songNameVO.add(new SongInfoVO(
                     s, 
                     sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
                     slRepo.countBySongAndMember(s, member)>=1?true:false
@@ -64,7 +65,7 @@ public class SearchService {
             
         }else{
             for(SongInfoEntity s : songNames){
-                songNameVO.add(new ArtistSongVO(
+                songNameVO.add(new SongInfoVO(
                     s, 
                     sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null
                     ));
@@ -102,15 +103,15 @@ public class SearchService {
                 map.put("code", HttpStatus.BAD_REQUEST);
                 return map;
             }
-            Page<ArtistSongVO> songNameVO = songs.map(
-                s->new ArtistSongVO(s,
+            Page<SongInfoVO> songNameVO = songs.map(
+                s->new SongInfoVO(s,
                 sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
                 slRepo.countBySongAndMember(s, member)>=1?true:false
                 ));
                 map.put("data", songNameVO);
         }else{
-            Page<ArtistSongVO> songNameVO = songs.map(
-                s->new ArtistSongVO(s,
+            Page<SongInfoVO> songNameVO = songs.map(
+                s->new SongInfoVO(s,
                 sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null));
                 map.put("data", songNameVO);
         }

@@ -166,23 +166,37 @@
         })
       },
       loadWeeklyChart() {
-        let today = new Date();
-
-        // 저번 주 월요일 구하기
-        let monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - today.getDay() - 6);
-
-        // 결과 출력
-        // console.log(monday)
-        // const year = monday.getFullYear()
-        // const tmp = monday.getMonth() + 1
-        // const tmp2 = monday.getDate()
-        // const month = tmp < 10 ? '0' + tmp : tmp
-        // const days = tmp2 < 10 ? '0' + tmp2 : tmp2
-
-        // axios.get("http://dev.guyso.me/api/v3/chart/melon/weekly/20230213")
-        // .then((e) => {
-        //     console.log(e)
-        //   })
+        // axios.get("http://localhost:8250/song/spotify")
+        // .then((e)=>{
+        //   this.spotifyToken=e.data
+        // })
+        // axios({
+        //   method: 'POST',
+        //   url: 'https://accounts.spotify.com/api/token',
+        //   data: 'grant_type=authorization_code&code=AQBiMLXDbSgaFHGWdBJbo8xGPR-KKA8vohP0v5k14YvfxGYKOrQPMgWubtrSSL3MjkN93f5kiWUnaCmQhPMLP4q29ghXhpVsYIPvZnZTUlIrRL3-vgnDig62MbqjugAISS3tg4PFFC40PljkDZwE3Hut6Z08doaVDzRA97Ol0hf26U-RYWMvVvQfeRAymQ3I4t-3I6ru_ueFrDiCKa4',
+        //   headers: {
+        //     'Content-Type': 'application/x-www-form-urlencoded',
+        //     'Authorization': 'Basic ' + btoa('a44e6aaa247c427f925c1a44d26b0359' + ':' + this.spotifyToken)
+        //   }
+        // })
+        // .then(response => {
+        //   console.log(response.data)
+        // })
+        // .catch(error => {
+        //   console.log(error)
+        // })
+        // const token = "d42434663ee841a580ad0e943421cf93"
+        // axios.get('https://api.spotify.com/v1/playlists/37i9dQZEVXbJZGli0rRpfx/tracks', {
+        //   headers: {
+        //     'Authorization': 'Bearer ' +token
+        //   }
+        // })
+        // .then(response => {
+        //   console.log(response.data)
+        // })
+        // .catch(error => {
+        //   console.log(error)
+        // })
       },
       loginPush() {
         this.$router.push("/login")
