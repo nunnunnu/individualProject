@@ -54,7 +54,9 @@
     // name: 'main',
     data() {
       return {
-        keywordSearch: null
+        keywordSearch: null,
+        index: sessionStorage.getItem('nowIndex'),
+        songs: JSON.parse(sessionStorage.getItem('playlist'))
       }
     },
     created() {
