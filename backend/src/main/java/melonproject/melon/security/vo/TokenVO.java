@@ -13,4 +13,8 @@ public class TokenVO {
     private String grantType;
     private String accessToken;
     private String refreshToken;
+
+    public TokenVO(String access){
+        this.accessToken=access;
+    }
 }

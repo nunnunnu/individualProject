@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,6 +16,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
@@ -30,6 +32,7 @@ import melonproject.melon.vo.Member.LoginVO;
 import melonproject.melon.vo.Member.MemberInfo;
 import melonproject.melon.vo.Member.MemberJoinVO;
 import melonproject.melon.vo.Member.MemberListenSong;
+import melonproject.melon.vo.Member.RefreshCheck;
 import melonproject.melon.vo.Member.chartVO.ChartVO;
 import melonproject.melon.vo.Member.chartVO.UserGenreVO;
 
@@ -42,6 +45,8 @@ public class MemberService {
     private final TicketMemberRepository tmRepo;
     private final SongInfoRepository sRepo;
     private final HistoryPlayRepository hpRepo;
+    private final RedisTemplate<String, Object> redisTemplate;
+    // private final TmRepo tmRepo;
 
     @Transactional
     public Map<String, Object> memberJoin(MemberJoinVO data) throws Exception{
@@ -131,10 +136,23 @@ public class MemberService {
         
         Authentication authentication =
         authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        String accessToken = jwtTokenProvider.generateToken(authentication).getAccessToken();
+        String refreshToken = jwtTokenProvider.generateToken(authentication).getRefreshToken();
+
+        redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
+        redisTemplate.opsForHash().put(member.getMiId(), "refreshToken", refreshToken);
+        // redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
+        // redisTemplate.opsForHash().put(member.getMiId(), refreshToken);
+
+        // ValueOperations<String, String> values = redisTemplate.opsForValue();
+        // values.set(member.getMiId(), refreshToken);
+
         map.put("status", true);
         map.put("message", "로그인 완료");
         map.put("code", HttpStatus.OK);
         map.put("token", jwtTokenProvider.generateToken(authentication));
+        map.put("member", member.getMiId());
 
         return map;
     }
@@ -219,6 +237,43 @@ public class MemberService {
         map.put("message", "성공");
         map.put("code", HttpStatus.OK);
         map.put("data", chart);
+        return map;
+    }
+    public Map<String, Object> accessToken(RefreshCheck data){
+        Map<String, Object> map = new LinkedHashMap<>();
+        String refreshToken = (String) redisTemplate.opsForHash().get(data.getId(), "refreshToken");
+        
+        if(!StringUtils.hasText(refreshToken)){
+            map.put("message","해당 해원은 로그인 한적 없는 회원입니다.");
+            map.put("code",HttpStatus.BAD_REQUEST);
+            map.put("status",false);
+            return map;
+        }
+        
+        if(jwtTokenProvider.isRefreshTokenExpired(refreshToken)){
+            redisTemplate.opsForHash().delete(data.getId(), "accessToken");
+            redisTemplate.opsForHash().delete(data.getId(), "refreshToken");
+            map.put("message","만료된 토큰");
+            map.put("code",HttpStatus.BAD_REQUEST);
+            map.put("status",false);
+            return map;
+        }
+        MemberInfoEntity member = mRepo.findByMiId(data.getId());
+        UsernamePasswordAuthenticationToken authenticationToken =
+        new UsernamePasswordAuthenticationToken(member.getMiId(), member.getMiPwd());
+        
+        Authentication authentication =
+        authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+        String accessToken = jwtTokenProvider.generateToken(authentication).getAccessToken();
+
+        redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
+
+        map.put("status", true);
+        map.put("message", "로그인 완료");
+        map.put("code", HttpStatus.OK);
+        map.put("token", accessToken);
+
         return map;
     }
 }

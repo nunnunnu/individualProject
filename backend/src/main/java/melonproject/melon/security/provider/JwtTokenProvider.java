@@ -28,8 +28,10 @@ import melonproject.melon.security.vo.TokenVO;
 @Component
 public class JwtTokenProvider {
     private final Key key;
-    private final Integer tokenExpireMinutes = 60*24*7 ; //토근 만료시간 (현재 일주일)
-    private final Integer refreshExpireMinutes = 60*24*30; //리프레쉬 토큰 만료시간(현재 한달) 자동로그인도 풀리는경우
+    private final Integer tokenExpireMinutes = 1 ; //토근 만료시간 (현재 일주일)
+    private final Integer refreshExpireMinutes = 60*24*24; //리프레쉬 토큰 만료시간(현재 한달) 자동로그인도 풀리는경우
+    @Value("${jwt.secretKey}") String secretKey;
+
     public JwtTokenProvider(@Value("${jwt.secretKey}") String secretKey) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
@@ -37,7 +39,9 @@ public class JwtTokenProvider {
     public TokenVO generateToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         Date expires = new Date((new Date()).getTime()+tokenExpireMinutes*60*1000);
+        System.out.println(expires);
         Date refreshExpires = new Date((new Date()).getTime()+refreshExpireMinutes*60*1000);
+        System.out.println(refreshExpires);
         String accessToken = Jwts.builder().setSubject(authentication.getName()).claim("auth", authorities).setExpiration(expires)
                 .signWith(key, SignatureAlgorithm.HS256).compact();
         String refreshToken = Jwts.builder().setExpiration(refreshExpires)
@@ -81,6 +85,35 @@ public class JwtTokenProvider {
             System.out.println("JWT claims string is empty."+e); //없는 토큰임
         }
         return false;
+    }
+
+    // public boolean validateRefreshToken(String refreshToken, String username) {
+    //     try {
+    //         // Claims claims = Jwts.parserBuilder()
+    //         //     .setSigningKey(key)
+    //         //     .build()
+    //         //     .parseClaimsJws(refreshToken)
+    //         //     .getBody();
+    //         System.out.println("Aaa");
+    //         String storedRefreshToken = (String)redisTemplate.opsForValue().get("RT:" + username);
+    //         System.out.println("bbb");
+            
+    //         return refreshToken.equals(storedRefreshToken);
+    //     } catch (JwtException | IllegalArgumentException e) {
+    //         e.printStackTrace();
+    //         return false;
+    //     }
+    // }
+    // public TokenVO reissueAtk(AccountResponse accountResponse) throws JsonProcessingException {
+
+    // }
+
+    public boolean isRefreshTokenExpired(String refreshToken) {
+        Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(refreshToken).getBody();
+    
+        Date expiration = claims.getExpiration();
+    
+        return expiration.before(new Date());
     }
 }
 

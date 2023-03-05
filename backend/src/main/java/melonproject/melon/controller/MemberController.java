@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.MemberService;
 import melonproject.melon.vo.Member.LoginVO;
 import melonproject.melon.vo.Member.MemberJoinVO;
+import melonproject.melon.vo.Member.RefreshCheck;
 
 @RestController
 @RequiredArgsConstructor
@@ -42,5 +43,10 @@ public class MemberController {
         Map<String, Object> map = mService.isDuplicate(id);
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @PostMapping("refresh")
+    public ResponseEntity<Object> refresh(@RequestBody RefreshCheck data){
+        Map<String, Object> map = mService.accessToken(data);
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 }
