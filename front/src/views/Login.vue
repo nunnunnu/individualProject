@@ -46,6 +46,7 @@
                         const token = response.data.token
                         Cookies.set('accessToken', token.accessToken)
                         Cookies.set('refreshToken', token.refreshToken)
+                        Cookies.set('member', response.data.member)
                         if(Cookies.get('beforePage')!=null){
                             Cookies.remove('beforePage')
                             this.$router.push("/");

@@ -243,10 +243,11 @@ public class MemberService {
         Map<String, Object> map = new LinkedHashMap<>();
         String refreshToken = (String) redisTemplate.opsForHash().get(data.getId(), "refreshToken");
         
-        if(!StringUtils.hasText(refreshToken)){
+        if(!StringUtils.hasText(refreshToken) || !refreshToken.equals(data.getRefresh())){
             map.put("message","해당 해원은 로그인 한적 없는 회원입니다.");
             map.put("code",HttpStatus.BAD_REQUEST);
             map.put("status",false);
+            System.out.println(map);
             return map;
         }
         
@@ -256,6 +257,7 @@ public class MemberService {
             map.put("message","만료된 토큰");
             map.put("code",HttpStatus.BAD_REQUEST);
             map.put("status",false);
+            System.out.println(map);
             return map;
         }
         MemberInfoEntity member = mRepo.findByMiId(data.getId());
@@ -264,16 +266,17 @@ public class MemberService {
         
         Authentication authentication =
         authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
+        
         String accessToken = jwtTokenProvider.generateToken(authentication).getAccessToken();
-
+        
         redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
-
+        
         map.put("status", true);
-        map.put("message", "로그인 완료");
+        map.put("message", "재발급 완료");
         map.put("code", HttpStatus.OK);
         map.put("token", accessToken);
-
+        System.out.println(map);
+        
         return map;
     }
 }
