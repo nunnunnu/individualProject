@@ -308,6 +308,27 @@
                     .then((e)=>{
                         this.loadPage(this.seq)
                     })
+                    .catch((error)=>{
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                        id:member,
+                        refresh:refresh
+                        })
+                            .then((e)=>{
+                            console.log(e.data.token)
+                            Cookies.set('accessToken', e.data.token)
+                            this.likeUnlike(seq)
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                    })
                 }
             },
             playSong(item){
