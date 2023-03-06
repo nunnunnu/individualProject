@@ -239,15 +239,37 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/album/detail/" + seq, {
+                axios.get(`http://localhost:8250/album/detail/${seq}/`+(this.isLogin?"login":"unLogin"), {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
                 })
-                    .then((e) => {
-                        this.data = e.data.data
-                        this.albumExplan = e.data.data.explan
-                    })
+                .then((e) => {
+                    this.data = e.data.data
+                    this.albumExplan = e.data.data.explan
+                })
+                .catch((error)=>{
+                    if(error.response.status==403){
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            Cookies.set('accessToken', e.data.token)
+                            this.loadPage(this.seq)
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                    }
+                })
             },
             explan() {
                 return this.data.explan
@@ -286,6 +308,27 @@
                         }else{
                             alert(e.data.message)
                         }
+                    })
+                    .catch((error)=>{
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            console.log(e.data.token)
+                            Cookies.set('accessToken', e.data.token)
+                            this.gradeAdd(seq)
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
                     })
                 }
             },

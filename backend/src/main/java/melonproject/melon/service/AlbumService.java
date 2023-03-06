@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.ArtistInfoEntity;
 import melonproject.melon.entity.artist.album.AlbumGenreConnection;
@@ -69,7 +70,6 @@ public class AlbumService {
             return map;
         }
         PublisherInfoEntity pub = pubRepo.findById(data.getPublisher()).orElse(null);
-        System.out.println(pub);
         if(pub==null){
             map.put("status", false);
             map.put("message", "출판사번호가 일치하지 않습니다.");
@@ -144,11 +144,6 @@ public class AlbumService {
         map.put("data", result);
         map.put("code", HttpStatus.OK);
 
-        return map;
-    }
-    public Map<String, Object> detailAlbum(){
-        Map<String, Object> map = new LinkedHashMap<>();
-        
         return map;
     }
 
@@ -244,8 +239,14 @@ public class AlbumService {
         map.put("data", result);
         return map;
     }
-    public Map<String, Object> albumDetail(UserDetails userDetails, Long seq) {
+    public Map<String, Object> albumDetail(UserDetails userDetails, Long seq, String type) {
         Map<String, Object> map = new LinkedHashMap<>();
+        if(type.equals("login") && userDetails==null){
+            map.put("status", false);
+            map.put("message", "만료된 토큰입니다.");
+            map.put("code", HttpStatus.FORBIDDEN);
+            return map;
+        }
         AlbumInfoEntity album = albumRepo.findAllFetch(seq);
         if(album==null){
             map.put("status", false);
@@ -255,6 +256,7 @@ public class AlbumService {
         }
         AlbumDetailVO albumVo = new AlbumDetailVO(album);
         albumVo.setGrade(gradeRepo.albumGrade(album));
+        
         if(userDetails!=null){
             MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
             if(member==null){

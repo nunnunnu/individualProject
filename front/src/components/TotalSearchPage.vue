@@ -190,26 +190,50 @@
         created() {
             // this.childKeyword = this.keyword
             this.childKeyword = this.$route.params.key;
-            this.loadPage()
             if(Cookies.get('accessToken')!=null){
                 this.isLogin=true
             }else{
                 this.isLogin=false
             }
+            this.loadPage()
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/total?keyword=" + this.childKeyword, {
+                axios.get("http://localhost:8250/search/total/"+(this.isLogin?"login":"unLogin")+"?keyword=" + this.childKeyword, {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
                 })
-                    .then((e) => {
-                        this.songName = e.data.songName
-                        this.songLyrics = e.data.songLyrics
-                        this.albums = e.data.albums
-                        this.artist = e.data.artist
-                    })
+                .then((e) => {
+                    console.log(e)
+                    this.songName = e.data.songName
+                    this.songLyrics = e.data.songLyrics
+                    this.albums = e.data.albums
+                    this.artist = e.data.artist
+                })
+                .catch((error)=>{
+                    console.log(error.response.status)
+                    if(error.response.status==403){
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            Cookies.set('accessToken', e.data.token)
+                            this.loadPage()
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                    }
+                })
             },
             stringFind(lyrics) {
                 console.log(this.childKeyword)
@@ -232,6 +256,29 @@
                     })
                     .then((e)=>{
                         this.loadPage(this.seq)
+                    })
+                    .catch((error)=>{
+                        console.log(error.response.status)
+                        if(error.response.status==403){
+                            const member = Cookies.get('member')
+                            const refresh = Cookies.get('refreshToken')
+                            axios.post("http://localhost:8250/member/refresh", {
+                                id:member,
+                                refresh:refresh
+                            })
+                            .then((e)=>{
+                                Cookies.set('accessToken', e.data.token)
+                                this.loadPage()
+                            })
+                            .catch((error)=>{
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.clear()
+                                this.$router.push("/login")
+                            })
+                        }
                     })
                 }
 

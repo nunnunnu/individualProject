@@ -28,7 +28,7 @@ import melonproject.melon.security.vo.TokenVO;
 @Component
 public class JwtTokenProvider {
     private final Key key;
-    private final Integer tokenExpireMinutes = 60*24*7 ; //토근 만료시간 (현재 일주일)
+    private final Integer tokenExpireMinutes = 1 ; //토근 만료시간 (현재 일주일)
     private final Integer refreshExpireMinutes = 60*24*24; //리프레쉬 토큰 만료시간(현재 한달) 자동로그인도 풀리는경우
     @Value("${jwt.secretKey}") String secretKey;
 

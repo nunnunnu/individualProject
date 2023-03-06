@@ -60,31 +60,33 @@ public class SongController {
         
     }
     
-    @GetMapping("/artist/part/{seq}")
+    @GetMapping("/artist/part/{seq}/{type}")
     public ResponseEntity<Object> artistSongPart(@PathVariable Long seq,
         @RequestParam @PageableDefault(size=10, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal UserDetails userDetails,
+        @PathVariable String type
     ){
-        Map<String, Object> map = songService.artistSongParticipation(seq, page, userDetails);
+        Map<String, Object> map = songService.artistSongParticipation(seq, page, userDetails, type);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         
     }
-    @GetMapping("/new")
+    @GetMapping("/new/{type}")
     public ResponseEntity<Object> newSongList(
         @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal UserDetails userDetails,
+        @PathVariable String type
     ){
-        Map<String, Object> map = songService.newSongList(page, userDetails);
+        Map<String, Object> map = songService.newSongList(page, userDetails, type);
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
-    @GetMapping("/spotify")
-    public String spotify(
-    ){
+    // @GetMapping("/spotify")
+    // public String spotify(
+    // ){
 
-        return "d42434663ee841a580ad0e943421cf93";
-    }
+    //     return "d42434663ee841a580ad0e943421cf93";
+    // }
 
     
     

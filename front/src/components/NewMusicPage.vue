@@ -122,28 +122,51 @@
             }
         },
         mounted() {
-            this.loadPage()
             if(Cookies.get('accessToken')!=null){
                 this.isLogin=true
             }else{
                 this.isLogin=false
             }
+            this.loadPage()
 
 
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/song/new?page="+this.currentPage, {
+                axios.get("http://localhost:8250/song/new/"+(this.isLogin?"login":"unLogin")+"?page="+this.currentPage, {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
                 })
-                    .then((e) => {
-                        this.data = e.data.data.content
-                        console.log(this.data)
-                        this.totalPage=e.data.data.totalPages
-                        this.size=e.data.data.size                        
-                    })
+                .then((e) => {
+                    this.data = e.data.data.content
+                    console.log(this.data)
+                    this.totalPage=e.data.data.totalPages
+                    this.size=e.data.data.size                        
+                })
+                .catch((error)=>{
+                    console.log(error.response.status)
+                    if(error.response.status==403){
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            Cookies.set('accessToken', e.data.token)
+                            this.loadPage()
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                    }
+                })
             },
             pageClick(page){
                 this.currentPage=page
@@ -165,6 +188,29 @@
                     })
                     .then((e)=>{
                         this.loadPage(this.seq)
+                    })
+                    .catch((error)=>{
+                        console.log(error.response.status)
+                        if(error.response.status==403){
+                            const member = Cookies.get('member')
+                            const refresh = Cookies.get('refreshToken')
+                            axios.post("http://localhost:8250/member/refresh", {
+                                id:member,
+                                refresh:refresh
+                            })
+                            .then((e)=>{
+                                Cookies.set('accessToken', e.data.token)
+                                this.likeUnlike(seq)
+                            })
+                            .catch((error)=>{
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.clear()
+                                this.$router.push("/login")
+                            })
+                        }
                     })
                 }
 

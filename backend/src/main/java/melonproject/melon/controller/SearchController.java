@@ -11,6 +11,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,18 +25,19 @@ import melonproject.melon.service.SearchService;
 public class SearchController {
     private final SearchService sService;
     
-    @GetMapping("/total")
-    public ResponseEntity<Object> totalKeyword(@RequestParam String keyword, @AuthenticationPrincipal UserDetails userDetails){
-        Map<String, Object> map = sService.searchTotal(keyword, userDetails);
+    @GetMapping("/total/{type}")
+    public ResponseEntity<Object> totalKeyword(@RequestParam String keyword, @AuthenticationPrincipal UserDetails userDetails, @PathVariable String type){
+        Map<String, Object> map = sService.searchTotal(keyword, userDetails, type);
 
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(map,(HttpStatus)map.get("code"));
     }
-    @GetMapping("songName")
+    @GetMapping("songName/{type}")
     public ResponseEntity<Object> songNameSearch(@RequestParam String keyword,  
         @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
-        @AuthenticationPrincipal UserDetails userDetails
+        @AuthenticationPrincipal UserDetails userDetails,
+        @PathVariable String type
     ){
-        Map<String, Object> map = sService.searchSongName(keyword, page, userDetails);
+        Map<String, Object> map = sService.searchSongName(keyword, page, userDetails, type);
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }

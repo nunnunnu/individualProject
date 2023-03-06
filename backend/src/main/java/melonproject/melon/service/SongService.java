@@ -195,8 +195,14 @@ public class SongService {
         map.put("code", HttpStatus.OK);
         return map;
     }
-    public Map<String, Object> artistSongParticipation(Long seq, Pageable page, UserDetails userDetails){
+    public Map<String, Object> artistSongParticipation(Long seq, Pageable page, UserDetails userDetails, String type){
         Map<String, Object> map = new LinkedHashMap<>();
+        if(type.equals("login") && userDetails==null){
+            map.put("status", false);
+            map.put("message", "만료된 토큰입니다.");
+            map.put("code", HttpStatus.FORBIDDEN);
+            return map;
+        }
         ArtistInfoEntity artist = artRepo.findById(seq).orElse(null);
         if(artist==null){
             map.put("status", false);
@@ -219,15 +225,15 @@ public class SongService {
                 map.put("message", "정상적이지 않은 접근입니다.");
                 map.put("code", HttpStatus.BAD_REQUEST);
             }
-            Page<ArtistSongVO> result = songs.map(
-                s->new ArtistSongVO(s.getSong(),
+            Page<SongInfoVO> result = songs.map(
+                s->new SongInfoVO(s.getSong(),
                 sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3).getSfUri():null,
                 slRepo.countBySongAndMember(s.getSong(), member)>=1?true:false
                 ));
                 map.put("data", result);
         }else{
-            Page<ArtistSongVO> result = songs.map(
-                s->new ArtistSongVO(s.getSong(),
+            Page<SongInfoVO> result = songs.map(
+                s->new SongInfoVO(s.getSong(),
                 sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s.getSong(), SoundQuality.MP3).getSfUri():null)
                 );
                 map.put("data", result);
@@ -239,8 +245,14 @@ public class SongService {
         return map;
     }
 
-    public Map<String, Object> newSongList(Pageable page, UserDetails userDetails){
+    public Map<String, Object> newSongList(Pageable page, UserDetails userDetails, String type){
         Map<String, Object> map = new LinkedHashMap<>();
+        if(type.equals("login") && userDetails==null){
+            map.put("status", false);
+            map.put("message", "만료된 토큰입니다.");
+            map.put("code", HttpStatus.FORBIDDEN);
+            return map;
+        }
         LocalDate now = LocalDate.now().minusMonths(1);
         Page<SongInfoEntity> entity = songRepo.findBySiRegDtLessThanEqual(now, page);
         if(userDetails!=null){

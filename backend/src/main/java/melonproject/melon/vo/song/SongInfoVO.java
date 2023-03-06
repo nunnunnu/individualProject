@@ -25,7 +25,7 @@ public class SongInfoVO {
     private String movie;
     private List<SongFileVO> files = new ArrayList<>();
     private Boolean isliked;
-    private String albumUri;
+    // private String albumUri;
     private String lyrics;
     private AlbumInfoVO album;
 
@@ -40,10 +40,10 @@ public class SongInfoVO {
         this.likes = entity.getLikes().size();
         this.movie = entity.getSiMovie();
         for(SongFileEntity file : entity.getFiles()){
-            System.out.println("sss");
             this.files.add(new SongFileVO(file));
         }
-        this.albumUri = entity.getAlbum().getAlbumUri();
+        // this.albumUri = entity.getAlbum().getAlbumUri();
+        this.album = new AlbumInfoVO(entity.getAlbum());
 
     }
     public SongInfoVO(SongInfoEntity entity, Boolean liked){
@@ -61,12 +61,13 @@ public class SongInfoVO {
             this.files.add(new SongFileVO(file));
         }
         this.isliked=liked;
-        this.albumUri = entity.getAlbum().getAlbumUri();
+        // this.albumUri = entity.getAlbum().getAlbumUri();
+        this.album = new AlbumInfoVO(entity.getAlbum());
     }
     public SongInfoVO(SongInfoEntity song, String uri, Boolean liked){
         this.seq = song.getSiSeq();
         this.name = song.getSiName();
-        this.albumUri = song.getAlbum().getAlbumUri();
+        // this.albumUri = song.getAlbum().getAlbumUri();
         this.title = song.getSiTitle();
         for(SongArtistConnection a : song.getArtists()){
             artists.add(new ArtistInfoVO(a.getArtist()));
@@ -80,6 +81,7 @@ public class SongInfoVO {
         this.movie = song.getSiMovie();
         this.lyrics = song.getSiLyrics();
         this.isliked = liked;
+        this.album = new AlbumInfoVO(song.getAlbum());
     }
     public SongInfoVO(SongInfoEntity entity, String uri){
         this.seq = entity.getSiSeq();
@@ -96,6 +98,7 @@ public class SongInfoVO {
             this.files.add(new SongFileVO(file));
         }
         // this.isliked=liked;
-        this.albumUri = entity.getAlbum().getAlbumUri();
+        // this.albumUri = entity.getAlbum().getAlbumUri();
+        this.album = new AlbumInfoVO(entity.getAlbum());
     }
 }

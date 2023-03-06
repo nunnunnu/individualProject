@@ -50,10 +50,10 @@ public class AlbumController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
     
-    @GetMapping("/detail/{seq}")
-    public ResponseEntity<Object> getAlbumDetail(@PathVariable Long seq, @AuthenticationPrincipal UserDetails userDetails){
+    @GetMapping("/detail/{seq}/{type}")
+    public ResponseEntity<Object> getAlbumDetail(@PathVariable Long seq, @AuthenticationPrincipal UserDetails userDetails, @PathVariable String type){
         System.out.println(userDetails);
-        Map<String, Object> map = aService.albumDetail(userDetails, seq);
+        Map<String, Object> map = aService.albumDetail(userDetails, seq, type);
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }

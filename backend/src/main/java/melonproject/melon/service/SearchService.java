@@ -39,8 +39,14 @@ public class SearchService {
     private final SongLikesRepository slRepo;
     private final MemberInfoRepository mRepo;
 
-    public Map<String, Object> searchTotal(String key, UserDetails userDetails){
+    public Map<String, Object> searchTotal(String key, UserDetails userDetails, String type){
         Map<String, Object> map = new LinkedHashMap<>();
+        if(type.equals("login") && userDetails==null){
+            map.put("status", false);
+            map.put("message", "만료된 토큰입니다.");
+            map.put("code", HttpStatus.FORBIDDEN);
+            return map;
+        }
         List<SongInfoEntity> songNames = songRepo.findTop10BySiNameContains(key);
         List<SongInfoEntity> songLyrics = songRepo.findTop10BySiLyricsContains(key);
         List<AlbumInfoEntity> albums = albumRepo.findTop10ByAlbumNameContains(key);
@@ -89,11 +95,18 @@ public class SearchService {
         map.put("albums", albumsVO);
         map.put("artist", artistVO);
         map.put("status", false);
+        map.put("code", HttpStatus.OK);
         return map;
     }
 
-    public Map<String, Object> searchSongName(String keyword, Pageable page, UserDetails userDetails){
+    public Map<String, Object> searchSongName(String keyword, Pageable page, UserDetails userDetails, String type){
         Map<String, Object> map = new LinkedHashMap<>();
+        if(type.equals("login") && userDetails==null){
+            map.put("status", false);
+            map.put("message", "만료된 토큰입니다.");
+            map.put("code", HttpStatus.FORBIDDEN);
+            return map;
+        }
         Page<SongInfoEntity> songs = songRepo.findBySiNameContains(keyword, page);
         if(userDetails!=null){
             MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
