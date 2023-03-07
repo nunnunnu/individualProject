@@ -239,7 +239,7 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get(`http://localhost:8250/album/detail/${seq}/`+(this.isLogin?"login":"unLogin"), {
+                axios.get("http://localhost:8250/album/detail/"+seq+"/"+(this.isLogin?"login":"unLogin"), {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
@@ -388,13 +388,13 @@
             
             },
             playListAdd(item){
-                
             },
             nowPlayingAdd(item){
                 let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
                 songlist.push(item)
                 sessionStorage.setItem('playlist',JSON.stringify(songlist))
-                this.$root.songs =  JSON.parse(sessionStorage.getItem('playlist'))
+                // this.$root.songs =  JSON.parse(sessionStorage.getItem('playlist'))
+                this.$emit('setPlayList')
                 
             }
         }

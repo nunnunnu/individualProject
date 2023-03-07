@@ -26,7 +26,7 @@
             <!-- <form class="d-flex" role="search"> -->
             <div class="row">
               <div class="col-8">
-                <input class="form-control me-2" type="search" placeholder="Search" v-model="key">
+                <input class="form-control me-2" type="search" placeholder="Search" v-model="key" @change="searchClick(key)">
               </div>
               <div class="col-2">
                 <button class="btn btn-outline-success" type="submit" @click="searchClick(key)">Search</button>
@@ -40,7 +40,7 @@
     <router-view />
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
     
-      <playList />
+      <playList @setPlayList="setPlayList" />
     </footer>
   </div>
 </template>

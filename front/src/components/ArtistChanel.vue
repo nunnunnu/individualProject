@@ -29,7 +29,7 @@
                     <h5 v-if="data.type=='솔로'">소속 그룹</h5>
                     <tr v-for="artist in data.artists" :key="artist.seq">
                         <div align="left">
-                            <router-link :to="{name:'artistChannel', params:{seq:artist.seq}}" @click="changeArtist(artist.seq)">{{ artist.name }}</router-link>
+                            <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" @click="changeSeq(artist.seq)">{{ artist.name }}</router-link>
                         </div>
                     </tr>
                     <br>
@@ -44,7 +44,7 @@
                     <router-link :to="`/artist/channel${this.seq}/albumList`">앨범정보</router-link>
                 </nav>
             </div>
-            <router-view />
+            <router-view @changeSeq="changeSeq"/>
         </div>
     </b-container>
 </template>
@@ -64,6 +64,13 @@
             this.seq = this.$route.params.seq;
             this.loadPage(this.seq)
         },
+        // watch:{
+        //     seq(){
+        //         console.log(this.seq)
+        //         this.loadPage(this.seq)
+
+        //     }
+        // },
         methods: {
             loadPage(seq) {
                 axios.get("http://localhost:8250/artist/channel/" + seq)
@@ -78,9 +85,10 @@
                 this.seq = changeSeq;
                 this.loadPage(changeSeq)
             },
-            seqChange(changeSeq){
+            changeSeq(changeSeq){
                 this.seq = changeSeq
-                this.loadPage(changeSeq)
+                this.loadPage(this.seq)
+
             }
         }
     }

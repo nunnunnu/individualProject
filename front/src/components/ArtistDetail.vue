@@ -76,11 +76,13 @@
         <tr v-for="art in detail.artists" :key="art.seq">
             <!-- <div class="col"> -->
             <div class="card">
-                <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
-                <div class="card-body">
-                    <p class="card-title">{{art.name}}</p>
-                    <!-- <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a> -->
-                </div>
+                <span  @click="changeChanel(art.seq)">
+                    <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
+                    <div class="card-body">
+                        <p class="card-title">{{art.name}}</p>
+                        <!-- <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a> -->
+                    </div>
+                </span>
             </div>
         </tr>
         </div>
@@ -99,17 +101,19 @@ import Cookies from 'js-cookie'
                 detail: null,
             }
         },
-        props : ['seq'],
+        props : {
+            seq: Number,
+        },
         created() {
             // this.seq = this.$route.params.seq;
             this.childSeq = this.seq;
             this.loadPage(this.childSeq)
         },
-        // watch: {
-        //     '$route' (to, from) {
-        //     console.log(to)
-        //     }
-        // },
+        watch: {
+            seq (seq) {
+                this.loadPage(seq)
+            }
+        },
         methods: {
             loadPage(seq) {
                 axios.get("http://localhost:8250/artist/detail/" + seq)
@@ -127,8 +131,12 @@ import Cookies from 'js-cookie'
                 // this.$router.push('/artist/channel' + changeSeq);
                 // Object.assign(changeSeq)
                 // this.$emit('parentChange', changeSeq)
-                console.log(changeSeq)
                 
+            },
+            changeChanel(changeSeq){
+                this.childSeq = changeSeq
+                this.$emit('changeSeq', this.childSeq)
+                this.loadPage(this.childSeq)
             }
         }
     }

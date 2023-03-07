@@ -15,19 +15,16 @@
             </thead>
             <tbody>
                 <tr v-for="(item, index ) in data" :key="item.seq">
-                <th scope="row">{{ index+1 }}</th>
+                <td scope="row">{{ index+1 }}</td>
                 <td>
-                                <span v-if="item.title" class="badge rounded-pill text-bg-success">title</span>
-                                <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
-                                <br>
-                                <tr v-for="artist in item.artists" :key="artist.seq">
+                    <span v-if="item.title" class="badge rounded-pill text-bg-success">title</span>
+                    <router-link :to="{name:'songDetail', params:{seq:item.seq}}">{{ item.name }}</router-link>
+                    <br>
+                </td>
+                <td align="center">
+                    <tr v-for="artist in item.artists" :key="artist.seq">
                                     <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">{{ artist.name }}</router-link>
                                 </tr>
-                            </td>
-                <td>
-                    <tr v-for="artist in item.artist" :key="artist.seq">
-                        <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}">{{ artist.name }}</router-link>
-                    </tr>
                 </td>
                 <td>
                     <router-link :to="{name:'albumDetail', params:{seq:item.album.seq}}">{{ item.album.name }}</router-link>
@@ -158,30 +155,42 @@
                         this.loadPage(this.seq)
                     })
                     .catch((error)=>{
-                    console.log(error.response.status)
-                    if(error.response.status==403){
-                        const member = Cookies.get('member')
-                        const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
-                            id:member,
-                            refresh:refresh
-                        })
-                        .then((e)=>{
-                            Cookies.set('accessToken', e.data.token)
-                            this.likeUnlike(seq)
-                        })
-                        .catch((error)=>{
-                            alert("다시 로그인해주세요")
-                            Cookies.remove('refreshToken')
-                            Cookies.remove('accessToken')
-                            Cookies.remove('member')
-                            sessionStorage.clear()
-                            this.$router.push("/login")
-                        })
-                    }
-                })
+                        console.log(error.response.status)
+                        if(error.response.status==403){
+                            const member = Cookies.get('member')
+                            const refresh = Cookies.get('refreshToken')
+                            axios.post("http://localhost:8250/member/refresh", {
+                                id:member,
+                                refresh:refresh
+                            })
+                            .then((e)=>{
+                                Cookies.set('accessToken', e.data.token)
+                                this.likeUnlike(seq)
+                            })
+                            .catch((error)=>{
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.clear()
+                                this.$router.push("/login")
+                            })
+                        }
+                    })
                 }
-
+            },
+            playSong(item){
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능합니다.")
+                    this.$router.push("/login")
+                }
+                // let songlist = []
+                let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                songlist.push(item)
+                sessionStorage.setItem('playlist',JSON.stringify(songlist))
+                sessionStorage.setItem('nowIndex',songlist.length-1)
+                this.$router.go();
+            
             }
         }
     }

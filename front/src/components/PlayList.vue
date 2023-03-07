@@ -1,23 +1,22 @@
 <template>
     <div v-if="songs!=null && songs.length!=0">
         <div class="HTML_Audio_player">
-            <div class="Audio_Player_image"><img style="border-radius: 60px;" :src="img" /></div>
+            <div>
+                
+            </div>
+            <div class="Audio_Player_image">
+                <img style="border-radius: 60px;" :src="img" /></div>
             <div class="player-content">
                 <div class="player-info">
                     <a class="song-name" target="_blank">
-                        <!-- <div class="row"> -->
-                            <!-- <div class="col-auto" align="right"> -->
-                                <router-link :to="{name:'songDetail', params:{seq:songs[index].seq}}">{{ songs[index].name }}
-                                </router-link>
-                            <!-- </div> -->
-                            <!-- <div class="col-9"> -->
-                                <a class="btn btn-dark" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
-                                    aria-controls="offcanvasExample"
-                                    style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                                    재생목록
-                                </a>
-                            <!-- </div> -->
-                        <!-- </div> -->
+                        <router-link :to="{name:'songDetail', params:{seq:songs[index].seq}}">{{ songs[index].name }}
+                        </router-link>
+                        <a class="btn btn-dark" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                            aria-controls="offcanvasExample"
+                            style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                            재생목록
+                        </a>
+                        <!-- 재생목록 모달창 -->
                         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
                             aria-labelledby="offcanvasExampleLabel">
                             <div class="offcanvas-header">
@@ -31,10 +30,10 @@
                                     <div @click="indexChange(idx)">
                                         <div class="row">
                                             <div class="col-1">
-                                                <div class="Audio_Player_image"><img style="border-radius: 60px;" width="30" height="30" :src="`http://localhost:8250/image/album/${s.albumUri}`" /></div>
+                                                <div class="Audio_Player_image"><img style="border-radius: 60px;" width="30" height="30" :src="`http://localhost:8250/image/album/${s.album.uri}`" /></div>
                                             </div>
                                             <div class="col-2">
-                                                <img style="border-radius: 60px;" :src="imgLoad(s.albumUri)"
+                                                <img style="border-radius: 60px;" :src="imgLoad(s.album.uri)"
                                                     width="40" />
                                             </div>
                                             <div class="col-auto">
@@ -94,11 +93,12 @@ import Cookies from 'js-cookie'
             return {
                 mp3: null,
                 index: sessionStorage.getItem('nowIndex'),
-                songs: JSON.parse(sessionStorage.getItem('playlist')),
+                songs: null,
                 img: null
             }
         },
         mounted() {
+            this.setPlayList()
             this.nowPlaying()
             // this.$refs.audioPlayer.addEventListener('ended', this.playNext);
         },
@@ -130,6 +130,27 @@ import Cookies from 'js-cookie'
                                 return blobUrl
                             }
                         })
+                        .catch((error)=>{
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            console.log(e.data.token)
+                            Cookies.set('accessToken', e.data.token)
+                            this.nowPlaying()
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                    })
                 }
             },
             imgLoad(albumUri) {
@@ -156,6 +177,9 @@ import Cookies from 'js-cookie'
                 this.$refs.audioPlayer.play();
 
             },
+            setPlayList(){
+                this.songs =JSON.parse(sessionStorage.getItem('playlist'))
+            }
         }
     }
 </script>
