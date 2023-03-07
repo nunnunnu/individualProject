@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.MemberService;
 import melonproject.melon.vo.Member.LoginVO;
@@ -32,7 +33,7 @@ public class MemberController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
     @PostMapping("/login")
-    public ResponseEntity<Object> memberLogin(@RequestBody LoginVO data) throws Exception{
+    public ResponseEntity<Object> memberLogin(@RequestBody @Valid LoginVO data) throws Exception{
         System.out.println(data);
         Map<String, Object> map = mService.login(data);
     
