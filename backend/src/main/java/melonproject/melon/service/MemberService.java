@@ -26,6 +26,7 @@ import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.repository.user.TicketMemberRepository;
+import melonproject.melon.security.config.WebSecurityConfig;
 import melonproject.melon.security.provider.JwtTokenProvider;
 import melonproject.melon.util.AESAlgorithm;
 import melonproject.melon.vo.Member.LoginVO;
@@ -46,7 +47,15 @@ public class MemberService {
     private final SongInfoRepository sRepo;
     private final HistoryPlayRepository hpRepo;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final WebSecurityConfig wConfig;
     // private final TmRepo tmRepo;
+
+    private Boolean checkPassword(String rawPassword, String findMemberPassword) {
+        if (!wConfig.passwordEncoder().matches(rawPassword, findMemberPassword)) {
+            return false;
+        }
+        return true;
+    }
 
     @Transactional
     public Map<String, Object> memberJoin(MemberJoinVO data) throws Exception{
@@ -91,7 +100,7 @@ public class MemberService {
             return map;
         }
         MemberInfoEntity member = MemberInfoEntity.builder().miId(data.getId())
-                        .miPwd(AESAlgorithm.Encrypt(data.getPwd()))
+                        .miPwd(wConfig.passwordEncoder().encode(data.getPwd()))
                         .miName(data.getName())
                         .miAge(data.getAge())
                         .miPhone(data.getPhone())
@@ -120,7 +129,7 @@ public class MemberService {
 
         login.setPwd(AESAlgorithm.Encrypt(login.getPwd()));
         MemberInfoEntity member = mRepo.findByMiIdAndMiPwd(login.getId(), login.getPwd());
-        if(member==null){
+        if(member == null || !checkPassword(login.getPwd(), member.getPassword())){
             map.put("status", false);
             map.put("message", "아이디 또는 비밀번호 에러입니다.");
             map.put("code", HttpStatus.UNAUTHORIZED);
