@@ -49,6 +49,7 @@ public class MemberService {
     private final RedisTemplate<String, Object> redisTemplate;
     private final WebSecurityConfig wConfig;
     // private final TmRepo tmRepo;
+    private final RedisService redisService;
 
     private Boolean checkPassword(String rawPassword, String findMemberPassword) {
         if (!wConfig.passwordEncoder().matches(rawPassword, findMemberPassword)) {
@@ -127,8 +128,8 @@ public class MemberService {
             return map;
         }
 
-        login.setPwd(AESAlgorithm.Encrypt(login.getPwd()));
-        MemberInfoEntity member = mRepo.findByMiIdAndMiPwd(login.getId(), login.getPwd());
+        // login.setPwd(AESAlgorithm.Encrypt(login.getPwd()));
+        MemberInfoEntity member = mRepo.findByMiId(login.getId());
         if(member == null || !checkPassword(login.getPwd(), member.getPassword())){
             map.put("status", false);
             map.put("message", "아이디 또는 비밀번호 에러입니다.");
@@ -149,8 +150,9 @@ public class MemberService {
         String accessToken = jwtTokenProvider.generateToken(authentication).getAccessToken();
         String refreshToken = jwtTokenProvider.generateToken(authentication).getRefreshToken();
 
-        redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
-        redisTemplate.opsForHash().put(member.getMiId(), "refreshToken", refreshToken);
+        redisService.setValues(refreshToken, member.getMiId());
+        // redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
+        // redisTemplate.opsForHash().put(member.getMiId(), "refreshToken", refreshToken);
         // redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
         // redisTemplate.opsForHash().put(member.getMiId(), refreshToken);
 
@@ -250,9 +252,11 @@ public class MemberService {
     }
     public Map<String, Object> accessToken(RefreshCheck data){
         Map<String, Object> map = new LinkedHashMap<>();
-        String refreshToken = (String) redisTemplate.opsForHash().get(data.getId(), "refreshToken");
-        
-        if(!StringUtils.hasText(refreshToken) || !refreshToken.equals(data.getRefresh())){
+        // String refreshToken = (String) redisTemplate.opsForHash().get(data.getId(), "refreshToken");
+        System.out.println("refreshToken");
+        String id = redisService.getValues(data.getRefresh());
+        System.out.println(id);
+        if(!StringUtils.hasText(id)){
             map.put("message","해당 해원은 로그인 한적 없는 회원입니다.");
             map.put("code",HttpStatus.BAD_REQUEST);
             map.put("status",false);
@@ -260,7 +264,7 @@ public class MemberService {
             return map;
         }
         
-        if(jwtTokenProvider.isRefreshTokenExpired(refreshToken)){
+        if(jwtTokenProvider.isRefreshTokenExpired(data.getRefresh())){
             redisTemplate.opsForHash().delete(data.getId(), "accessToken");
             redisTemplate.opsForHash().delete(data.getId(), "refreshToken");
             map.put("message","만료된 토큰");
@@ -269,7 +273,7 @@ public class MemberService {
             System.out.println(map);
             return map;
         }
-        MemberInfoEntity member = mRepo.findByMiId(data.getId());
+        MemberInfoEntity member = mRepo.findByMiId(id);
         UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(member.getMiId(), member.getMiPwd());
         
