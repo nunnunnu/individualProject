@@ -26,14 +26,14 @@ public class MemberController {
     private final MemberService mService;
 
     @PutMapping("/join")
-    public ResponseEntity<Object> memberJoin(@RequestBody MemberJoinVO data) throws Exception{
+    public ResponseEntity<Object> memberJoin(@RequestBody @Valid MemberJoinVO data){
         System.out.println(data);
         Map<String, Object> map = mService.memberJoin(data);
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
     @PostMapping("/login")
-    public ResponseEntity<Object> memberLogin(@RequestBody @Valid LoginVO data) throws Exception{
+    public ResponseEntity<Object> memberLogin(@RequestBody @Valid LoginVO data){
         System.out.println(data);
         Map<String, Object> map = mService.login(data);
     

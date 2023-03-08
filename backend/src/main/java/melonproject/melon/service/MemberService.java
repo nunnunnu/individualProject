@@ -58,41 +58,41 @@ public class MemberService {
     }
 
     @Transactional
-    public Map<String, Object> memberJoin(MemberJoinVO data) throws Exception{
+    public Map<String, Object> memberJoin(MemberJoinVO data){
         Map<String, Object> map = new LinkedHashMap<>();
-        String emailPattern = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-        String phonePattern = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
-        String passwordPattern = "^[a-zA-Z\\d`~!@#$%^&*()-_=+]{6,}$";
-        if(!hasText(data.getId()) || !hasText(data.getPwd())){
-            map.put("status", false);
-            map.put("message", "아이디 혹은 비밀번호 누락");
-            map.put("code", HttpStatus.OK);
-            return map;
-        }
-        if(!hasText(data.getNickName())){
-            map.put("status", false);
-            map.put("message", "닉네임을 입력하지 않으셨습니다.");
-            map.put("code", HttpStatus.OK);
-            return map;
-        }
-        if(!Pattern.matches(passwordPattern, data.getPwd())){ //공백없이 특수문자 가능 6자리 이상
-            map.put("status", false);
-            map.put("message", "비밀번호는 공백없이 6자리 이상 가능합니다.");
-            map.put("code", HttpStatus.OK);
-            return map;
-        }
-        if(data.getEmail()!=null && !Pattern.matches(emailPattern, data.getEmail())){
-            map.put("status", false);
-            map.put("message", "올바른 이메일 형식이 아닙니다. 이메일을 다시 확인해주세요.");
-            map.put("code", HttpStatus.OK);
-            return map;
-        }
-        if(data.getPhone()!=null && !Pattern.matches(phonePattern, data.getPhone())){
-            map.put("status", false);
-            map.put("message", "올바른 전화번호 형식이 아닙니다. 번호를 다시 확인해주세요.");
-            map.put("code", HttpStatus.OK);
-            return map;
-        }
+        // String emailPattern = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
+        // String phonePattern = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
+        // String passwordPattern = "^[a-zA-Z\\d`~!@#$%^&*()-_=+]{6,}$";
+        // if(!hasText(data.getId()) || !hasText(data.getPwd())){
+        //     map.put("status", false);
+        //     map.put("message", "아이디 혹은 비밀번호 누락");
+        //     map.put("code", HttpStatus.OK);
+        //     return map;
+        // }
+        // if(!hasText(data.getNickName())){
+        //     map.put("status", false);
+        //     map.put("message", "닉네임을 입력하지 않으셨습니다.");
+        //     map.put("code", HttpStatus.OK);
+        //     return map;
+        // }
+        // if(!Pattern.matches(passwordPattern, data.getPwd())){ //공백없이 특수문자 가능 6자리 이상
+        //     map.put("status", false);
+        //     map.put("message", "비밀번호는 공백없이 6자리 이상 가능합니다.");
+        //     map.put("code", HttpStatus.OK);
+        //     return map;
+        // }
+        // if(data.getEmail()!=null && !Pattern.matches(emailPattern, data.getEmail())){
+        //     map.put("status", false);
+        //     map.put("message", "올바른 이메일 형식이 아닙니다. 이메일을 다시 확인해주세요.");
+        //     map.put("code", HttpStatus.OK);
+        //     return map;
+        // }
+        // if(data.getPhone()!=null && !Pattern.matches(phonePattern, data.getPhone())){
+        //     map.put("status", false);
+        //     map.put("message", "올바른 전화번호 형식이 아닙니다. 번호를 다시 확인해주세요.");
+        //     map.put("code", HttpStatus.OK);
+        //     return map;
+        // }
         if(mRepo.countByMiId(data.getId())>=1){
             map.put("status", false);
             map.put("message", "이미 가입된 아이디입니다.");
@@ -117,7 +117,7 @@ public class MemberService {
     }
 
     @Transactional
-    public Map<String, Object> login(LoginVO login) throws Exception{
+    public Map<String, Object> login(LoginVO login){
         Map<String, Object> map = new LinkedHashMap<>();
         
         if(!hasText(login.getId()) || !hasText(login.getPwd())){
