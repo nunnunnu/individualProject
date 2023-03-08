@@ -18,6 +18,7 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,7 +48,6 @@ public class ArtistInfoEntity {
     @Column(name="art_uri") private String artUri;
     // @OneToMany(mappedBy = "group")
     // private Set<ArtistConnectionEntity> SoloList = new HashSet<>();
-    // @Column(name="art_dtype") private String artDtype;
     @OneToMany(mappedBy = "artist")
     private Set<ArtistFanEntity> fanList = new HashSet<>();
     @Column(name="art_introduce") private String artIntroduce;

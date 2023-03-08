@@ -40,13 +40,11 @@
     <router-view @setPlayList="setPlayList" />
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
     
-      <playList @setPlayList="setPlayList" ref="playlist" />
+      <playList @setPlayList="setPlayList" ref="list" />
     </footer>
   </div>
 </template>
 <script>
-  import axios from 'axios'
-  import Cookies from 'js-cookie'
   import PlayList from './components/PlayList.vue'
 
   export default {
@@ -70,7 +68,7 @@
       },
       setPlayList(){
         console.log("sss")
-        this.$refs.playList.setPlayList()
+        this.$refs.list.setPlayList()
       }
     }
   }

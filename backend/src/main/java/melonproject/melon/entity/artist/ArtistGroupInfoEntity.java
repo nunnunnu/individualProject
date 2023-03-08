@@ -5,9 +5,8 @@ import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +24,7 @@ import melonproject.melon.entity.info.AgencyInfoEntity;
 @SuperBuilder
 @DiscriminatorValue("GROUP")
 public class ArtistGroupInfoEntity extends ArtistInfoEntity{
+    // @OneToOne @JoinColumn(name="art_dtype") private String artDtype;
     @Column(name="agi_split") private LocalDate agiSplit;
 
     public void addSetting(AgencyInfoEntity agency, String country, LocalDate debut, String name, LocalDate split) {

@@ -38,16 +38,7 @@
             <p>현재 이용중인 이용권이 없습니다.</p>
           </div>
       </div>
-      <!-- </div> -->
     </div>
-    <!-- <div class="p-4 p-md-3 mb-4">
-      <div class="col-md-4 px-0">
-        <h1 class="display-4 fst-italic">Water Melon</h1>
-      </div>
-      <div class="col-md-15 px-0">
-        <button type="submit" class="btn btn-success">로그인</button>
-      </div>
-    </div> -->
     <div align="left" style="font-size: 20px">
       <router-link to="/album/new">최신 앨범 > </router-link>
     </div>
@@ -96,27 +87,6 @@
             </td>
           </tbody>
         </table>
-      <!-- <div class="col-md-4">
-        <h3 class="pb-4 mb-4 fst-italic border-bottom">
-          player
-        </h3>
-        <div class="HTML_Audio_player">
-          <div class="Audio_Player_image"><img style="border-radius: 60px;"
-              src="http://localhost:8250/image/album/nctdream_candy" /></div>
-          <div class="player-content">
-            <div class="player-info">
-              <a class="song-name" target="_blank">Candy</a>
-              <a class="artist" href="#">NCT Dream</a>
-            </div>
-            <div class="k2_audio_player">
-              <audio controls style="width: 80%;">
-                <source src="http://localhost:8250/song/NCT DREAM-01-Candy-Candy - Winter Special Mini Album-320/1/1"
-                  type="audio/mpeg" />
-              </audio>
-            </div>
-          </div>
-        </div>
-      </div> -->
       </div>
   </b-container>
 </template>
