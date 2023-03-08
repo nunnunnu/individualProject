@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +21,7 @@ import melonproject.melon.service.SongService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("")
+// @RequestMapping("")
 public class TokenController {
     private final MemberService mService;
     private final AlbumService aService;
@@ -62,5 +62,13 @@ public class TokenController {
         Map<String, Object> map = sService.LikeUnLike(userDetails, song);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(@RequestBody String refresh){
+        System.out.println(refresh);
+        Map<String, Object> map = mService.logout(refresh);
+    
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+        
     }
 }

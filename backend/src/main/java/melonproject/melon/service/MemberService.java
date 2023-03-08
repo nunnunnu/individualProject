@@ -28,7 +28,6 @@ import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.repository.user.TicketMemberRepository;
 import melonproject.melon.security.config.WebSecurityConfig;
 import melonproject.melon.security.provider.JwtTokenProvider;
-import melonproject.melon.util.AESAlgorithm;
 import melonproject.melon.vo.Member.LoginVO;
 import melonproject.melon.vo.Member.MemberInfo;
 import melonproject.melon.vo.Member.MemberJoinVO;
@@ -290,6 +289,21 @@ public class MemberService {
         map.put("token", accessToken);
         System.out.println(map);
         
+        return map;
+    }
+    public Map<String, Object> logout(String refresh){
+        Map<String, Object> map = new LinkedHashMap<>();
+        if(redisService.getValues(refresh)==null){
+            map.put("status", false);
+            map.put("message", "존재하지않는 토큰입니다.");
+            map.put("code", HttpStatus.BAD_REQUEST);
+            return map;
+        }
+        redisService.delValues(refresh);
+        map.put("status", true);
+        map.put("message", "삭제 완료");
+        map.put("code", HttpStatus.OK);
+
         return map;
     }
 }

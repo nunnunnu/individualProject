@@ -24,11 +24,12 @@ public class RedisService {
     // 키값으로 벨류 가져오기
     public String getValues(String token){
         ValueOperations<String, String> values = redisTemplate.opsForValue();
+        System.out.println(values);
         return values.get(token);
     }
 
     // 키-벨류 삭제
     public void delValues(String token) {
-        redisTemplate.delete(token.substring(7));
+        redisTemplate.delete(token);
     }
 }
