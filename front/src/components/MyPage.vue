@@ -64,6 +64,29 @@
                     this.data = e.data.data.data
                     // console.log(this.chart)
                 })
+                .catch((error)=>{
+                    console.log(error.response.status)
+                    if(error.response.status==403){
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            Cookies.set('accessToken', e.data.token)
+                            this.loadPage()
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                    }
+                })
             },
             chartDataReturn(){
                 return {

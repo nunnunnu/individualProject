@@ -135,7 +135,7 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <button type="button" @click="nowPlayingAdd(item)" class="btn btn-success">재생목록 추가</button>
+                                        <button type="button" data-bs-dismiss="modal" aria-label="Close" @click="nowPlayingAdd(item)" class="btn btn-success">재생목록 추가</button>
                                         <br>
                                         <br>
                                         <button type="button" @click="playListAdd(item)" class="btn btn-success">플레이리스트 추가</button>
@@ -393,9 +393,7 @@
                 let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
                 songlist.push(item)
                 sessionStorage.setItem('playlist',JSON.stringify(songlist))
-                // this.$root.songs =  JSON.parse(sessionStorage.getItem('playlist'))
                 this.$emit('setPlayList')
-                
             }
         }
     }

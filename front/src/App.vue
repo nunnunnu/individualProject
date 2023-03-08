@@ -37,10 +37,10 @@
         </div>
       </div>
     </nav>
-    <router-view />
+    <router-view @setPlayList="setPlayList" />
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
     
-      <playList @setPlayList="setPlayList" />
+      <playList @setPlayList="setPlayList" ref="playlist" />
     </footer>
   </div>
 </template>
@@ -55,33 +55,10 @@
     data() {
       return {
         keywordSearch: null,
-        index: sessionStorage.getItem('nowIndex'),
-        songs: JSON.parse(sessionStorage.getItem('playlist'))
       }
     },
     created() {
-      // console.log(this.songs[this.index])
-      this.nowPlaying()
-
-      // this.seq = sessionStorage.getItem('nowplayingSeq');
-      // this.mp3 = this.nowPlaying()
     },
-    watch:{
-      mp3: function(){
-        // this.nowPlaying();
-        // this.$refs.myAudio
-      }
-    },
-    // computed: {
-    //   sessionValue() {
-    //     return sessionStorage.getItem('nowplayingSeq');
-    //   }
-    // },
-    // watch:{
-    //   seq(){
-    //     this.nowPlaying
-    //   }
-    // },
     methods: {
       searchClick(keyword) {
         this.$router.push({
@@ -89,48 +66,13 @@
           params: {
             key: keyword
           },
-        });
+        })
       },
-      nowPlaying() {
-        if (this.songs!=null && this.songs.length != 0) {
-          axios.get(`http://localhost:8250/songfile/${this.songs[this.index].files[0].uri}/${this.songs[this.index].seq}`, {
-              headers: {
-                Authorization: 'Bearer ' + Cookies.get('accessToken')
-              },
-              responseType: 'blob'
-            })
-            .then((response) => {
-              const blobUrl = URL.createObjectURL(response.data);
-              if (blobUrl) {
-                this.mp3 = blobUrl;
-              }
-            })
-        }
-      },
-      imgLoad(albumUri) {
-        this.img = `http://localhost:8250/image/album/${albumUri}`
-      },
-      indexChange(idx){
-        sessionStorage.setItem('nowIndex', idx)
-        this.index = idx
-        this.nowPlaying()
-        this.$router.go()
-      },
-      nextTrack(){
-        console.log("???")
-        if(this.songs.length<=this.index-1){
-          sessionStorage.setItem('nowIndex', 0)
-          this.index= 0
-        }else{
-          sessionStorage.setItem('nowIndex', this.index+1)
-          this.index= this.index+1
-        }
-        
+      setPlayList(){
+        console.log("sss")
+        this.$refs.playList.setPlayList()
       }
     }
-    // mounted() {
-    //   this.nowPlaying();
-    // }
   }
 </script>
 <style>

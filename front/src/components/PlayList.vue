@@ -1,15 +1,13 @@
 <template>
     <div v-if="songs!=null && songs.length!=0">
         <div class="HTML_Audio_player">
-            <div>
-                
-            </div>
             <div class="Audio_Player_image">
                 <img style="border-radius: 60px;" :src="img" /></div>
             <div class="player-content">
                 <div class="player-info">
                     <a class="song-name" target="_blank">
-                        <router-link :to="{name:'songDetail', params:{seq:songs[index].seq}}">{{ songs[index].name }}
+                        <router-link :to="{name:'songDetail', params:{seq:songs[this.index==null?0:this.index].seq}}">
+                            {{ songs[this.index==null?0:this.index].name }}
                         </router-link>
                         <a class="btn btn-dark" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
                             aria-controls="offcanvasExample"
@@ -30,7 +28,10 @@
                                     <div @click="indexChange(idx)">
                                         <div class="row">
                                             <div class="col-1">
-                                                <div class="Audio_Player_image"><img style="border-radius: 60px;" width="30" height="30" :src="`http://localhost:8250/image/album/${s.album.uri}`" /></div>
+                                                <div class="Audio_Player_image"><img style="border-radius: 60px;"
+                                                        width="30" height="30"
+                                                        :src="`http://localhost:8250/image/album/${s.album.uri}`" />
+                                                </div>
                                             </div>
                                             <div class="col-2">
                                                 <img style="border-radius: 60px;" :src="imgLoad(s.album.uri)"
@@ -48,18 +49,16 @@
                                 <div v-if="idx==index">
                                     재생중
                                 </div>
+
                             </div>
                         </div>
                         <hr>
                 </div>
                 </tr>
-                <div class="dropdown mt-3">
-
-                </div>
             </div>
         </div>
         </a>
-        <tr v-for="artist in songs[index].artists" :key="artist.seq">
+        <tr v-for="artist in songs[this.index==null?0:this.index].artists" :key="artist.seq">
             <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
                 {{ artist.name }}</router-link>
         </tr>
@@ -80,13 +79,32 @@
                 <div class="player-info">
                     <p>재생할 곡이 없습니다.</p>
                 </div>
+                <a class="btn btn-dark" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                    aria-controls="offcanvasExample"
+                    style="--bs-btn-padding-y: .1rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                    재생목록
+                </a>
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+                    aria-labelledby="offcanvasExampleLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasExampleLabel">재생목록</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <span v-if="songs==null">재생할 곡이 없습니다.</span>
+                        <span v-else>
+
+                        </span>
+                    </div>
+                </div>
+                <hr>
             </div>
         </div>
     </div>
 </template>
 <script>
-import axios from 'axios'
-import Cookies from 'js-cookie'
+    import axios from 'axios'
+    import Cookies from 'js-cookie'
     export default {
         name: 'playList',
         data() {
@@ -117,7 +135,7 @@ import Cookies from 'js-cookie'
             nowPlaying() {
                 if (this.songs != null && this.songs.length != 0) {
                     axios.get(
-                            `http://localhost:8250/songfile/${this.songs[this.index].files[0].uri}/${this.songs[this.index].seq}`, {
+                            `http://localhost:8250/songfile/${this.songs[this.index==null?0:this.index].files[0].uri}/${this.songs[this.index==null?0:this.index].seq}`, {
                                 headers: {
                                     Authorization: 'Bearer ' + Cookies.get('accessToken')
                                 },
@@ -130,27 +148,27 @@ import Cookies from 'js-cookie'
                                 return blobUrl
                             }
                         })
-                        .catch((error)=>{
-                        const member = Cookies.get('member')
-                        const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
-                            id:member,
-                            refresh:refresh
+                        .catch((error) => {
+                            const member = Cookies.get('member')
+                            const refresh = Cookies.get('refreshToken')
+                            axios.post("http://localhost:8250/member/refresh", {
+                                    id: member,
+                                    refresh: refresh
+                                })
+                                .then((e) => {
+                                    console.log(e.data.token)
+                                    Cookies.set('accessToken', e.data.token)
+                                    this.nowPlaying()
+                                })
+                                .catch((error) => {
+                                    alert("다시 로그인해주세요")
+                                    Cookies.remove('refreshToken')
+                                    Cookies.remove('accessToken')
+                                    Cookies.remove('member')
+                                    sessionStorage.clear()
+                                    this.$router.push("/login")
+                                })
                         })
-                        .then((e)=>{
-                            console.log(e.data.token)
-                            Cookies.set('accessToken', e.data.token)
-                            this.nowPlaying()
-                        })
-                        .catch((error)=>{
-                            alert("다시 로그인해주세요")
-                            Cookies.remove('refreshToken')
-                            Cookies.remove('accessToken')
-                            Cookies.remove('member')
-                            sessionStorage.clear()
-                            this.$router.push("/login")
-                        })
-                    })
                 }
             },
             imgLoad(albumUri) {
@@ -160,25 +178,25 @@ import Cookies from 'js-cookie'
                 sessionStorage.setItem('nowIndex', idx)
                 this.index = idx
                 // this.nowPlaying()
-                this.mp3= this.nowPlaying()
+                this.mp3 = this.nowPlaying()
                 // this.$router.go()
                 // this.$refs.audioPlayer.play();
             },
             playNext() {
-                if(this.songs.length-1<=this.index){
-                    this.index=0
-                }else{
+                if (this.songs.length - 1 <= this.index) {
+                    this.index = 0
+                } else {
                     this.index++;
                 }
                 sessionStorage.setItem('nowIndex', this.index)
-                this.mp3= this.nowPlaying()
-                console.log(this.mp3)
-                // this.$refs.audioPlayer.src = this.mp3
+                this.mp3 = this.nowPlaying()
                 this.$refs.audioPlayer.play();
 
             },
-            setPlayList(){
-                this.songs =JSON.parse(sessionStorage.getItem('playlist'))
+            setPlayList() {
+                console.log("test")
+                this.songs = JSON.parse(sessionStorage.getItem('playlist'))
+                this.nowPlaying()
             }
         }
     }
