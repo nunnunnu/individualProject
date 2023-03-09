@@ -1,4 +1,5 @@
 <template>
+    <b-container>
     <div class="popup_wrap">
         <div class="popup">
             <div align="right">
@@ -37,14 +38,12 @@
                     <Button class="btn btn-outline-success btn-sm" @click="savePlayList">저장</Button>
                 </div>
             </div>
-    
-    
-</div>
-
+            </div>
             </div>
             </div>
         </div>
     </div>
+</b-container>
 </template>
 <script>
 // import { Axios } from 'axios'
