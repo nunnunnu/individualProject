@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import melonproject.melon.error.ErrorCode;
 import melonproject.melon.error.ErrorResponse;
 import melonproject.melon.error.custom.MemberNotFound;
+import melonproject.melon.error.custom.NoContentException;
 import melonproject.melon.error.custom.RequiredValueOmission;
 
 @RestControllerAdvice
@@ -37,5 +38,16 @@ public class ControllerSupport {
             .build();
 
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = NoContentException.class)
+    public ResponseEntity<ErrorResponse> requiredValueOmission(NoContentException rvo){
+        ErrorResponse error = ErrorResponse.builder()
+            .code(ErrorCode.NO_CONTENT)
+            .message("값이 존재하지않음")
+            .status(204)
+            .timestamp(LocalDateTime.now())
+            .build();
+
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.NO_CONTENT);
     }
 }

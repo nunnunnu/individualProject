@@ -1,5 +1,8 @@
 package melonproject.melon.entity.user.playlist;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,4 +35,5 @@ public class PlayListInfoEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="playi_mi_seq") private MemberInfoEntity member;
     // @Column(name="playi_reg_dt") private LocalDateTime playiRegDt;
     // @Column(name="playi_edit_dt") private LocalDateTime playiEditDt;
+    @OneToMany(mappedBy = "play") private List<PlayListSongEntity> songs = new ArrayList<>();
 }

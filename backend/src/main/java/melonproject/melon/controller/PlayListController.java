@@ -1,25 +1,21 @@
 package melonproject.melon.controller;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import melonproject.melon.error.ErrorCode;
-import melonproject.melon.error.ErrorResponse;
-import melonproject.melon.error.custom.MemberNotFound;
-import melonproject.melon.error.custom.RequiredValueOmission;
 import melonproject.melon.service.PlayListService;
+import melonproject.melon.vo.playlist.PlayListInfoVO;
 
 @RestController
 @RequestMapping("/playlist")
@@ -34,5 +30,9 @@ public class PlayListController {
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         
+    }
+    @GetMapping("")
+    public ResponseEntity<List<PlayListInfoVO>> showMyPlaylist(@AuthenticationPrincipal UserDetails userDetails){
+        return new ResponseEntity<List<PlayListInfoVO>>((List<PlayListInfoVO>)pService.showMyPlaylist(userDetails), HttpStatus.OK);
     }
 }
