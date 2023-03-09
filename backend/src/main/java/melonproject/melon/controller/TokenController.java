@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.AlbumService;
 import melonproject.melon.service.MemberService;
+import melonproject.melon.service.PlayListService;
 import melonproject.melon.service.SongService;
+import melonproject.melon.vo.Member.RefreshCheck;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,6 +28,7 @@ public class TokenController {
     private final MemberService mService;
     private final AlbumService aService;
     private final SongService sService;
+    private final PlayListService pService;
 
     @GetMapping("/myInfo")
     public ResponseEntity<Object> findUser(@AuthenticationPrincipal UserDetails userDetails){
@@ -63,10 +66,18 @@ public class TokenController {
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
-    @PostMapping("/logout")
-    public ResponseEntity<Object> logout(@RequestBody String refresh){
+    @PostMapping("/refreshDel")
+    public ResponseEntity<Object> logout(@RequestBody RefreshCheck refresh){
+        System.out.println("sssss");
         System.out.println(refresh);
-        Map<String, Object> map = mService.logout(refresh);
+        Map<String, Object> map = mService.logout(refresh.getRefresh());
+    
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+        
+    }
+    @PutMapping("/playList")
+    public ResponseEntity<Object> logout(@AuthenticationPrincipal UserDetails userDetails){
+        Map<String, Object> map = pService.createPlayList(userDetails);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         

@@ -1,7 +1,5 @@
 package melonproject.melon.entity.user.playlist;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -17,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import melonproject.melon.entity.share.BaseTimeEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 
 @Getter
@@ -25,11 +24,11 @@ import melonproject.melon.entity.user.MemberInfoEntity;
 @NoArgsConstructor
 @Entity
 @Table(name="playlist_info")
-public class PlayListInfoEntity {
+public class PlayListInfoEntity extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="playi_seq") private Long playiSeq;
     @Column(name="playi_title") private String playiTitle;
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="playi_mi_seq") private MemberInfoEntity member;
-    @Column(name="playi_reg_dt") private LocalDateTime playiRegDt;
-    @Column(name="playi_edit_dt") private LocalDateTime playiEditDt;
+    // @Column(name="playi_reg_dt") private LocalDateTime playiRegDt;
+    // @Column(name="playi_edit_dt") private LocalDateTime playiEditDt;
 }

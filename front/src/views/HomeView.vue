@@ -172,6 +172,18 @@
         this.$router.push("/login")
       },
       logout() {
+        const refresh =  Cookies.get('refreshToken')
+        const token =  Cookies.get('accessToken')
+        console.log(refresh)
+        axios.post("http://localhost:8250/refreshDel", {refresh: refresh}, {
+            headers: {
+              "Content-Type": `application/json`,
+              Authorization: 'Bearer ' + token
+            }
+          })
+          .then((e) => {
+            this.user = e.data.data
+          })
         Cookies.remove('refreshToken')
         Cookies.remove('accessToken')
         this.loadNewAlbum();

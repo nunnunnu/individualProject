@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RefreshCheck {
-    private String id;
+    // private String id;
     private String refresh;
 }

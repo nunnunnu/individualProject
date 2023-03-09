@@ -1,9 +1,11 @@
 package melonproject.melon.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -26,9 +28,9 @@ public class MemberController {
     private final MemberService mService;
 
     @PutMapping("/join")
-    public ResponseEntity<Object> memberJoin(@RequestBody @Valid MemberJoinVO data){
-        System.out.println(data);
-        Map<String, Object> map = mService.memberJoin(data);
+    public ResponseEntity<Object> memberJoin(@RequestBody @Valid MemberJoinVO data, BindingResult bindingResult){
+        
+        Map<String, Object> map = mService.memberJoin(data, bindingResult);
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }

@@ -174,11 +174,14 @@ export default {
                 axios.put("http://localhost:8250/member/join", data)
                     .then((e) => {
                         alert(e.data.message)
-                                if(e.data.status){
-                                    Cookies.set('beforePage', true)
-                                    this.$router.push("/login")
-                                }
-                            })
+                            if(e.data.status){
+                                Cookies.set('beforePage', true)
+                                this.$router.push("/login")
+                            }
+                    })
+                    .catch((error)=>{
+                        alert(error.response.data.message)
+                    })
             }
         }
     }

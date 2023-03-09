@@ -122,7 +122,7 @@
                         <td>
                             <div v-if="item.files.length!=0">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
-  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" @click="openPopup" :song="item"/>
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" @click="openPopup(item)"/>
 </svg>
                             </div>
                             <div v-else>
@@ -195,7 +195,7 @@
                 <hr>
             </div>
         </div>
-        <playListPopup v-if="popup"/>
+        <playListPopup v-if="popup" @closePopup="closePopup" :song="seletedSong" @nowPlayingAdd="nowPlayingAdd"/>
     </b-container>
 </template>
 <script>
@@ -215,7 +215,8 @@
                 rating: 0,
                 stars: [1, 2, 3, 4, 5],
                 isLogin: null,
-                popup:false
+                popup:false,
+                seletedSong:null
             }
         },
         created() {
@@ -375,19 +376,22 @@
                 sessionStorage.setItem('playlist',JSON.stringify(songlist))
                 sessionStorage.setItem('nowIndex',songlist.length-1)
                 this.$router.go();
+                // this.$emit("nowPlaying")
             
             },
             playListAdd(item){
             },
-            nowPlayingAdd(item){
-                console.log(item.target)
-                let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
-                songlist.push(item)
-                sessionStorage.setItem('playlist',JSON.stringify(songlist))
+            nowPlayingAdd(){
+                // console.log(item.target)
                 this.$emit('setPlayList')
             },
-            openPopup(){
+            openPopup(item){
+                // console.log(item)
+                this.seletedSong = item
                 this.popup=true
+            },
+            closePopup(){
+                this.popup=false
             }
         }
     }

@@ -46,7 +46,7 @@
                                 </tr>
                             </div>
                             <div class="col-auto">
-                                <div v-if="idx==index">
+                                <div v-if="idx==index || (index==null && idx ==0)">
                                     재생중
                                 </div>
 
@@ -63,9 +63,14 @@
                 {{ artist.name }}</router-link>
         </tr>
     </div>
-    <div v-if="mp3!=null" class="k2_audio_player">
+    <div v-if="mp3!=null && index!=null" class="k2_audio_player">
         <audio ref="audioPlayer" @ended="playNext()" controls autoplay style="width: 80%;">
-            <source :src="mp3" @ended="nextTrack" type="audio/mpeg" />
+            <source :src="mp3" @onPlay="indexSetting" type="audio/mpeg" />
+        </audio>
+    </div>
+    <div v-if="mp3!=null && index==null" class="k2_audio_player">
+        <audio ref="audioPlayer" @ended="playNext()" controls style="width: 80%;">
+            <source :src="mp3"  type="audio/mpeg" />
         </audio>
     </div>
     </div>
@@ -119,6 +124,7 @@
             this.setPlayList()
             this.nowPlaying()
             // this.$refs.audioPlayer.addEventListener('ended', this.playNext);
+            
         },
         watch: {
             mp3: function () {}
@@ -135,40 +141,40 @@
             nowPlaying() {
                 if (this.songs != null && this.songs.length != 0) {
                     axios.get(
-                            `http://localhost:8250/songfile/${this.songs[this.index==null?0:this.index].files[0].uri}/${this.songs[this.index==null?0:this.index].seq}`, {
-                                headers: {
-                                    Authorization: 'Bearer ' + Cookies.get('accessToken')
-                                },
-                                responseType: 'blob'
+                        `http://localhost:8250/songfile/${this.songs[this.index==null?0:this.index].files[0].uri}/${this.songs[this.index==null?0:this.index].seq}`, {
+                            headers: {
+                                Authorization: 'Bearer ' + Cookies.get('accessToken')
+                            },
+                            responseType: 'blob'
+                        })
+                    .then((response) => {
+                        const blobUrl = URL.createObjectURL(response.data);
+                        if (blobUrl) {
+                            this.mp3 = blobUrl;
+                            return blobUrl
+                        }
+                    })
+                    .catch((error) => {
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                                id: member,
+                                refresh: refresh
                             })
-                        .then((response) => {
-                            const blobUrl = URL.createObjectURL(response.data);
-                            if (blobUrl) {
-                                this.mp3 = blobUrl;
-                                return blobUrl
-                            }
-                        })
-                        .catch((error) => {
-                            const member = Cookies.get('member')
-                            const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
-                                    id: member,
-                                    refresh: refresh
-                                })
-                                .then((e) => {
-                                    console.log(e.data.token)
-                                    Cookies.set('accessToken', e.data.token)
-                                    this.nowPlaying()
-                                })
-                                .catch((error) => {
-                                    alert("다시 로그인해주세요")
-                                    Cookies.remove('refreshToken')
-                                    Cookies.remove('accessToken')
-                                    Cookies.remove('member')
-                                    sessionStorage.clear()
-                                    this.$router.push("/login")
-                                })
-                        })
+                            .then((e) => {
+                                console.log(e.data.token)
+                                Cookies.set('accessToken', e.data.token)
+                                this.nowPlaying()
+                            })
+                            .catch((error) => {
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.clear()
+                                this.$router.push("/login")
+                            })
+                    })
                 }
             },
             imgLoad(albumUri) {
@@ -183,8 +189,11 @@
                 // this.$refs.audioPlayer.play();
             },
             playNext() {
+                console.log("next")
                 if (this.songs.length - 1 <= this.index) {
                     this.index = 0
+                }else if(this.index==null){
+                    this.index=1
                 } else {
                     this.index++;
                 }
@@ -197,6 +206,13 @@
                 console.log("test")
                 this.songs = JSON.parse(sessionStorage.getItem('playlist'))
                 this.nowPlaying()
+            },
+            indexSetting(){
+                console.log("playTest")
+                if(sessionStorage.getItem("nowIndex")==null){
+                    this.index=0;
+                    sessionStorage.setItem('nowIndex', 0)
+                }
             }
         }
     }

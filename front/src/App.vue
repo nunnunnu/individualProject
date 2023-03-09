@@ -40,7 +40,7 @@
     <router-view @setPlayList="setPlayList" />
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
     
-      <playList @setPlayList="setPlayList" ref="list" />
+      <playList @setPlayList="setPlayList" @nowPlaying="nowPlaying" ref="list" />
     </footer>
   </div>
 </template>

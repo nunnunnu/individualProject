@@ -3,13 +3,14 @@ package melonproject.melon.service;
 import static org.springframework.util.StringUtils.hasText;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -17,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
@@ -58,41 +60,16 @@ public class MemberService {
     }
 
     @Transactional
-    public Map<String, Object> memberJoin(MemberJoinVO data){
+    public Map<String, Object> memberJoin(MemberJoinVO data,BindingResult bindingResult){
         Map<String, Object> map = new LinkedHashMap<>();
-        // String emailPattern = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
-        // String phonePattern = "^\\d{2,3}-\\d{3,4}-\\d{4}$";
-        // String passwordPattern = "^[a-zA-Z\\d`~!@#$%^&*()-_=+]{6,}$";
-        // if(!hasText(data.getId()) || !hasText(data.getPwd())){
-        //     map.put("status", false);
-        //     map.put("message", "아이디 혹은 비밀번호 누락");
-        //     map.put("code", HttpStatus.OK);
-        //     return map;
-        // }
-        // if(!hasText(data.getNickName())){
-        //     map.put("status", false);
-        //     map.put("message", "닉네임을 입력하지 않으셨습니다.");
-        //     map.put("code", HttpStatus.OK);
-        //     return map;
-        // }
-        // if(!Pattern.matches(passwordPattern, data.getPwd())){ //공백없이 특수문자 가능 6자리 이상
-        //     map.put("status", false);
-        //     map.put("message", "비밀번호는 공백없이 6자리 이상 가능합니다.");
-        //     map.put("code", HttpStatus.OK);
-        //     return map;
-        // }
-        // if(data.getEmail()!=null && !Pattern.matches(emailPattern, data.getEmail())){
-        //     map.put("status", false);
-        //     map.put("message", "올바른 이메일 형식이 아닙니다. 이메일을 다시 확인해주세요.");
-        //     map.put("code", HttpStatus.OK);
-        //     return map;
-        // }
-        // if(data.getPhone()!=null && !Pattern.matches(phonePattern, data.getPhone())){
-        //     map.put("status", false);
-        //     map.put("message", "올바른 전화번호 형식이 아닙니다. 번호를 다시 확인해주세요.");
-        //     map.put("code", HttpStatus.OK);
-        //     return map;
-        // }
+        if (bindingResult.hasErrors()) {
+            bindingResult.getFieldErrors().forEach(error -> {
+                map.put("message", error.getDefaultMessage());
+                map.put("code", HttpStatus.BAD_REQUEST);
+                map.put("status", false);
+            });
+            return map;
+        }
         if(mRepo.countByMiId(data.getId())>=1){
             map.put("status", false);
             map.put("message", "이미 가입된 아이디입니다.");
@@ -259,17 +236,14 @@ public class MemberService {
             map.put("message","해당 해원은 로그인 한적 없는 회원입니다.");
             map.put("code",HttpStatus.BAD_REQUEST);
             map.put("status",false);
-            System.out.println(map);
             return map;
         }
         
         if(jwtTokenProvider.isRefreshTokenExpired(data.getRefresh())){
-            redisTemplate.opsForHash().delete(data.getId(), "accessToken");
-            redisTemplate.opsForHash().delete(data.getId(), "refreshToken");
+            redisService.delValues(data.getRefresh());
             map.put("message","만료된 토큰");
             map.put("code",HttpStatus.BAD_REQUEST);
             map.put("status",false);
-            System.out.println(map);
             return map;
         }
         MemberInfoEntity member = mRepo.findByMiId(id);
@@ -287,8 +261,6 @@ public class MemberService {
         map.put("message", "재발급 완료");
         map.put("code", HttpStatus.OK);
         map.put("token", accessToken);
-        System.out.println(map);
-        
         return map;
     }
     public Map<String, Object> logout(String refresh){
