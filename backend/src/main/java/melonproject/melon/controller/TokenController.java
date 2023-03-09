@@ -28,7 +28,6 @@ public class TokenController {
     private final MemberService mService;
     private final AlbumService aService;
     private final SongService sService;
-    private final PlayListService pService;
 
     @GetMapping("/myInfo")
     public ResponseEntity<Object> findUser(@AuthenticationPrincipal UserDetails userDetails){
@@ -75,11 +74,5 @@ public class TokenController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         
     }
-    @PutMapping("/playList")
-    public ResponseEntity<Object> logout(@AuthenticationPrincipal UserDetails userDetails){
-        Map<String, Object> map = pService.createPlayList(userDetails);
-    
-        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
-        
-    }
+
 }

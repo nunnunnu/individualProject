@@ -47,6 +47,8 @@
 </template>
 <script>
 // import { Axios } from 'axios'
+    import axios from 'axios'
+    import Cookies from 'js-cookie'
     export default{
         name:"playListPopup",
         props:{
@@ -79,6 +81,41 @@
             },
             savePlayList(){
                 console.log(this.name)
+                const token = Cookies.get('accessToken')
+                console.log(token)
+                
+                axios.put(
+                    `http://localhost:8250/playlist/`+this.name,{}, {
+                        headers: {
+                            Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((response) => {
+                    alert(response.data.message)
+                    this.name=null
+                })
+                .catch((error) => {
+                    console.log(error)
+                    const member = Cookies.get('member')
+                    const refresh = Cookies.get('refreshToken')
+                    axios.post("http://localhost:8250/member/refresh", {
+                            id: member,
+                            refresh: refresh
+                        })
+                        .then((e) => {
+                            console.log(e.data.token)
+                            Cookies.set('accessToken', e.data.token)
+                            this.savePlayList()
+                        })
+                        .catch((error) => {
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                })
             }
         }
     }
