@@ -12,11 +12,11 @@
                 <button type="button" @click="nowPlayingAdd" class="btn btn-success">재생목록 추가</button>
                 <br>
                 <br>
-                <button  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom" aria-controls="offcanvasBottom"
+                <button  type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop"
                     class="btn btn-success">플레이리스트 추가</button>
             </div>
             <div class="mylistPopup">
-            <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom" aria-labelledby="offcanvasBottomLabel">
+            <div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasTop" aria-labelledby="offcanvasTopLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasBottomLabel">내 플레이리스트</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -37,6 +37,9 @@
                 <div class="col-auto" v-if="input">
                     <Button class="btn btn-outline-success btn-sm" @click="savePlayList">저장</Button>
                 </div>
+            </div>
+            <br>
+            <div class="row">
                 <div v-for="list in playlist" :key="list.seq" @click="addPlayListSong(list.seq)">
                     <h6 align="left">{{ list.title }}</h6>
                     <div class="row">
@@ -167,6 +170,7 @@
                 .then((response) => {
                     console.log(response)
                     alert("저장되었습니다.")
+                    this.$emit("closePopup")
                 })
                 .catch((error) => {
                     console.log(error)
@@ -197,6 +201,7 @@
     .popup_wrap{
         position: fixed; width:100vw; height: 100vh;
         left: 0; top: 0; z-index: 9999; background-color: #55555570;
+        padding-bottom: 102px;
     }
     .popup{
         position:absolute; left:50%;

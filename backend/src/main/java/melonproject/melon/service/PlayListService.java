@@ -25,6 +25,7 @@ import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.repository.user.playlist.PlayListInfoRepository;
 import melonproject.melon.repository.user.playlist.PlayListSongRepository;
 import melonproject.melon.vo.playlist.PlayListInfoVO;
+import melonproject.melon.vo.song.SongInfoVO;
 @Service
 @RequiredArgsConstructor
 public class PlayListService {
@@ -58,7 +59,7 @@ public class PlayListService {
         if(member==null){
             throw new MemberNotFound();
         }
-        List<PlayListInfoEntity> playlist = pRepo.findByMember(member);
+        List<PlayListInfoEntity> playlist = pRepo.findByMemberOrderByCreatedDate(member);
         if(playlist.size()==0){
             throw new NoContentException();
         }
@@ -82,6 +83,51 @@ public class PlayListService {
 
         map.put("status", true);
         map.put("message", "저장완료");
+
+        return map;
+    }
+    public Map<String, Object> showPlayListSongList(Long seq, UserDetails userDetails){
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        if(member==null){
+            throw new MemberNotFound();
+        }
+
+        PlayListInfoEntity playlist = pRepo.findByPlayiSeqAndMember(seq, member);
+        if(playlist==null){
+            throw new NotFoundPlaylistException();
+        }
+
+        List<PlayListSongEntity> list = psRepo.findByPlayOrderByPsOrder(playlist);
+
+        if(list.size()==0){
+            throw new NoContentException();
+        }
+
+        List<SongInfoVO> result = list.stream().map((p->new SongInfoVO(p.getSong()))).toList();
+    
+        map.put("status", true);
+        map.put("message", "조회완료");
+        map.put("data", result);
+
+        return map;
+    }
+    public Map<String, Object> delPlaylist(Long seq, UserDetails userDetails){
+        Map<String, Object> map = new LinkedHashMap<>();
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        if(member==null){
+            throw new MemberNotFound();
+        }
+        PlayListInfoEntity playlist = pRepo.findByPlayiSeqAndMember(seq, member);
+        if(playlist==null){
+            throw new NotFoundPlaylistException();
+        }
+        List<PlayListSongEntity> songs = psRepo.findByPlay(playlist);
+        psRepo.deleteAll(songs);
+        pRepo.delete(playlist);
+        map.put("status", false);
+        map.put("message", "삭재했습니다.");
+
 
         return map;
     }

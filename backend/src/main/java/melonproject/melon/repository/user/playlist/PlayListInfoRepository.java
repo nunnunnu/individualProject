@@ -10,6 +10,9 @@ import melonproject.melon.entity.user.playlist.PlayListInfoEntity;
 
 public interface PlayListInfoRepository extends JpaRepository<PlayListInfoEntity, Long>{
     @EntityGraph(attributePaths = {"songs"})
-    List<PlayListInfoEntity> findByMember(MemberInfoEntity member);
+    List<PlayListInfoEntity> findByMemberOrderByCreatedDate(MemberInfoEntity member);
+    
+    @EntityGraph(attributePaths = {"songs"})
+    PlayListInfoEntity findByPlayiSeqAndMember(Long seq, MemberInfoEntity member);
     
 }

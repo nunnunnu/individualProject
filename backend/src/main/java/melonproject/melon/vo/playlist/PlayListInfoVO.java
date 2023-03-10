@@ -25,6 +25,6 @@ public class PlayListInfoVO {
         this.seq = playlist.getPlayiSeq();
         this.title = playlist.getPlayiTitle();
         this.songcount = playlist.getSongs().size();
-        this.regDt = playlist.getCreated_at();
+        this.regDt = playlist.getCreatedDate();
     }
 }

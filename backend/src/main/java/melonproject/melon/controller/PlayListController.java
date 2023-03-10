@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -39,5 +40,15 @@ public class PlayListController {
     public ResponseEntity<Object> addSong(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long playlist, @PathVariable Long song){
         Map<String, Object> map = pService.playlistAddSong(userDetails, playlist, song);
         return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+    @GetMapping("/song/{playlist}")
+    public ResponseEntity<Object> playListGetSong(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long playlist){
+        Map<String, Object> map = pService.showPlayListSongList(playlist, userDetails);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+    @DeleteMapping("/{seq}")
+    public ResponseEntity<Object> playlistDelete(@PathVariable Long seq, @AuthenticationPrincipal UserDetails userDetails){
+        Map<String, Object> map = pService.delPlaylist(seq, userDetails);
+        return new ResponseEntity<>(map, HttpStatus.OK);    
     }
 }

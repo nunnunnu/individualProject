@@ -12,8 +12,39 @@
             <br>
             <br>
             <br>
-        <h4 class="pb-4 mb-4 fst-italic border-bottom">플레이이스트</h4>
+        <h4 class="pb-4 mb-4 fst-italic border-bottom">플레이리스트</h4>
+        <div align="left">
+            <div class="row" >
+                <div class="col-auto" >
+                    <button type="button" @click="inputChange" class="btn btn-success btn-sm">추가</button>
+                </div>
+                <div class="col-auto" v-if="input">
+                    <input class="form-control form-control-sm" type="text" placeholder="생성할 이름을 입력해주세요" aria-label=".form-control-sm example"  v-model="name">
+                </div>
+                <div class="col-auto" v-if="input">
+                        <Button class="btn btn-outline-success btn-sm" @click="savePlayList">저장</Button>
+                    </div>
+            </div>
+        </div>
+        <br>
+        <div v-for="list in playlist" :key="list.seq">
+                    <h6 align="left"  @click="playlistShow(list.seq)">{{ list.title }}</h6>
+                    <div class="row">
+                        <div class="col-auto"  @click="playlistShow(list.seq)">
+                            <p align="left">{{ list.regDt }}</p>
+                        </div>
+                        <div class="col-auto"  @click="playlistShow(list.seq)">
+                            <span>{{ list.songcount }}곡</span>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-dark" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" @click="delPlaylist(list.seq)">
+                                플레이리스트 삭제</button>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
     </div>
+    <songlist :seq="seq" v-if="popup" @closePopup="closePopup"/>
     </b-container>
 </template>
 <script>
@@ -21,20 +52,25 @@
     import axios from 'axios'
     import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
     import { Pie } from 'vue-chartjs';
-    // import * as chartConfig from '@/components/chartConfig.js';
+    import songlist from '@/components/PlayListSongListPopup';
 
     ChartJS.register(ArcElement, Tooltip, Legend);
     
     export default {
         name: 'myPage',
         components: {
-            Pie,
+            Pie, songlist
         },
         data() {
             return {
                 chart:null,
                 labels:null,
                 isLogin:null,
+                playlist:null,
+                seq:null,
+                popup:false,
+                input:false,
+                name:new Date(),
                 options : {
                     responsive: true,
                     maintainAspectRatio: false
@@ -45,6 +81,7 @@
             if (Cookies.get('accessToken') != null) {
                 this.isLogin = true
                 this.loadPage()
+                this.loadMyPlayList()
             } else {
                 alert("로그인 후 이용가능한 서비스입니다.")
                 this.isLogin = false
@@ -98,6 +135,121 @@
                         }
                     ],
                 }//https://colorhunt.co/
+            },
+            loadMyPlayList(){
+                axios.get(
+                    `http://localhost:8250/playlist`, {
+                        headers: {
+                            Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((response) => {
+                    this.playlist=response.data
+                })
+                .catch((error) => {
+                    // const member = Cookies.get('member')
+                    const refresh = Cookies.get('refreshToken')
+                    axios.post("http://localhost:8250/member/refresh", {
+                            // id: member,
+                            refresh: refresh
+                        })
+                        .then((e) => {
+                            Cookies.set('accessToken', e.data.token)
+                            this.loadMyPlayList()
+                        })
+                        .catch((error) => {
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                })
+            },
+            playlistShow(seq){
+                this.seq=seq
+                // console.log(seq)
+                this.popup=true
+            },
+            closePopup(){
+                this.popup = false
+            },
+            inputChange(){
+                if(this.input){
+                    this.name = new Date()
+                }
+                this.input=!this.input
+            },
+            savePlayList(){
+                axios.put(
+                    `http://localhost:8250/playlist/`+this.name,{}, {
+                        headers: {
+                            Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((response) => {
+                    alert(response.data.message)
+                    this.name=null
+                    this.loadMyPlayList()
+                    this.input = false;
+                })
+                .catch((error) => {
+                    const member = Cookies.get('member')
+                    const refresh = Cookies.get('refreshToken')
+                    axios.post("http://localhost:8250/member/refresh", {
+                            id: member,
+                            refresh: refresh
+                        })
+                        .then((e) => {
+                            Cookies.set('accessToken', e.data.token)
+                            this.savePlayList()
+                        })
+                        .catch((error) => {
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                })
+            },
+            delPlaylist(seq){
+                if(confirm("정말 삭제하겠습니까? 삭제한 플레이리스트는 되돌릴 수 없습니다.")){
+                    console.log(seq)
+                    axios.delete(
+                        `http://localhost:8250/playlist/`+seq, {
+                            headers: {
+                                Authorization: 'Bearer ' + Cookies.get('accessToken')
+                        }
+                    })
+                    .then((response) => {
+                        alert(response.data.message)
+                        this.name=null
+                        this.loadMyPlayList()
+                    })
+                    .catch((error) => {
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                                id: member,
+                                refresh: refresh
+                            })
+                            .then((e) => {
+                                Cookies.set('accessToken', e.data.token)
+                                this.savePlayList()
+                            })
+                            .catch((error) => {
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.clear()
+                                this.$router.push("/login")
+                            })
+                    })
+                }
             }
         }
     }
