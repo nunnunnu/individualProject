@@ -56,7 +56,7 @@
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-dark btn-sm">삭제</button>
+                                <button class="btn btn-dark btn-sm" >삭제</button>
                             </td>
                     </tr>
                 </tbody>
