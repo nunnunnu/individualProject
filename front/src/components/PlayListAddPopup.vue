@@ -37,6 +37,18 @@
                 <div class="col-auto" v-if="input">
                     <Button class="btn btn-outline-success btn-sm" @click="savePlayList">저장</Button>
                 </div>
+                <div v-for="list in playlist" :key="list.seq" @click="addPlayListSong(list.seq)">
+                    <h6 align="left">{{ list.title }}</h6>
+                    <div class="row">
+                        <div class="col-auto">
+                            <p align="left">{{ list.regDt }}</p>
+                        </div>
+                        <div class="col-auto">
+                            <span>{{ list.songcount }}곡</span>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
             </div>
             </div>
             </div>
@@ -57,18 +69,18 @@
         data(){
             return{
                 input:false,
-                name: new Date()
+                name: new Date(),
+                playlist:null
             }
         },
         mounted(){
-            console.log(this.song)
+            this.loadMyPlayList()
         },
         methods:{
             closePopup(){
                 this.$emit("closePopup")
             },
             nowPlayingAdd(){
-                console.log(this.song)
                 let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
                 songlist.push(this.song)
                 sessionStorage.setItem('playlist',JSON.stringify(songlist))
@@ -80,9 +92,7 @@
                 this.input=!this.input
             },
             savePlayList(){
-                console.log(this.name)
                 const token = Cookies.get('accessToken')
-                console.log(token)
                 
                 axios.put(
                     `http://localhost:8250/playlist/`+this.name,{}, {
@@ -95,7 +105,6 @@
                     this.name=null
                 })
                 .catch((error) => {
-                    console.log(error)
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
                     axios.post("http://localhost:8250/member/refresh", {
@@ -103,7 +112,6 @@
                             refresh: refresh
                         })
                         .then((e) => {
-                            console.log(e.data.token)
                             Cookies.set('accessToken', e.data.token)
                             this.savePlayList()
                         })
@@ -115,6 +123,71 @@
                             sessionStorage.clear()
                             this.$router.push("/login")
                         })
+                })
+            },
+            loadMyPlayList(){
+                axios.get(
+                    `http://localhost:8250/playlist`, {
+                        headers: {
+                            Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((response) => {
+                    this.playlist=response.data
+                })
+                .catch((error) => {
+                    // const member = Cookies.get('member')
+                    const refresh = Cookies.get('refreshToken')
+                    axios.post("http://localhost:8250/member/refresh", {
+                            // id: member,
+                            refresh: refresh
+                        })
+                        .then((e) => {
+                            Cookies.set('accessToken', e.data.token)
+                            this.loadMyPlayList()
+                        })
+                        .catch((error) => {
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                })
+            },
+            addPlayListSong(seq){
+                console.log(this.song.seq)
+                axios.put(
+                    `http://localhost:8250/playlist/song/${seq}/${this.song.seq}`, {}, {
+                        headers: {
+                            Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((response) => {
+                    console.log(response)
+                    alert("저장되었습니다.")
+                })
+                .catch((error) => {
+                    console.log(error)
+                    const member = Cookies.get('member')
+                    const refresh = Cookies.get('refreshToken')
+                    axios.post("http://localhost:8250/member/refresh", {
+                        // id: member,
+                        refresh: refresh
+                    })
+                    .then((e) => {
+                        Cookies.set('accessToken', e.data.token)
+                        this.addPlayListSong()
+                    })
+                    .catch((error) => {
+                        alert("다시 로그인해주세요")
+                        Cookies.remove('refreshToken')
+                        Cookies.remove('accessToken')
+                        Cookies.remove('member')
+                        sessionStorage.clear()
+                        this.$router.push("/login")
+                    })
                 })
             }
         }

@@ -28,5 +28,5 @@ public class PlayListSongEntity {
     @Column(name="ps_seq") private Long psSeq; 
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="ps_playi_seq") private PlayListInfoEntity play; 
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="ps_si_seq") private SongInfoEntity song; 
-    @Column(name="ps_order") private Long psOrder; 
+    @Column(name="ps_order") private Integer psOrder; 
 }

@@ -35,4 +35,9 @@ public class PlayListController {
     public ResponseEntity<List<PlayListInfoVO>> showMyPlaylist(@AuthenticationPrincipal UserDetails userDetails){
         return new ResponseEntity<List<PlayListInfoVO>>((List<PlayListInfoVO>)pService.showMyPlaylist(userDetails), HttpStatus.OK);
     }
+    @PutMapping("/song/{playlist}/{song}")
+    public ResponseEntity<Object> addSong(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long playlist, @PathVariable Long song){
+        Map<String, Object> map = pService.playlistAddSong(userDetails, playlist, song);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
 }

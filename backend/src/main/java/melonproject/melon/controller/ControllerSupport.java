@@ -1,8 +1,6 @@
 package melonproject.melon.controller;
 
 import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +11,8 @@ import melonproject.melon.error.ErrorCode;
 import melonproject.melon.error.ErrorResponse;
 import melonproject.melon.error.custom.MemberNotFound;
 import melonproject.melon.error.custom.NoContentException;
+import melonproject.melon.error.custom.NotFoundPlaylistException;
+import melonproject.melon.error.custom.NotFoundSongException;
 import melonproject.melon.error.custom.RequiredValueOmission;
 
 @RestControllerAdvice
@@ -26,7 +26,7 @@ public class ControllerSupport {
         .timestamp(LocalDateTime.now())
         .build();
 
-    return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(value = RequiredValueOmission.class)
     public ResponseEntity<ErrorResponse> requiredValueOmission(RequiredValueOmission rvo){
@@ -49,5 +49,27 @@ public class ControllerSupport {
             .build();
 
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.NO_CONTENT);
+    }
+    @ExceptionHandler(value = NotFoundPlaylistException.class)
+    public ResponseEntity<ErrorResponse> notFoundPlaylistException(NotFoundPlaylistException ndp){
+        ErrorResponse error = ErrorResponse.builder()
+            .code(ErrorCode.NOT_FOUND_PLAYLIST)
+            .message("플레이리스트를 찾을 수 없음. 번호 오류")
+            .status(400)
+            .timestamp(LocalDateTime.now())
+            .build();
+
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = NotFoundSongException.class)
+    public ResponseEntity<ErrorResponse> notFoundSongException(NotFoundSongException nds){
+        ErrorResponse error = ErrorResponse.builder()
+            .code(ErrorCode.NOT_FOUND_SONG)
+            .message("곡을 찾을 수 없음. 번호 오류")
+            .status(400)
+            .timestamp(LocalDateTime.now())
+            .build();
+
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
     }
 }

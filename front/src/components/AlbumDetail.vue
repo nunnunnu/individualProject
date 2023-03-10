@@ -387,11 +387,21 @@
             },
             openPopup(item){
                 // console.log(item)
-                this.seletedSong = item
-                this.popup=true
+                if(this.isLogin){
+                    this.seletedSong = item
+                    this.popup=true
+                }else{
+                    alert("로그인 후 이용가능한 기능입니다.")
+                    this.$router.push("/login")
+                }
             },
             closePopup(){
-                this.popup=false
+                if(this.isLogin){
+                    this.popup=false
+                }else{
+                    alert("로그인 후 이용가능한 기능입니다.")
+                    this.$router.push("/login")
+                }
             }
         }
     }
