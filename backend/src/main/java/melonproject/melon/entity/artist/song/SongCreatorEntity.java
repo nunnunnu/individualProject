@@ -32,4 +32,5 @@ public class SongCreatorEntity {
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="sc_art_seq") private ArtistInfoEntity artist;
     @Enumerated(value = EnumType.STRING)
     @Column(name="sc_type") private SongWirter scType;
+
 }
