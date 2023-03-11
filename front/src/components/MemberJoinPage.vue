@@ -180,7 +180,7 @@ export default {
                             }
                     })
                     .catch((error)=>{
-                        alert(error.response.data.message)
+                        alert(error.response.data.err)
                     })
             }
         }

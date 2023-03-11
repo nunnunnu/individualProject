@@ -32,6 +32,6 @@ public class MemberJoinVO {
     private String email;
     private LocalDate birth;
     private LocalDateTime regDt;
-    @NotBlank
+    @NotBlank(message = "닉네임을 입력하지않으셨습니다.")
     private String nickName;
 }

@@ -3,14 +3,12 @@ package melonproject.melon.service;
 import static org.springframework.util.StringUtils.hasText;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -21,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 
 import lombok.RequiredArgsConstructor;
+import melonproject.melon.Validator.SignUpFormValidator;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.entity.user.TicketMemberEntity;
@@ -51,6 +50,7 @@ public class MemberService {
     private final WebSecurityConfig wConfig;
     // private final TmRepo tmRepo;
     private final RedisService redisService;
+    private final SignUpFormValidator signUpFormValidator;
 
     private Boolean checkPassword(String rawPassword, String findMemberPassword) {
         if (!wConfig.passwordEncoder().matches(rawPassword, findMemberPassword)) {
@@ -61,33 +61,22 @@ public class MemberService {
 
     @Transactional
     public Map<String, Object> memberJoin(MemberJoinVO data,BindingResult bindingResult){
+        signUpFormValidator.validate(data, bindingResult);
+
         Map<String, Object> map = new LinkedHashMap<>();
-        if (bindingResult.hasErrors()) {
-            bindingResult.getFieldErrors().forEach(error -> {
-                map.put("message", error.getDefaultMessage());
-                map.put("code", HttpStatus.BAD_REQUEST);
-                map.put("status", false);
-            });
-            return map;
-        }
-        if(mRepo.countByMiId(data.getId())>=1){
-            map.put("status", false);
-            map.put("message", "이미 가입된 아이디입니다.");
-            map.put("code", HttpStatus.OK);
-            return map;
-        }
-        MemberInfoEntity member = MemberInfoEntity.builder().miId(data.getId())
-                        .miPwd(wConfig.passwordEncoder().encode(data.getPwd()))
-                        .miName(data.getName())
-                        .miAge(data.getAge())
-                        .miPhone(data.getPhone())
-                        .miEmail(data.getEmail())
-                        .miBirth(data.getBirth())
-                        .miRegDt(data.getRegDt())
-                        .miNickName(data.getNickName())
-                        .build();
-        mRepo.save(member);
-        map.put("status", true);
+
+        // MemberInfoEntity member = MemberInfoEntity.builder().miId(data.getId())
+        //                 .miPwd(wConfig.passwordEncoder().encode(data.getPwd()))
+        //                 .miName(data.getName())
+        //                 .miAge(data.getAge())
+        //                 .miPhone(data.getPhone())
+        //                 .miEmail(data.getEmail())
+        //                 .miBirth(data.getBirth())
+        //                 .miRegDt(data.getRegDt())
+        //                 .miNickName(data.getNickName())
+        //                 .build();
+        // mRepo.save(member);
+        // map.put("status", true);
         map.put("message", "회원가입 완료. 로그인페이지로 이동합니다.");
         map.put("code", HttpStatus.OK);
         return map;
@@ -152,7 +141,7 @@ public class MemberService {
             map.put("code", HttpStatus.OK);
             return map;
         }
-        if(mRepo.countByMiId(id)>=1){
+        if(mRepo.existsByMiId(id)){
             map.put("status", false);
             map.put("message", "중복 아이디입니다.");
             map.put("code", HttpStatus.OK);

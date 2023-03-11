@@ -10,6 +10,6 @@ public interface MemberInfoRepository extends JpaRepository<MemberInfoEntity, Lo
 
     MemberInfoEntity findByMiIdAndMiPwd(String id, String pwd);
 
-    Long countByMiId(String id);
+    boolean existsByMiId(String id);
     
 }

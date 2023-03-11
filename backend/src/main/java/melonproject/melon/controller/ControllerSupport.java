@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import melonproject.melon.error.ErrorCode;
 import melonproject.melon.error.ErrorResponse;
+import melonproject.melon.error.NotValidExceptionResponse;
+import melonproject.melon.error.custom.JoinException;
 import melonproject.melon.error.custom.MemberNotFound;
 import melonproject.melon.error.custom.NoContentException;
 import melonproject.melon.error.custom.NotFoundPlaylistException;
@@ -71,5 +73,24 @@ public class ControllerSupport {
             .build();
 
         return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = JoinException.class)
+    public ResponseEntity<Object> handleMethodArgumentNotValid(JoinException ex) {
+
+        // List<String> errorList = ex
+        //         .getBindingResult()
+        //         .getFieldErrors()
+        //         .stream()
+        //         .map(DefaultMessageSourceResolvable::getDefaultMessage)
+        //         .collect(Collectors.toList());
+
+        return new ResponseEntity<>(
+                NotValidExceptionResponse.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("회원가입 실패")
+                        .code(ErrorCode.JOIN_FAILED)
+                        .status(400)
+                        .err(ex.getErr())
+                        .build(), HttpStatus.BAD_REQUEST);
     }
 }
