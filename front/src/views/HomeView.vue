@@ -62,32 +62,37 @@
       </div>
     </div>
         <h3 class="pb-4 mb-4 fst-italic border-bottom">
-          일간차트
+          대한민국 TOP10
         </h3>
-
+      <div v-if="tracks!=null">
         <table class="table table-sm">
           <thead>
-            <th>순위</th>
             <th></th>
+            <th>이미지</th>
             <th>곡정보</th>
+            <th>가수</th>
             <th>앨범</th>
-            <th>좋아요</th>
-            <th>듣기</th>
           </thead>
           <tbody>
-            <td>1</td>
-            <td>
-              <img src="http://localhost:8250/image/album/nctdream_candy" width="75" height="75">
-            </td>
-            <td>Candy</td>
-            <td>Candy - Winter Special Mini Album</td>
-            <td>132,223</td>
-            <td>
-              ▶
-            </td>
+            <tr v-for="(track, index) in tracks.slice(0,10)" :key="track.id">
+              <td>{{ index + 1 }}</td>
+              <td>
+                <img :src="track.track.album.images[0].url"  width="80" height="80">
+              </td>
+              <td>{{ track.track.name }}</td>
+              <td>{{ track.track.artists[0].name }}</td>
+              <td>{{ track.track.album.name }}</td>
+              <td>{{ track.track.album.release_date }}</td>
+            </tr>
           </tbody>
         </table>
       </div>
+      <div v-else>
+        현재 차트를 표시할 수 없습니다. 관리자에게 문의해주세요.
+      </div>
+    </div>
+      <div>
+  </div>
   </b-container>
 </template>
 
@@ -101,18 +106,22 @@
       return {
         newAlbumList: null,
         isLogin: null,
-        user: null
+        user: null,
+        tracks:null
       }
     },
     created() {
       this.loadNewAlbum()
-      this.loadWeeklyChart()
       if (Cookies.get('accessToken') != null) {
         this.isLogin = true
         this.loadUserInfo(Cookies.get('accessToken'))
       } else {
         this.isLogin = false
       }
+      if(sessionStorage.getItem("spotifyAccess")==null){
+        this.getSpotifyToken()  
+      }
+      this.loadTracks()
     },
     methods: {
       loadNewAlbum() {
@@ -134,39 +143,6 @@
             seq: albumSeq
           }
         })
-      },
-      loadWeeklyChart() {
-        // axios.get("http://localhost:8250/song/spotify")
-        // .then((e)=>{
-        //   this.spotifyToken=e.data
-        // })
-        // axios({
-        //   method: 'POST',
-        //   url: 'https://accounts.spotify.com/api/token',
-        //   data: 'grant_type=authorization_code&code=AQBiMLXDbSgaFHGWdBJbo8xGPR-KKA8vohP0v5k14YvfxGYKOrQPMgWubtrSSL3MjkN93f5kiWUnaCmQhPMLP4q29ghXhpVsYIPvZnZTUlIrRL3-vgnDig62MbqjugAISS3tg4PFFC40PljkDZwE3Hut6Z08doaVDzRA97Ol0hf26U-RYWMvVvQfeRAymQ3I4t-3I6ru_ueFrDiCKa4',
-        //   headers: {
-        //     'Content-Type': 'application/x-www-form-urlencoded',
-        //     'Authorization': 'Basic ' + btoa('a44e6aaa247c427f925c1a44d26b0359' + ':' + this.spotifyToken)
-        //   }
-        // })
-        // .then(response => {
-        //   console.log(response.data)
-        // })
-        // .catch(error => {
-        //   console.log(error)
-        // })
-        // const token = "d42434663ee841a580ad0e943421cf93"
-        // axios.get('https://api.spotify.com/v1/playlists/37i9dQZEVXbJZGli0rRpfx/tracks', {
-        //   headers: {
-        //     'Authorization': 'Bearer ' +token
-        //   }
-        // })
-        // .then(response => {
-        //   console.log(response.data)
-        // })
-        // .catch(error => {
-        //   console.log(error)
-        // })
       },
       loginPush() {
         this.$router.push("/login")
@@ -222,6 +198,31 @@
               this.$router.push("/login")
             })
           })
+      },
+      getSpotifyToken(){
+        axios.get("http://localhost:8250/spotify")
+        .then((e)=>{
+          console.log(e)
+          sessionStorage.setItem("spotifyAccess", e.data.spotifyAccess)
+          sessionStorage.setItem("spotifyRefresh", e.data.spotifyRefresh)
+        })
+      },
+      loadTracks() {
+        axios.get('https://api.spotify.com/v1/playlists/37i9dQZEVXbNxXF4SkHj9F', {
+          headers: {
+            Authorization: 'Bearer ' + sessionStorage.getItem("spotifyAccess")
+          }
+        })
+        .then(response => {
+          this.tracks = response.data.tracks.items;
+          console.log(this.tracks);
+          
+        })
+        .catch(error => {
+          console.log(error);
+          sessionStorage.removeItem("accessToken")
+          sessionStorage.removeItem("refreshToken")
+        });
       }
     }
   }

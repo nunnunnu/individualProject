@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MelonApplication<melon>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "melonproject.melon.MelonApplication",
+            "projectName": "melon",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

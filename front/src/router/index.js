@@ -19,12 +19,18 @@ import LoginPage from '../views/Login.vue'
 import JoinMember from '../components/MemberJoinPage.vue'
 import MyPage from '../components/MyPage.vue'
 import PlayList from '../components/PlayList.vue'
+import MusicTop from '../views/TOP50View.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/top',
+    name: 'musicTop',
+    component: MusicTop
   },
   {
     path: '/myPage',

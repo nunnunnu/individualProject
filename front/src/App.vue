@@ -20,7 +20,7 @@
                 <router-link to="/song/new">최신 음악</router-link>
               </li>
               <li class="nav-item">
-                <!-- <router-link :to="{name:'loginPage', params:{url:this.$router}}">로그인</router-link> -->
+                <router-link to="/top">TOP50</router-link>
               </li>
             </ul>
             <!-- <form class="d-flex" role="search"> -->

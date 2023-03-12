@@ -65,10 +65,24 @@ dependencies {
 
 	//@vaild
 	implementation('org.springframework.boot:spring-boot-starter-validation')
+
+	//OAuth2 
+	implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.3.4.RELEASE'
+
+	//스포티파이
+	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
+	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
+	
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+allprojects { //스포티파이
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
 }
 
 //querydsl 추가 시작
