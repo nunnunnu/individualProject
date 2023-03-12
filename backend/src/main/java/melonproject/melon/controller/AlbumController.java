@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.AlbumService;
+import melonproject.melon.service.CommentService;
 import melonproject.melon.vo.album.AlbumAddVO;
 
 @RestController
@@ -29,6 +30,7 @@ import melonproject.melon.vo.album.AlbumAddVO;
 @RequestMapping("/album")
 public class AlbumController {
     private final AlbumService aService;
+    private final CommentService cService;
 
     @PutMapping("/add")
     public ResponseEntity<Object> addAlbum(@RequestPart AlbumAddVO data, @RequestPart MultipartFile file){
@@ -69,6 +71,15 @@ public class AlbumController {
         Map<String, Object> map = aService.newAlbumTwo();
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
+    @GetMapping("/comment/{album}")
+    public ResponseEntity<Object> commentGet(
+            @PathVariable Long album,
+            @PageableDefault(size=2, sort="createdDate",direction = Sort.Direction.ASC) @Nullable Pageable page
+        ){
+        Map<String, Object> map = cService.getComment(album, page);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
     
 }

@@ -1,4 +1,4 @@
-package melonproject.melon.vo.album;
+package melonproject.melon.vo.comment;
 
 import org.springframework.web.multipart.MultipartFile;
 

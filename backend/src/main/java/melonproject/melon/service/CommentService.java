@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -13,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.album.AlbumCommentEntity;
 import melonproject.melon.entity.artist.album.AlbumInfoEntity;
+import melonproject.melon.entity.artist.song.SoundQuality;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.error.custom.CommentInputException;
 import melonproject.melon.error.custom.MemberNotFound;
@@ -21,7 +24,9 @@ import melonproject.melon.error.custom.NotFoundComment;
 import melonproject.melon.repository.artist.album.AlbumCommentRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
-import melonproject.melon.vo.album.CommentInputVO;
+import melonproject.melon.vo.comment.CommentInputVO;
+import melonproject.melon.vo.comment.CommentListVO;
+import melonproject.melon.vo.song.SongInfoVO;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +71,22 @@ public class CommentService {
         map.put("status", true);
         map.put("message", "저장성공");
 
+        return map;
+    }
+    public Map<String, Object> getComment(Long albumSeq, Pageable page){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        AlbumInfoEntity album = aRepo.findById(albumSeq).orElseThrow(()->new NotFoundAlbumException());
+
+        Page<AlbumCommentEntity> list = acRepo.findByAlbumAndParentIsNull(album, page);
+        Page<CommentListVO> result = list.map(
+                c->new CommentListVO(
+                    c, acRepo.findByParent(c)
+                ));
+        
+        map.put("status", true);
+        map.put("message", "조회성공");
+        map.put("data", result);
         return map;
     }
 }
