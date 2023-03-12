@@ -36,7 +36,6 @@ public class MemberController {
     }
     @PostMapping("/login")
     public ResponseEntity<Object> memberLogin(@RequestBody @Valid LoginVO data){
-        System.out.println(data);
         Map<String, Object> map = mService.login(data);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
@@ -49,7 +48,6 @@ public class MemberController {
     }
     @PostMapping("refresh")
     public ResponseEntity<Object> refresh(@RequestBody RefreshCheck data){
-        System.out.println(data);
         Map<String, Object> map = mService.accessToken(data);
         return new ResponseEntity<>(map, (HttpStatus)map.get(("code")));
     }

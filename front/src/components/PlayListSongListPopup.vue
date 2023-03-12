@@ -56,7 +56,7 @@
                                 </div>
                             </td>
                             <td>
-                                <button class="btn btn-dark btn-sm" >삭제</button>
+                                <button class="btn btn-dark btn-sm" @click="deleteSong(item.playListOrder   )">삭제</button>
                             </td>
                     </tr>
                 </tbody>
@@ -86,6 +86,7 @@
         },
         mounted(){
             this.loadSongList()
+            
         },
         methods:{
             loadSongList(){
@@ -97,6 +98,7 @@
                 })
                 .then((response) => {
                     this.songlist=response.data.data
+                    console.log(this.songlist)
                 })
                 .catch((error) => {
                     const member = Cookies.get('member')
@@ -134,6 +136,41 @@
                 sessionStorage.setItem("nowIndex",0)
                 sessionStorage.setItem("playlist", JSON.stringify(this.songlist))
                 this.$router.go();
+            },
+            deleteSong(order){
+                if(confirm("정말 삭제하시겠습니까?")){
+                    axios.delete(
+                        `http://localhost:8250/playlist/`+this.seq+"/"+order, {
+                            headers: {
+                                Authorization: 'Bearer ' + Cookies.get('accessToken')
+                        }
+                    })
+                    .then((response) => {
+                        alert("삭제되었습니다.")
+                        this.loadSongList()
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            // id: member,
+                            refresh: refresh
+                        })
+                        .then((e) => {
+                            Cookies.set('accessToken', e.data.token)
+                            this.loadMyPlayList()
+                        })
+                        .catch((error) => {
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.clear()
+                            this.$router.push("/login")
+                        })
+                    })
+                }
             }
         }
     }

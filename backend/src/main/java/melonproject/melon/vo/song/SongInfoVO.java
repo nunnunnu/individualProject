@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import melonproject.melon.entity.artist.song.SongArtistConnection;
 import melonproject.melon.entity.artist.song.SongFileEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
+import melonproject.melon.entity.user.playlist.PlayListSongEntity;
 import melonproject.melon.vo.album.AlbumInfoVO;
 import melonproject.melon.vo.artist.ArtistInfoVO;
 
@@ -28,6 +29,7 @@ public class SongInfoVO {
     // private String albumUri;
     private String lyrics;
     private AlbumInfoVO album;
+    private Integer playListOrder;
 
     public SongInfoVO(SongInfoEntity entity){
         this.seq = entity.getSiSeq();
@@ -57,7 +59,6 @@ public class SongInfoVO {
         this.likes = entity.getLikes().size();
         this.movie = entity.getSiMovie();
         for(SongFileEntity file : entity.getFiles()){
-            System.out.println("sss");
             this.files.add(new SongFileVO(file));
         }
         this.isliked=liked;
@@ -73,7 +74,6 @@ public class SongInfoVO {
             artists.add(new ArtistInfoVO(a.getArtist()));
         }
         for(SongFileEntity file : song.getFiles()){
-            System.out.println("sss");
             this.files.add(new SongFileVO(file));
         }
         this.album = new AlbumInfoVO(song.getAlbum());
@@ -94,11 +94,30 @@ public class SongInfoVO {
         this.likes = entity.getLikes().size();
         this.movie = entity.getSiMovie();
         for(SongFileEntity file : entity.getFiles()){
-            System.out.println("sss");
             this.files.add(new SongFileVO(file));
         }
         // this.isliked=liked;
         // this.albumUri = entity.getAlbum().getAlbumUri();
         this.album = new AlbumInfoVO(entity.getAlbum());
+    }
+
+    public SongInfoVO(PlayListSongEntity p){
+        SongInfoEntity entity = p.getSong();
+        this.seq = entity.getSiSeq();
+        this.order = entity.getSiOrder();
+        this.title = entity.getSiTitle();
+        this.name = entity.getSiName();
+        for(SongArtistConnection sac : entity.getArtists()){
+            this.artists.add(new ArtistInfoVO(sac.getArtist()));
+        }
+        this.likes = entity.getLikes().size();
+        this.movie = entity.getSiMovie();
+        for(SongFileEntity file : entity.getFiles()){
+            this.files.add(new SongFileVO(file));
+        }
+        // this.isliked=liked;
+        // this.albumUri = entity.getAlbum().getAlbumUri();
+        this.album = new AlbumInfoVO(entity.getAlbum());
+        this.playListOrder = p.getPsOrder();
     }
 }

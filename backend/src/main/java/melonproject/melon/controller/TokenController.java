@@ -67,8 +67,6 @@ public class TokenController {
     }
     @PostMapping("/refreshDel")
     public ResponseEntity<Object> logout(@RequestBody RefreshCheck refresh){
-        System.out.println("sssss");
-        System.out.println(refresh);
         Map<String, Object> map = mService.logout(refresh.getRefresh());
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));

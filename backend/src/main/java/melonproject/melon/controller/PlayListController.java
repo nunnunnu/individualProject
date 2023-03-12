@@ -26,7 +26,6 @@ public class PlayListController {
     
     @PutMapping("/{name}")
     public ResponseEntity<Object> playlistCreate(@AuthenticationPrincipal UserDetails userDetails, @PathVariable String name){
-        System.out.println(userDetails);
         Map<String, Object> map = pService.createPlayList(userDetails, name);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
@@ -49,6 +48,14 @@ public class PlayListController {
     @DeleteMapping("/{seq}")
     public ResponseEntity<Object> playlistDelete(@PathVariable Long seq, @AuthenticationPrincipal UserDetails userDetails){
         Map<String, Object> map = pService.delPlaylist(seq, userDetails);
+        return new ResponseEntity<>(map, HttpStatus.OK);    
+    }
+    @DeleteMapping("/{play}/{order}")
+    public ResponseEntity<Object> playlistSongDelete(
+            @PathVariable Long play, 
+            @PathVariable Integer order, 
+            @AuthenticationPrincipal UserDetails userDetails){
+        Map<String, Object> map = pService.delPlaylistSong(userDetails, play, order);
         return new ResponseEntity<>(map, HttpStatus.OK);    
     }
 }

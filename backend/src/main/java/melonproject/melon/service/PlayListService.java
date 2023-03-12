@@ -17,6 +17,7 @@ import melonproject.melon.entity.user.playlist.PlayListInfoEntity;
 import melonproject.melon.entity.user.playlist.PlayListSongEntity;
 import melonproject.melon.error.custom.MemberNotFound;
 import melonproject.melon.error.custom.NoContentException;
+import melonproject.melon.error.custom.NotFoundPlayListSong;
 import melonproject.melon.error.custom.NotFoundPlaylistException;
 import melonproject.melon.error.custom.NotFoundSongException;
 import melonproject.melon.error.custom.RequiredValueOmission;
@@ -103,9 +104,8 @@ public class PlayListService {
         if(list.size()==0){
             throw new NoContentException();
         }
+        List<SongInfoVO> result = list.stream().map(p->new SongInfoVO(p)).toList();
 
-        List<SongInfoVO> result = list.stream().map((p->new SongInfoVO(p.getSong()))).toList();
-    
         map.put("status", true);
         map.put("message", "조회완료");
         map.put("data", result);
@@ -128,6 +128,34 @@ public class PlayListService {
         map.put("status", false);
         map.put("message", "삭재했습니다.");
 
+
+        return map;
+    }
+    public Map<String, Object> delPlaylistSong(UserDetails userDetails, Long playseq, Integer order){
+        Map<String, Object> map = new LinkedHashMap<>();
+
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        if(member==null){
+            throw new MemberNotFound();
+        }
+        PlayListInfoEntity playlist = pRepo.findByPlayiSeqAndMember(playseq, member);
+        if(playlist==null){
+            throw new NotFoundPlaylistException();
+        }
+        // SongInfoEntity song = sRepo.findById(songSeq).orElseThrow(()->new NotFoundSongException());
+        
+        PlayListSongEntity entity = psRepo.findByPlayAndPsOrder(playlist, order);
+        System.out.print(entity);
+        if(entity==null){
+            throw new NotFoundPlayListSong();
+        }
+
+        psRepo.delete(entity);
+
+        psRepo.playlistOrderSet(playlist, order);
+
+        map.put("status", true);
+        map.put("message", "삭제성공");
 
         return map;
     }

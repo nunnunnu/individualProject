@@ -218,9 +218,7 @@ public class MemberService {
     public Map<String, Object> accessToken(RefreshCheck data){
         Map<String, Object> map = new LinkedHashMap<>();
         // String refreshToken = (String) redisTemplate.opsForHash().get(data.getId(), "refreshToken");
-        System.out.println("refreshToken");
         String id = redisService.getValues(data.getRefresh());
-        System.out.println(id);
         if(!StringUtils.hasText(id)){
             map.put("message","해당 해원은 로그인 한적 없는 회원입니다.");
             map.put("code",HttpStatus.BAD_REQUEST);

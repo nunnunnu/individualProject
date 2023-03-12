@@ -34,7 +34,6 @@ public class ArtistService {
     private final ArtistConnectionRepository acRepo;
 
     public Map<String, Object> saveArtist(ArtistAddVO data, MultipartFile file){
-        System.out.println(data);
         Map<String, Object> map = new LinkedHashMap<>();
         if(data.getName()==null || data.getDtype()==null){
             map.put("status", false);
@@ -55,8 +54,6 @@ public class ArtistService {
         
         if(data.getDtype().equals("SOLO")){
             ArtistSoloInfoEntity solo = fService.saveArtistSoloFile(file, data.getName());
-            System.out.println(solo.getArtFile());
-            System.out.println(solo.getArtUri());
             solo.addSetting(agency, data.getBirth(), data.getCountry(), data.getDebut(), data.getName());
             asRepo.save(solo);
             map.put("status", true);

@@ -57,7 +57,7 @@ class MelonApplicationTests {
 		// System.out.println(artgRepo.findAll().get(0).getArtName());
 		// System.out.println(artsRepo.findAll().get(0).getArtName());
 		// System.out.println(artRepo.findAll().get(0));
-		System.out.println(hpRepo.countListenGenre(miRepo.findAll().get(0)));
+		// System.out.println(hpRepo.countListenGenre(miRepo.findAll().get(0)));
 	}
 
 }

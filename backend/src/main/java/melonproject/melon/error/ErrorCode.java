@@ -7,6 +7,7 @@ public enum ErrorCode {
     NO_CONTENT(204, "A002", "조회할 컨텐츠가 없음"),
     NOT_FOUND_SONG(400, "P001", "플레이 리스트 번호 오류"),
     NOT_FOUND_PLAYLIST(400, "S001", "곡 번호 오류"),
+    NOT_FOUND_PLAYLIST_SONG(400, "P002", "플레이리스트 번호오류 또는 순서 오류"),
     JOIN_FAILED(400, "M001", "회원가입오류");
 
     private final String code;

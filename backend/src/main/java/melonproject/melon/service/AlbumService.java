@@ -163,7 +163,6 @@ public class AlbumService {
             map.put("code", HttpStatus.BAD_REQUEST);
             return map;
         }
-        System.out.println(gradeRepo.countByAlbumAndMember(album, member));
         if(gradeRepo.countByAlbumAndMember(album, member) >=1){
             map.put("status", false);
             map.put("message", "이미 평점을 등록한 앨범입니다.");
