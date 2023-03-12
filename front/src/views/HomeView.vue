@@ -163,9 +163,9 @@
         Cookies.remove('refreshToken')
         Cookies.remove('accessToken')
         this.loadNewAlbum();
-        this.loadWeeklyChart()
         this.isLogin = false
-        sessionStorage.clear()
+        sessionStorage.removeItem("nowIndex")
+        sessionStorage.removeItem("playlist")
         this.$router.go()
       },
       loadUserInfo(token) {
@@ -194,7 +194,8 @@
               Cookies.remove('refreshToken')
               Cookies.remove('accessToken')
               Cookies.remove('member')
-              sessionStorage.clear()
+              sessionStorage.removeItem("nowIndex")
+              sessionStorage.removeItem("playlist")
               this.$router.push("/login")
             })
           })

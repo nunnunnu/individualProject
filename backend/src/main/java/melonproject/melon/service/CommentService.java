@@ -1,0 +1,71 @@
+package melonproject.melon.service;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.multipart.MultipartFile;
+
+import lombok.RequiredArgsConstructor;
+import melonproject.melon.entity.artist.album.AlbumCommentEntity;
+import melonproject.melon.entity.artist.album.AlbumInfoEntity;
+import melonproject.melon.entity.user.MemberInfoEntity;
+import melonproject.melon.error.custom.CommentInputException;
+import melonproject.melon.error.custom.MemberNotFound;
+import melonproject.melon.error.custom.NotFoundAlbumException;
+import melonproject.melon.error.custom.NotFoundComment;
+import melonproject.melon.repository.artist.album.AlbumCommentRepository;
+import melonproject.melon.repository.artist.album.AlbumInfoRepository;
+import melonproject.melon.repository.user.MemberInfoRepository;
+import melonproject.melon.vo.album.CommentInputVO;
+
+@Service
+@RequiredArgsConstructor
+public class CommentService {
+    private final AlbumCommentRepository acRepo;
+    private final MemberInfoRepository mRepo;
+    private final AlbumInfoRepository aRepo;
+    private final FileService fService;
+
+    public Map<String, Object> albumCommentAdd(UserDetails userDetails, CommentInputVO data, BindingResult bindingResult, MultipartFile file){
+        if (bindingResult.hasErrors()) {
+            List<String> errorMessage = new ArrayList<>();
+            bindingResult.getFieldErrors().forEach(error -> {
+                errorMessage.add(error.getDefaultMessage());
+            });
+            throw new CommentInputException(errorMessage);
+        }
+        AlbumCommentEntity parentComment =null;
+        if(data.getParentSeq()!=null){
+            parentComment = acRepo.findById(data.getParentSeq()).orElseThrow(()->new NotFoundComment());
+        }
+
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        if(member==null){
+            throw new MemberNotFound();
+        }
+
+        AlbumInfoEntity album = aRepo.findById(data.getAlbum()).orElseThrow(()->new NotFoundAlbumException());
+
+        AlbumCommentEntity comment;
+        if(data.getParentSeq()==null && file!=null){
+            comment = fService.saveCommentFile(file);
+        }else{
+            comment = new AlbumCommentEntity();
+        }
+
+        comment.setting(member, album, data.getComment(), parentComment);
+
+        acRepo.save(comment);
+
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put("status", true);
+        map.put("message", "저장성공");
+
+        return map;
+    }
+}

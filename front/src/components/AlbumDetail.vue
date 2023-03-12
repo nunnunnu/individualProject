@@ -179,12 +179,26 @@
                 <br>
                 <h5 class="pb-4 mb-4 fst-italic border-bottom">댓글</h5>
                 <br>
-                <div class="row">
+                <div class="row" @click="loginCheck">
                     <div class="col-11">
                         <div class="input-group">
                             <span class="input-group-text">댓글</span>
                             <textarea class="form-control" aria-label="With textarea"></textarea>
+                            <div class="col-1">
+
+                            </div>
+                            <div class="col-3" v-if="isLogin">
+                                <input class="form-control form-control-sm" id="formFileSm" type="file">
+                            </div>
+                            <div v-else>
+                                <div class="mb-3">
+                                <input class="form-control" type="file" id="formFileDisabled" disabled>
+                            </div>
+                            </div>
                         </div>
+                        <div class="mb-3">
+                            <br>
+</div>
                     </div>
                     <div class="col-1">
                         <button class="btn btn-success btn-lg">입력</button>
@@ -256,7 +270,8 @@
                             Cookies.remove('refreshToken')
                             Cookies.remove('accessToken')
                             Cookies.remove('member')
-                            sessionStorage.clear()
+                            sessionStorage.removeItem("nowIndex")
+                            sessionStorage.removeItem("playlist")
                             this.$router.push("/login")
                         })
                     }
@@ -317,7 +332,8 @@
                             Cookies.remove('refreshToken')
                             Cookies.remove('accessToken')
                             Cookies.remove('member')
-                            sessionStorage.clear()
+                            sessionStorage.removeItem("nowIndex")
+                            sessionStorage.removeItem("playlist")
                             this.$router.push("/login")
                         })
                     })
@@ -359,7 +375,8 @@
                             Cookies.remove('refreshToken')
                             Cookies.remove('accessToken')
                             Cookies.remove('member')
-                            sessionStorage.clear()
+                            sessionStorage.removeItem("nowIndex")
+                            sessionStorage.removeItem("playlist")
                             this.$router.push("/login")
                         })
                     })
@@ -400,6 +417,12 @@
                     this.popup=false
                 }else{
                     alert("로그인 후 이용가능한 기능입니다.")
+                    this.$router.push("/login")
+                }
+            },
+            loginCheck(){
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능한 서비스입니다.")
                     this.$router.push("/login")
                 }
             }

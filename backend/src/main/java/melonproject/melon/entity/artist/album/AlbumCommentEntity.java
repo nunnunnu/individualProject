@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +24,7 @@ import melonproject.melon.entity.user.MemberInfoEntity;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 @Table(name="album_comment")
 public class AlbumCommentEntity extends BaseTimeEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +36,13 @@ public class AlbumCommentEntity extends BaseTimeEntity {
     // @Column(name="albumc_edit_dt") private LocalDateTime albumcEditDt;
     @Column(name="albumc_file") private String albumcFile;
     @Column(name="albumc_uri") private String albumcUri;
+    @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="albumc_albumc_seq") private AlbumCommentEntity parent;
+
+    public void setting(MemberInfoEntity member, AlbumInfoEntity album, String comment, AlbumCommentEntity parent){
+        this.member = member;
+        this.album = album;
+        this.albumcCommnet = comment;
+        this.parent = parent;
+    }
 
 }

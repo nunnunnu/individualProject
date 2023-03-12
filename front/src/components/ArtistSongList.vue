@@ -135,7 +135,8 @@
                             Cookies.remove('refreshToken')
                             Cookies.remove('accessToken')
                             Cookies.remove('member')
-                            sessionStorage.clear()
+                            sessionStorage.removeItem("nowIndex")
+                            sessionStorage.removeItem("playlist")
                             this.$router.push("/login")
                         })
                     }
@@ -172,7 +173,8 @@
                                 Cookies.remove('refreshToken')
                                 Cookies.remove('accessToken')
                                 Cookies.remove('member')
-                                sessionStorage.clear()
+                                sessionStorage.removeItem("nowIndex")
+                                sessionStorage.removeItem("playlist")
                                 this.$router.push("/login")
                             })
                         }
