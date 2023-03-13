@@ -22,6 +22,9 @@
               <li class="nav-item">
                 <router-link to="/top">TOP50</router-link>
               </li>
+              <li class="nav-item">
+                <router-link to="/ticket">이용권 구매</router-link>
+              </li>
             </ul>
             <!-- <form class="d-flex" role="search"> -->
             <div class="row">

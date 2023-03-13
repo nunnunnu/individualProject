@@ -25,5 +25,6 @@ public class TicketInfoEntity {
     @Column(name="ti_streaming") private Integer tiStreaming;
     @Column(name="ti_term") private Integer tiTerm;
     @Column(name="ti_name") private String name;
+    @Column(name="ti_ex") private String tiEx;
 
 }

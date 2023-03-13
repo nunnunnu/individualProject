@@ -20,12 +20,18 @@ import JoinMember from '../components/MemberJoinPage.vue'
 import MyPage from '../components/MyPage.vue'
 import PlayList from '../components/PlayList.vue'
 import MusicTop from '../views/TOP50View.vue'
+import TicketView from '../views/TicketView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/ticket',
+    name: 'ticket',
+    component: TicketView
   },
   {
     path: '/top',
