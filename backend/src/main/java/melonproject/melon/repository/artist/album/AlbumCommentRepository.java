@@ -12,7 +12,7 @@ import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 
 public interface AlbumCommentRepository extends JpaRepository<AlbumCommentEntity, Long>{
 
-    AlbumCommentEntity findByAlbumcUri(String uri);
+    AlbumCommentEntity findByAlbumcFile(String file);
 
     Page<AlbumCommentEntity> findByAlbumAndParentIsNull(AlbumInfoEntity album, Pageable page);
 

@@ -1,5 +1,6 @@
 <template>
     <b-container>
+    <div class="chart">
         <h3 class="pb-4 mb-4 fst-italic border-bottom">
             대한민국 TOP10
         </h3>
@@ -29,6 +30,7 @@
         <div v-else>
             현재 차트를 표시할 수 없습니다. 관리자에게 문의해주세요.
         </div>
+    </div>
     </b-container>
 </template>
 <script>
@@ -78,3 +80,8 @@
         }
     }
 </script>
+<style>
+.chart{
+    padding-bottom: 102px;
+}
+</style>

@@ -37,6 +37,7 @@ public class CommentService {
     private final FileService fService;
 
     public Map<String, Object> albumCommentAdd(UserDetails userDetails, CommentInputVO data, BindingResult bindingResult, MultipartFile file){
+        System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa"+data.getComment());
         if (bindingResult.hasErrors()) {
             List<String> errorMessage = new ArrayList<>();
             bindingResult.getFieldErrors().forEach(error -> {

@@ -183,16 +183,20 @@
                     <div class="col-11">
                         <div class="input-group">
                             <span class="input-group-text">댓글</span>
-                            <textarea class="form-control" aria-label="With textarea"></textarea>
+                            <input class="form-control" aria-label="With textarea" v-model="commentDetail">
                             <div class="col-1">
-
                             </div>
-                            <div class="col-3" v-if="isLogin">
-                                <input class="form-control form-control-sm" id="formFileSm" type="file">
+                            <div class="col-2" v-if="isLogin">
+                                <input class="form-control form-control-sm" id="formFileSm" type="file" @change="imageChange">
+                                <br>
                             </div>
                             <div v-else>
                                 <div class="mb-3">
-                                <input class="form-control" type="file" id="formFileDisabled" disabled>
+                                    <input class="form-control" type="file" id="formFileDisabled" disabled>
+                                </div>
+                            </div>
+                            <div class="col-1">
+                                <div class="img" style="width:100px; height: 100px; border: 1px solid #999;" ref="imgbox">
                             </div>
                             </div>
                         </div>
@@ -201,13 +205,88 @@
 </div>
                     </div>
                     <div class="col-1">
-                        <button class="btn btn-success btn-lg">입력</button>
+                        <button class="btn btn-success btn-lg" @click="saveComment">등록</button>
                     </div>
                 </div>
                 <br>
                 <p align="left">총 {{ data.comment }}개</p>
                 <hr>
+                <div class="row">
+                    <tr v-for="cmt in comment" :key="cmt.seq">
+                        <div class="row" align="left">
+                            <div class="col-auto">
+                                <p>닉네임 : {{ cmt.name }}</p>
+                            </div>
+                            <div class="col-auto" v-if="cmt.uri!=null">
+                                <img :src='`http://localhost:8250/image/comment/${cmt.uri}`'  width="80" height="80">
+                            </div>
+                            <div class="col-auto">
+                                <p>{{ cmt.content }}</p>
+                            </div>
+                            <div class="col-auto">
+                                <p>{{ cmt.create }}</p>
+                            </div>
+                        </div>
+                            <details align="left">
+                                <summary>답댓글</summary>
+                                <br>
+                                <div class="row">
+                                    <tr v-for="rep in cmt.child" :key="rep.seq">
+                                        <div class="row">
+                                        <div class="col-1"></div>
+                                    <div class="col-auto">
+                                        <p>닉네임 : {{ rep.name }}</p>
+                                    </div>
+                                    <div class="col-auto">
+                                        <p>{{ rep.content }}</p>
+                                    </div>
+                                    <div class="col-auto" align="right">
+                                        <p>{{ rep.create }}</p>
+                                    </div>
+                                    <hr>
+                                </div>
+                                </tr>
+                                <div class="row" @click="loginCheck">
+                                    <div class="col-1"></div>
+                                    <div v-if="isLogin" class="col">
+                                        <input class="form-control form-control-sm" type="text" placeholder="답댓글 입력창" aria-label=".form-control-sm example" v-model="childComment">
+                                    </div>
+                                    <div class="col-2">
+                                        <button type="button" class="btn btn-success"
+                                                style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" @click="saveChildComment(cmt.seq)">
+                                        등록
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            </details>
+                        <hr>
+                    </tr>
+                </div>
             </div>
+        <div class="pagearea">
+        <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a v-if="currentPage==0" class="page-link">Previous</a>
+        </li>
+        <a v-if="currentPage!=0" class="page-link" @click="prePage()">Previous</a>
+            <tr v-for="page in totalPage" :key="page">
+                <li class="page-item">
+                    <a class="page-link" @click="pageClick(page-1)">
+                        <font color="red" v-if="page-1==currentPage">{{ page }}</font>
+                        <font v-if="page-1!=currentPage">{{ page }}</font>
+                    </a>
+                </li>
+            </tr>
+            <li v-if="currentPage+1==totalPage" class="page-item disabled">
+            <a class="page-link">Next</a>
+            </li>
+            <li v-if="currentPage+1!=totalPage" class="page-item">
+            <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
+            </li>
+        </ul>
+        </div>
+
         </div>
         <playListPopup v-if="popup" @closePopup="closePopup" :song="seletedSong" @nowPlayingAdd="nowPlayingAdd"/>
     </b-container>
@@ -230,7 +309,14 @@
                 stars: [1, 2, 3, 4, 5],
                 isLogin: null,
                 popup:false,
-                seletedSong:null
+                seletedSong:null,
+                comment:null,
+                imgData:null,
+                commentDetail:"",
+                childComment:"",
+                totalPage:null,
+                size:null,
+                currentPage:0
             }
         },
         created() {
@@ -241,6 +327,7 @@
                 this.isLogin = false
             }
             this.loadPage(this.seq)
+            this.loadComment()
         },
         methods: {
             loadPage(seq) {
@@ -252,6 +339,7 @@
                 .then((e) => {
                     this.data = e.data.data
                     this.albumExplan = e.data.data.explan
+                    
                 })
                 .catch((error)=>{
                     if(error.response.status==403){
@@ -393,17 +481,13 @@
                 sessionStorage.setItem('playlist',JSON.stringify(songlist))
                 sessionStorage.setItem('nowIndex',songlist.length-1)
                 this.$router.go();
-                // this.$emit("nowPlaying")
-            
             },
             playListAdd(item){
             },
             nowPlayingAdd(){
-                // console.log(item.target)
                 this.$emit('setPlayList')
             },
             openPopup(item){
-                // console.log(item)
                 if(this.isLogin){
                     this.seletedSong = item
                     this.popup=true
@@ -425,6 +509,140 @@
                     alert("로그인 후 이용가능한 서비스입니다.")
                     this.$router.push("/login")
                 }
+            },
+            loadComment(){
+                axios.get("http://localhost:8250/album/comment/"+this.seq+"?page="+this.currentPage
+                )
+                .then((e) => {
+                    console.log(e.data.data.content)
+                    this.comment = e.data.data.content
+                    this.albumExplan = e.data.data.explan
+                    this.totalPage=e.data.data.totalPages
+                    this.size=e.data.data.size     
+                })
+            },
+            imageChange(event){
+                const imgbox = this.$refs.imgbox //imgbox ref를 가진 div
+                if(event.target.files && event.target.files[0]){ //파일있는지 검사
+                    const reader = new FileReader(); //파일 읽어들이는 클래스
+                    // reader.onload((e)=>{
+                        //     imgbox.style.backgroundImage = e.target.result
+                        // })
+                        reader.addEventListener("load", function(e){
+                            //이미지 로드 완료 시
+                            imgbox.style.backgroundImage= `url('${e.target.result}')` //배경 이미지 설정
+                            imgbox.style.backgroundSize= '100% auto' //크기설정
+                            imgbox.style.backgroundPosition= 'center' //가운데로
+                        })
+                        this.imgData = event.target.files[0]
+                    reader.readAsDataURL(this.imgData) //이미지 초기화
+                }else{
+                    imgbox.style.backgroundImage = ""
+                }
+                
+            },
+            saveComment(){
+                const formdata = new FormData()
+                formdata.append("album", this.data.seq)
+                formdata.append("comment", this.commentDetail)
+                formdata.append("file", this.imgData)
+
+                axios.put("http://localhost:8250/comment", formdata , {
+                        headers: {
+                            Authorization: `Bearer `+Cookies.get('accessToken')
+                        }
+                    })
+                    .then((e)=>{
+                        this.loadComment()
+                        this.commentDetail=null
+                        this.imgData=null
+                        const reader = new FileReader(); //파일 읽어들이는 클래스
+                        reader.readAsDataURL(this.imgData)
+                        console.log(e)
+                    })
+                    .catch((error)=>{
+                        if(error.response.status==403){
+                            const member = Cookies.get('member')
+                            const refresh = Cookies.get('refreshToken')
+                            axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                            })
+                                .then((e)=>{
+                                console.log(e.data.token)
+                                Cookies.set('accessToken', e.data.token)
+                                this.saveComment()
+                            })
+                            .catch((error)=>{
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.removeItem("nowIndex")
+                                sessionStorage.removeItem("playlist")
+                                this.$router.push("/login")
+                            })
+                        }else{
+                            console.log(error)
+                            alert(error.response.data.err)
+                        }
+                    })
+            },
+            saveChildComment(seq){
+                console.log(seq)
+                const formdata = new FormData()
+                formdata.append("album", this.data.seq)
+                formdata.append("comment", this.childComment)
+                formdata.append("parentSeq", seq)
+
+                axios.put("http://localhost:8250/comment", formdata , {
+                        headers: {
+                            Authorization: `Bearer `+Cookies.get('accessToken')
+                        }
+                    })
+                    .then((e)=>{
+                        this.loadComment()
+                        this.commentDetail=null
+                        this.imgData=null
+                        const reader = new FileReader(); //파일 읽어들이는 클래스
+                        reader.readAsDataURL(this.imgData)
+                        console.log(e)
+                    })
+                    .catch((error)=>{
+                        if(error.response.status==403){
+                            const member = Cookies.get('member')
+                            const refresh = Cookies.get('refreshToken')
+                            axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                            })
+                                .then((e)=>{
+                                console.log(e.data.token)
+                                Cookies.set('accessToken', e.data.token)
+                                this.saveComment()
+                            })
+                            .catch((error)=>{
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.removeItem("nowIndex")
+                                sessionStorage.removeItem("playlist")
+                                this.$router.push("/login")
+                            })
+                        }else{
+                            console.log(error)
+                            alert(error.response.data.err)
+                        }
+                    })
+            },
+            pageClick(page){
+                this.currentPage=page
+                this.loadComment()
+            },
+            prePage(){
+                this.currentPage = this.currentPage-1
+                this.loadComment()
             }
         }
     }

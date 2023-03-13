@@ -59,7 +59,7 @@ public class FileService {
     }
     else if(type.equals("comment")){
         folderLocation = Paths.get(comment_img_path);
-        filename = acRepo.findByAlbumcUri(uri).getAlbumcFile();
+        filename = uri;
     }else{
         return null;
     }

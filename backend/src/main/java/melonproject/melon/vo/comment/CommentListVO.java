@@ -3,7 +3,8 @@ package melonproject.melon.vo.comment;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,14 +16,17 @@ import melonproject.melon.entity.artist.album.AlbumCommentEntity;
 @NoArgsConstructor
 @Builder
 public class CommentListVO {
+    private Long seq;
     private String name;
     private String content;
     private String uri;
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime create;
     private LocalDateTime update;
     private List<ChildCommentListVO> child = new ArrayList<>();
 
     public CommentListVO(AlbumCommentEntity entity, List<AlbumCommentEntity> childlist){
+        this.seq = entity.getAlbumcSeq();
         this.name = entity.getMember().getMiNickName();
         this.content = entity.getAlbumcCommnet();
         this.uri = entity.getAlbumcFile();
