@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.AlbumService;
+import melonproject.melon.service.ArtistService;
 import melonproject.melon.service.MemberService;
-import melonproject.melon.service.PlayListService;
 import melonproject.melon.service.SongService;
 import melonproject.melon.vo.Member.RefreshCheck;
 
@@ -28,6 +29,7 @@ public class TokenController {
     private final MemberService mService;
     private final AlbumService aService;
     private final SongService sService;
+    private final ArtistService artService;
 
     @GetMapping("/myInfo")
     public ResponseEntity<Object> findUser(@AuthenticationPrincipal UserDetails userDetails){
@@ -71,6 +73,12 @@ public class TokenController {
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         
+    }
+    @PostMapping("/fan/{seq}")
+    public ResponseEntity<Object> artistFan(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long seq){
+        Map<String, Object> map = artService.putFan(userDetails, seq);
+
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
 }

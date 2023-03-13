@@ -19,7 +19,28 @@
                     <p v-if="data.debut!=null" align="left">데뷔 : {{ data.debut }}</p>
                     <p v-if="data.type!=null" align="left">활동 유형 : {{ data.type }}</p>
                     <p v-if="data.agency!=null" align="left">소속사 : {{ data.agency }}</p>
-                    <p v-if="data.fan!=null" align="left">팬 수 : {{data.fan}}</p>
+                    <div class="row">
+                    <div class="col-4">
+                        <div v-if="data.isFan">
+                            <button type="button" class="btn btn-light" @click="fan">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
+                                    <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                </svg> 팬
+                            </button>
+                        </div>
+                        <div v-else>
+                            <button type="button" class="btn btn-success" @click="fan">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                                <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"/>
+                            </svg>팬맺기
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <p v-if="data.fan!=null" align="left">
+                            팬 수 : {{data.fan}}</p>
+                    </div>
+                </div>
                 </div>
                 <div class="col-1">
                     <hr class="rowhr">
@@ -50,6 +71,7 @@
 </template>
 <script>
     import axios from 'axios'
+    import Cookies from 'js-cookie'
     export default {
         name: 'artistChannel',
         props: {},
@@ -57,10 +79,16 @@
             return {
                 seq:null,
                 data: null,
-                albumExplan: ""
+                albumExplan: "",
+                isLogin:null
             }
         },
         created() {
+            if (Cookies.get('accessToken') != null) {
+                this.isLogin = true
+            } else {
+                this.isLogin = false
+            }
             this.seq = this.$route.params.seq;
             this.loadPage(this.seq)
         },
@@ -73,10 +101,38 @@
         // },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/artist/channel/" + seq)
-                    .then((e) => {
-                        this.data = e.data.data
-                    })
+                axios.get("http://localhost:8250/artist/channel/" + seq+"/"+(this.isLogin?"login":"unLogin"),{
+                    headers: {
+                        Authorization: `Bearer `+Cookies.get('accessToken')
+                    }
+                })
+                .then((e) => {
+                    this.data = e.data.data
+                    console.log(this.data.isFan)
+                })
+                .catch((error)=>{
+                    if(error.response.status==403){
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            Cookies.set('accessToken', e.data.token)
+                            // this.loadPage(this.seq)
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.removeItem("nowIndex")
+                            sessionStorage.removeItem("playlist")
+                            this.$router.push("/login")
+                        })
+                    }
+                })
             },
             explan() {    
                 return  this.data.explan
@@ -88,7 +144,50 @@
             changeSeq(changeSeq){
                 this.seq = changeSeq
                 this.loadPage(this.seq)
-
+            },
+            fan(){
+                if(this.data.isFan){
+                    if(confirm("정말 팬맺기를 취소하시겠습니까?")){
+                        this.artistFan()
+                    }
+                }else{
+                    this.artistFan()
+                }
+            },
+            artistFan(){
+                axios.post("http://localhost:8250/fan/" + this.seq,{},{
+                    headers: {
+                        Authorization: `Bearer `+Cookies.get('accessToken')
+                    }
+                })
+                .then((e) => {
+                    alert(e.data.message)
+                    this.loadPage(this.seq)
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    if(error.response.status==403){
+                        const member = Cookies.get('member')
+                        const refresh = Cookies.get('refreshToken')
+                        axios.post("http://localhost:8250/member/refresh", {
+                            id:member,
+                            refresh:refresh
+                        })
+                        .then((e)=>{
+                            Cookies.set('accessToken', e.data.token)
+                            this.fan()
+                        })
+                        .catch((error)=>{
+                            alert("다시 로그인해주세요")
+                            Cookies.remove('refreshToken')
+                            Cookies.remove('accessToken')
+                            Cookies.remove('member')
+                            sessionStorage.removeItem("nowIndex")
+                            sessionStorage.removeItem("playlist")
+                            this.$router.push("/login")
+                        })
+                    }
+                })
             }
         }
     }

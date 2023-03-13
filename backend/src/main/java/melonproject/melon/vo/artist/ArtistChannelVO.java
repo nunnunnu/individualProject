@@ -25,6 +25,7 @@ public class ArtistChannelVO {
     private List<ArtistInfoVO> artists = new ArrayList<>();
     private String uri;
     private LocalDate debut;
+    private Boolean isFan;
 
     public ArtistChannelVO(ArtistInfoEntity entity){
         this.seq = entity.getArtSeq();
@@ -43,4 +44,5 @@ public class ArtistChannelVO {
     public void groupSetting(ArtistGroupInfoEntity solo){
         artists.add(new ArtistInfoVO(solo));
     }
+    
 }  

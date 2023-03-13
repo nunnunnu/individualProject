@@ -15,6 +15,7 @@ import melonproject.melon.error.custom.JoinException;
 import melonproject.melon.error.custom.MemberNotFound;
 import melonproject.melon.error.custom.NoContentException;
 import melonproject.melon.error.custom.NotFoundAlbumException;
+import melonproject.melon.error.custom.NotFoundArtist;
 import melonproject.melon.error.custom.NotFoundComment;
 import melonproject.melon.error.custom.NotFoundPlayListSong;
 import melonproject.melon.error.custom.NotFoundPlaylistException;
@@ -82,6 +83,17 @@ public class ControllerSupport {
     public ResponseEntity<ErrorResponse> notFoundPlayListSong(NotFoundPlayListSong nps){
         ErrorResponse error = ErrorResponse.builder()
             .code(ErrorCode.NOT_FOUND_PLAYLIST_SONG)
+            .message(nps.getMessage())
+            .status(400)
+            .timestamp(LocalDateTime.now())
+            .build();
+
+        return new ResponseEntity<ErrorResponse>(error, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(value = NotFoundArtist.class)
+    public ResponseEntity<ErrorResponse> notFoundPlayListSong(NotFoundArtist nps){
+        ErrorResponse error = ErrorResponse.builder()
+            .code(ErrorCode.NOT_FOUND_ARTIST)
             .message(nps.getMessage())
             .status(400)
             .timestamp(LocalDateTime.now())

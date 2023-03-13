@@ -228,7 +228,7 @@
                             </div>
                         </div>
                             <details align="left">
-                                <summary>답댓글</summary>
+                                <summary>답댓글({{ cmt.child.length }})</summary>
                                 <br>
                                 <div class="row">
                                     <tr v-for="rep in cmt.child" :key="rep.seq">
