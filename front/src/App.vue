@@ -37,7 +37,7 @@
         </div>
       </div>
     </nav>
-    <router-view @setPlayList="setPlayList" />
+    <router-view @setPlayList="setPlayList" @nowPlayingAdd="nowPlayingAdd" />
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
     
       <playList @setPlayList="setPlayList" @nowPlaying="nowPlaying" ref="list" />

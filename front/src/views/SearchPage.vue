@@ -9,7 +9,7 @@
                     <router-link :to="{name:'searchAlbumName', params:{key:this.keyword}}">앨범</router-link>
                 </nav>
             </div>
-            <router-view />
+            <router-view @nowPlayingAdd="nowPlayingAdd" />
     </b-container>
 </template>
 <script>
@@ -23,8 +23,10 @@
         },
         created(){
           this.keyword = this.$route.params.key;
+        },
+        nowPlayingAdd(){
+          this.$emit('setPlayList')
         }
-        
     }
 </script>
 

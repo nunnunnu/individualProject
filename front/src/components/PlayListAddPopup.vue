@@ -172,7 +172,8 @@
                 .then((response) => {
                     console.log(response)
                     alert("저장되었습니다.")
-                    this.$emit("closePopup")
+                    // this.$emit("closePopup")
+                    this.loadMyPlayList()
                 })
                 .catch((error) => {
                     console.log(error)
