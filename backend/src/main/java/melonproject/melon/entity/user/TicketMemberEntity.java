@@ -1,6 +1,6 @@
 package melonproject.melon.entity.user;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -30,5 +30,5 @@ public class TicketMemberEntity {
     @Column(name="tm_seq") private Long tmSeq;
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="tm_ti_seq") private TicketInfoEntity ticket;
     @ManyToOne(fetch = FetchType.LAZY) @JsonIgnore @JoinColumn(name="tm_mi_seq") private MemberInfoEntity member;
-    @Column(name="tm_reg_dt") private LocalDate tmRegDt;
+    @Column(name="tm_reg_dt") private LocalDateTime tmRegDt;
 }

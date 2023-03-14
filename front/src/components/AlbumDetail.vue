@@ -411,7 +411,6 @@
                             refresh:refresh
                         })
                         .then((e)=>{
-                            console.log(e.data.token)
                             Cookies.set('accessToken', e.data.token)
                             this.gradeAdd(seq)
                         })
@@ -454,7 +453,6 @@
                         refresh:refresh
                         })
                             .then((e)=>{
-                            console.log(e.data.token)
                             Cookies.set('accessToken', e.data.token)
                             this.likeUnlike(seq)
                         })
@@ -475,17 +473,54 @@
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
                 }
-                // let songlist = []
-                let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
-                songlist.push(item)
-                sessionStorage.setItem('playlist',JSON.stringify(songlist))
-                sessionStorage.setItem('nowIndex',songlist.length-1)
-                this.$router.go();
+                axios.get("http://localhost:8250/ticket/check",{
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((e)=>{
+                    let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                    songlist.push(item)
+                    sessionStorage.setItem('playlist',JSON.stringify(songlist))
+                    sessionStorage.setItem('nowIndex',songlist.length-1)
+                    this.$router.go();
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
+                        this.$router.push("/ticket")
+                    }else{
+                        sessionStorage.removeItem('playlist')
+                        sessionStorage.removeItem('nowIndex')
+                        this.$router.go();
+                    }
+                })
             },
             playListAdd(item){
             },
             nowPlayingAdd(){
-                this.$emit('setPlayList')
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능합니다.")
+                    this.$router.push("/login")
+                }
+                axios.get("http://localhost:8250/ticket/check",{
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((e)=>{
+                    this.$emit('setPlayList')
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
+                        this.$router.push("/ticket")
+                    }else{
+                        sessionStorage.removeItem('playlist')
+                        sessionStorage.removeItem('nowIndex')
+                        this.$router.go();
+                    }
+                })
             },
             openPopup(item){
                 if(this.isLogin){
@@ -514,7 +549,6 @@
                 axios.get("http://localhost:8250/album/comment/"+this.seq+"?page="+this.currentPage
                 )
                 .then((e) => {
-                    console.log(e.data.data.content)
                     this.comment = e.data.data.content
                     this.albumExplan = e.data.data.explan
                     this.totalPage=e.data.data.totalPages
@@ -558,7 +592,6 @@
                         this.imgData=null
                         const reader = new FileReader(); //파일 읽어들이는 클래스
                         reader.readAsDataURL(this.imgData)
-                        console.log(e)
                     })
                     .catch((error)=>{
                         if(error.response.status==403){
@@ -569,7 +602,6 @@
                             refresh:refresh
                             })
                                 .then((e)=>{
-                                console.log(e.data.token)
                                 Cookies.set('accessToken', e.data.token)
                                 this.saveComment()
                             })
@@ -583,13 +615,11 @@
                                 this.$router.push("/login")
                             })
                         }else{
-                            console.log(error)
                             alert(error.response.data.err)
                         }
                     })
             },
             saveChildComment(seq){
-                console.log(seq)
                 const formdata = new FormData()
                 formdata.append("album", this.data.seq)
                 formdata.append("comment", this.childComment)
@@ -606,7 +636,6 @@
                         this.imgData=null
                         const reader = new FileReader(); //파일 읽어들이는 클래스
                         reader.readAsDataURL(this.imgData)
-                        console.log(e)
                     })
                     .catch((error)=>{
                         if(error.response.status==403){
@@ -617,7 +646,6 @@
                             refresh:refresh
                             })
                                 .then((e)=>{
-                                console.log(e.data.token)
                                 Cookies.set('accessToken', e.data.token)
                                 this.saveComment()
                             })
@@ -631,7 +659,6 @@
                                 this.$router.push("/login")
                             })
                         }else{
-                            console.log(error)
                             alert(error.response.data.err)
                         }
                     })

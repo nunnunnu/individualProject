@@ -3,6 +3,7 @@ package melonproject.melon.service;
 import static org.springframework.util.StringUtils.hasText;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -163,8 +164,8 @@ public class MemberService {
             map.put("code", HttpStatus.OK);
             return map;
         }
-        LocalDate start = LocalDate.now().withDayOfMonth(1);     
-        LocalDate end = start.withDayOfMonth(start.lengthOfMonth());  
+        LocalDateTime start = LocalDateTime.now().withDayOfMonth(1);     
+        LocalDateTime end = start.withDayOfMonth(start.getMonth().length(start.toLocalDate().isLeapYear()));
         TicketMemberEntity ticket = tmRepo.findByMemberAndTmRegDtBetween(member, start, end);
         MemberInfo result = new MemberInfo(member, ticket);
         map.put("status", true);

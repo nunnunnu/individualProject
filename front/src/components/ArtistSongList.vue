@@ -186,12 +186,28 @@
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
                 }
-                // let songlist = []
-                let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
-                songlist.push(item)
-                sessionStorage.setItem('playlist',JSON.stringify(songlist))
-                sessionStorage.setItem('nowIndex',songlist.length-1)
-                this.$router.go();
+                axios.get("http://localhost:8250/ticket/check",{
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((e)=>{
+                    let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                    songlist.push(item)
+                    sessionStorage.setItem('playlist',JSON.stringify(songlist))
+                    sessionStorage.setItem('nowIndex',songlist.length-1)
+                    this.$router.go();
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
+                        this.$router.push("/ticket")
+                    }else{
+                        sessionStorage.removeItem('playlist')
+                        sessionStorage.removeItem('nowIndex')
+                        this.$router.go();
+                    }
+                })
             
             }
         }

@@ -14,13 +14,13 @@
                     {{ data.price }}
                 </div>
                 <div class="col-1">
-                    <button class="btn btn-dark" @click="openPopup">구매하기</button>
+                    <button class="btn btn-dark" @click="openPopup(data)">구매하기</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<buyPopup v-if="popup"/>
+<buyPopup v-if="popup" @closePopup="closePopup" :ticket="data"/>
 </b-container>
 </template>
 <script>
@@ -37,7 +37,8 @@ export default {
         return {
             isLogin: null,
             ticket:null,
-            popup:false
+            popup:false,
+            data:null
         }
     },
     mounted(){
@@ -83,9 +84,13 @@ export default {
                 }
             })
         },
-        openPopup(){
+        openPopup(data){
+            this.data = data
             this.popup = true
             console.log(this.popup)
+        },
+        closePopup(){
+            this.popup=false
         }
     }
 }

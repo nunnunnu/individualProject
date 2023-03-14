@@ -126,17 +126,53 @@
                 this.$emit("closePopup")
             },
             playSong(item){
+                axios.get("http://localhost:8250/ticket/check",{
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((e)=>{
+                    let song = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                    song.push(item)
+                    sessionStorage.setItem('playlist',JSON.stringify(song))
+                    sessionStorage.setItem('nowIndex',song.length-1)
+                    this.$router.go();
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
+                        this.$router.push("/ticket")
+                    }else{
+                        sessionStorage.removeItem('playlist')
+                        sessionStorage.removeItem('nowIndex')
+                        this.$router.go();
+                    }
+                })
                 // let songlist = []
-                let song = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
-                song.push(item)
-                sessionStorage.setItem('playlist',JSON.stringify(song))
-                sessionStorage.setItem('nowIndex',song.length-1)
-                this.$router.go();
+                
             },
             nowPlay(){
-                sessionStorage.setItem("nowIndex",0)
-                sessionStorage.setItem("playlist", JSON.stringify(this.songlist))
-                this.$router.go();
+                axios.get("http://localhost:8250/ticket/check",{
+                    headers: {
+                        Authorization: 'Bearer ' + Cookies.get('accessToken')
+                    }
+                })
+                .then((e)=>{
+                    sessionStorage.setItem("nowIndex",0)
+                    sessionStorage.setItem("playlist", JSON.stringify(this.songlist))
+                    this.$router.go();
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
+                        this.$router.push("/ticket")
+                    }else{
+                        sessionStorage.removeItem('playlist')
+                        sessionStorage.removeItem('nowIndex')
+                        this.$router.go();
+                    }
+                })
+                
             },
             deleteSong(order){
                 if(confirm("정말 삭제하시겠습니까?")){
