@@ -1,34 +1,43 @@
 <template>
 <b-container>
-    <h1>이용권 구매</h1>
+    <div class="box">
+    <br>
+    <h3 align="left" class="pb-4 mb-4 fst-italic border-bottom">이용권 구매</h3>
     <div class="row">
-        <div v-for="data in ticket" :key="data.seq" class="row" style="border: 1px solid gainsboro">
-            <!-- <div class="ticket"> -->
-                <div class="col-7">
+        <div v-for="data in ticket" :key="data.seq" class="row" style="border: 1px solid gainsboro" >
+            <div class="ticket">
+                <div class="col-8">
                     <h4>{{ data.name }}</h4>
                     {{ data.ex }}
                 </div>
-                <div class="col-3">
+                <div class="col-2">
                     {{ data.price }}
                 </div>
-                <div class="col-auto">
-                    <button class="btn btn-dark">구매하기</button>
+                <div class="col-1">
+                    <button class="btn btn-dark" @click="openPopup">구매하기</button>
                 </div>
-            <!-- </div> -->
+            </div>
         </div>
     </div>
+</div>
+<buyPopup v-if="popup"/>
 </b-container>
 </template>
 <script>
 import Cookies from 'js-cookie'
 import axios from 'axios'
+import buyPopup from '../components/TicketBuy.vue'
 
 export default {
     name: 'ticketView',
+    components:{
+        buyPopup
+    },
     data() {
         return {
             isLogin: null,
-            ticket:null
+            ticket:null,
+            popup:false
         }
     },
     mounted(){
@@ -73,15 +82,24 @@ export default {
                     })
                 }
             })
+        },
+        openPopup(){
+            this.popup = true
+            console.log(this.popup)
         }
     }
 }
 </script>
 <style>
 .ticket{
-    /* padding: 5px; */
+    display: flex;
+    padding: 30px;
     /* background-color: black; */
     /* color: white; */
+    /* padding-bottom: 102px; */
     
+}
+.box{
+    padding-bottom: 102px;
 }
 </style>

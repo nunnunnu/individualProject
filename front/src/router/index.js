@@ -21,6 +21,7 @@ import MyPage from '../components/MyPage.vue'
 import PlayList from '../components/PlayList.vue'
 import MusicTop from '../views/TOP50View.vue'
 import TicketView from '../views/TicketView.vue'
+import TicketBuy from '../components/TicketBuy.vue'
 
 const routes = [
   {
@@ -31,8 +32,14 @@ const routes = [
   {
     path: '/ticket',
     name: 'ticket',
-    component: TicketView
+    component: TicketView,
   },
+  // { 
+  //   path: '/buy',
+  //   name: 'ticketBuy',
+  //   component: TicketBuy,
+  //   props:true
+  // },
   {
     path: '/top',
     name: 'musicTop',

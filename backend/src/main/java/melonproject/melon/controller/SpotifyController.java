@@ -30,7 +30,7 @@ public class SpotifyController {
         .setRedirectUri(URI.create("http://localhost:8080/callback"))
         .build();
 
-        String code = "AQA2cuOb7VlQ4K8LvDAEKElM0QaWti81CZ-GpnLNbALf73A6q_TzmrHrnrxId3pMRwE1oiINBD7zTAIuo2PY7bgOvNxuCMHIUSoXRSIme8Q7X6EW_1WsqQe_Yw65owOv6TF_8lJx83Imt3-7G-v2znSMqrTlo2kH3gv-1mMzx2uFmz_FWyUPWM7R8ZyqKF6RBSc26CE1eX1SUcVit9q2Rf-3WrsvtA";
+        String code = "AQActM8XR_ifuZiTHd9A31lO2alsuwP6OIP03aZcyOZv-rpvKyPeBJivSLxIXfSOMzyKo1f6cVYE_5frUgYfbxE7HtJvrZHU9VT_zm0CvbpKW7MbIxPM7tDs4tyjOQ-_F7yaOcB0Jt1M0kT-kzw8BU1CH4uVpviS9EyJ9IUQsMpJsdcKvkPHDZ5cRIrR2Z4S0rsWdGGSxFBHs2si2MO_HZx_rL7Pvw";
         AuthorizationCodeRequest authorizationCodeRequest = spotifyApi.authorizationCode(code)
         .build();
         AuthorizationCodeCredentials authorizationCodeCredentials = authorizationCodeRequest.execute();
