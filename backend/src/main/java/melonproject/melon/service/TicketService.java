@@ -42,7 +42,7 @@ public class TicketService {
         Map<String, Object> map = new LinkedHashMap<>();
         if(tmRepo.existsByMemberAndTmRegDtBetween(member, LocalDateTime.now().minusDays(30), LocalDateTime.now())){
             map.put("status", false);
-            map.put("message", "이미 구매한 이용권입니다.");
+            map.put("message", "이미 이용중인 이용권이 있습니다.");
             map.put("code", HttpStatus.ACCEPTED);
             return map;
         }
@@ -51,8 +51,8 @@ public class TicketService {
         TicketMemberEntity ticketMember = new TicketMemberEntity(null, ticket, member, LocalDateTime.now());
         tmRepo.save(ticketMember);
 
-        map.put("status", false);
-        map.put("message", "이미 이용중인 이용권이 있습니다.");
+        map.put("status", true);
+        map.put("message", "이용권 구매 성공");
         map.put("code", HttpStatus.OK);
         return map;
     }
