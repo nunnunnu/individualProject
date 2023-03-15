@@ -133,13 +133,17 @@
                             
                         </td>
                         <td>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-download" viewBox="0 0 16 16">
-                                <path
-                                    d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />
-                                <path
-                                    d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z" />
-                            </svg>
+                            <div v-if="item.files.length!=0">
+                                <svg @click="openDown" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                                    <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
+                                </svg>
+                            </div>
+                            <div v-else>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down" viewBox="0 0 16 16">
+  <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+</svg>
+                            </div>
                         </td>
                         <td>
                             <div v-if="item.movie!=null">
@@ -289,16 +293,18 @@
 
         </div>
         <playListPopup v-if="popup" @closePopup="closePopup" :song="seletedSong" @nowPlayingAdd="nowPlayingAdd"/>
+        <downPopup v-if="downPopup" @closeDown="closeDown" :song="seletedSong" @nowPlayingAdd="nowPlayingAdd"/>
     </b-container>
 </template>
 <script>
     import axios from 'axios'
     import Cookies from 'js-cookie'
     import playListPopup from '@/components/PlayListAddPopup.vue'
+    import downPopup from '@/components/SongDownPopup.vue'
     export default {
         name: 'albumDetail',
         components: {
-            playListPopup
+            playListPopup, downPopup
         },
         props: {},
         data() {
@@ -316,7 +322,8 @@
                 childComment:"",
                 totalPage:null,
                 size:null,
-                currentPage:0
+                currentPage:0,
+                downPopup:false
             }
         },
         created() {
@@ -670,6 +677,12 @@
             prePage(){
                 this.currentPage = this.currentPage-1
                 this.loadComment()
+            },
+            openDown(){
+                this.downPopup=true
+            },
+            closeDown(){
+                this.downPopup=false
             }
         }
     }

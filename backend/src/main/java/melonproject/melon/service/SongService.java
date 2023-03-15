@@ -24,6 +24,7 @@ import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.user.HistoryPlayEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.entity.user.SongLikesEntity;
+import melonproject.melon.error.custom.NotFoundSongException;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.artist.song.SongArtistConnectionRepository;
@@ -34,7 +35,6 @@ import melonproject.melon.repository.info.GenreInfoRepository;
 import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.repository.user.SongLikesRepository;
-import melonproject.melon.vo.song.ArtistSongVO;
 import melonproject.melon.vo.song.SongAddVO;
 import melonproject.melon.vo.song.SongDetailVO;
 import melonproject.melon.vo.song.SongInfoVO;
@@ -338,5 +338,11 @@ public class SongService {
         map.put("status", true);
         map.put("code", HttpStatus.OK);
         return map;
+    }
+
+    public Map<String, Object> songFile(Long seq){
+        SongInfoEntity song = songRepo.findById(seq).orElseThrow(()->new NotFoundSongException());
+        
+        return null;
     }
 }
