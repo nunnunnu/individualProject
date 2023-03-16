@@ -3,6 +3,7 @@ package melonproject.melon.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.user.HistoryPlayEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.entity.user.SongLikesEntity;
+import melonproject.melon.error.custom.NoContentException;
 import melonproject.melon.error.custom.NotFoundSongException;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
@@ -37,6 +39,7 @@ import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.repository.user.SongLikesRepository;
 import melonproject.melon.vo.song.SongAddVO;
 import melonproject.melon.vo.song.SongDetailVO;
+import melonproject.melon.vo.song.SongFileInfoVO;
 import melonproject.melon.vo.song.SongInfoVO;
 import melonproject.melon.vo.song.Creator.SongCreatorAddVO;
 
@@ -340,9 +343,14 @@ public class SongService {
         return map;
     }
 
-    public Map<String, Object> songFile(Long seq){
+    public List<SongFileInfoVO> songFile(Long seq){
         SongInfoEntity song = songRepo.findById(seq).orElseThrow(()->new NotFoundSongException());
+
+        List<SongFileInfoVO> list = sfRepo.findBySong(song).stream().map((s)->new SongFileInfoVO(s)).toList();
+        if(list.size()==0){
+            throw new NoContentException();
+        }
         
-        return null;
+        return list;
     }
 }

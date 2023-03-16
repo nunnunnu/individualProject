@@ -1,5 +1,6 @@
 package melonproject.melon.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
@@ -24,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.song.SoundQuality;
 import melonproject.melon.service.SongService;
 import melonproject.melon.vo.song.SongAddVO;
+import melonproject.melon.vo.song.SongFileInfoVO;
 import melonproject.melon.vo.song.Creator.SongCreatorAddVO;
 
 @RestController
@@ -81,13 +83,11 @@ public class SongController {
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
-    // @GetMapping("/spotify")
-    // public String spotify(
-    // ){
-
-    //     return "d42434663ee841a580ad0e943421cf93";
-    // }
-
+    @GetMapping("/file/{seq}")
+    public ResponseEntity<List<SongFileInfoVO>> songFileDown(@PathVariable Long seq){
+        
+        return new ResponseEntity<>(songService.songFile(seq), HttpStatus.OK);
+    }
     
     
 
