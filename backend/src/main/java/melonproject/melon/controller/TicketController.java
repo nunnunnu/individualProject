@@ -41,4 +41,9 @@ public class TicketController {
         
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
+    @GetMapping("/downcheck/{seq}")
+    public ResponseEntity<Object> checkDown(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long seq){
+        Map<String, Object> map = tService.downCheck(userDetails, seq);
+        return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
+    }
 }

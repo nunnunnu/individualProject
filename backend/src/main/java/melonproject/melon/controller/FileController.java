@@ -2,10 +2,12 @@ package melonproject.melon.controller;
 
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,9 +28,15 @@ public class FileController {
         return fService.getImage(uri, type, request);
     }
     @GetMapping("/songfile/{uri}/{song}")
-    public ResponseEntity<Resource> getSong ( @PathVariable String uri, @PathVariable Long song, @AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<Resource> getSong ( 
+        @PathVariable String uri, @PathVariable Long song, @AuthenticationPrincipal UserDetails userDetails,
+        @RequestParam @Nullable String type,
             HttpServletRequest request ) throws Exception {
-            songService.listenMusicList(userDetails, song);
+                if(type.equalsIgnoreCase("down")){
+                    songService.downSave(userDetails, song);
+                }else{
+                    songService.listenMusicList(userDetails, song);
+                }
 
         return fService.getSong(uri, request);
     }

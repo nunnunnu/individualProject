@@ -22,9 +22,11 @@ import melonproject.melon.entity.artist.song.SongFileEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.artist.song.SoundQuality;
 import melonproject.melon.entity.info.GenreInfoEntity;
+import melonproject.melon.entity.user.DownHistoryEntity;
 import melonproject.melon.entity.user.HistoryPlayEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.entity.user.SongLikesEntity;
+import melonproject.melon.error.custom.MemberNotFound;
 import melonproject.melon.error.custom.NoContentException;
 import melonproject.melon.error.custom.NotFoundSongException;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
@@ -34,6 +36,7 @@ import melonproject.melon.repository.artist.song.SongCreatorRepository;
 import melonproject.melon.repository.artist.song.SongFileRepository;
 import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.info.GenreInfoRepository;
+import melonproject.melon.repository.user.DownHistoryRepository;
 import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
 import melonproject.melon.repository.user.SongLikesRepository;
@@ -57,6 +60,7 @@ public class SongService {
     private final HistoryPlayRepository hpRepo;
     private final SongArtistConnectionRepository sacRepo;
     private final SongLikesRepository slRepo;
+    private final DownHistoryRepository dhRepo;
 
     public Map<String, Object> songAdd(SongAddVO data){
         System.out.println(data);
@@ -352,5 +356,17 @@ public class SongService {
         }
         
         return list;
+    }
+    public void downSave(UserDetails userDetails, Long seq){
+        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        if(member==null){
+            throw new MemberNotFound();
+        }
+        SongInfoEntity song = songRepo.findById(seq).orElseThrow(()->new NotFoundSongException());
+        
+        if(!dhRepo.existsBySongAndMember(song, member)){
+            DownHistoryEntity entity = new DownHistoryEntity(null, song, member, LocalDateTime.now());
+            dhRepo.save(entity);
+        }
     }
 }
