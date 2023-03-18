@@ -64,6 +64,7 @@
         <h3 class="pb-4 mb-4 fst-italic border-bottom">
           대한민국 TOP10
         </h3>
+        <p align="right">해당차트는 스포티파이 기준입니다.</p>
       <div v-if="tracks!=null">
         <table class="table table-sm">
           <thead>

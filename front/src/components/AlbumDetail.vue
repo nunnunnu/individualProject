@@ -587,6 +587,7 @@
                 formdata.append("album", this.data.seq)
                 formdata.append("comment", this.commentDetail)
                 formdata.append("file", this.imgData)
+                console.log(this.imgData)
 
                 axios.put("http://localhost:8250/comment", formdata , {
                         headers: {
@@ -595,12 +596,13 @@
                     })
                     .then((e)=>{
                         this.loadComment()
-                        this.commentDetail=null
+                        this.commentDetail=""
                         this.imgData=null
                         const reader = new FileReader(); //파일 읽어들이는 클래스
-                        reader.readAsDataURL(this.imgData)
+                        // reader.readAsDataURL(this.imgData)
                     })
                     .catch((error)=>{
+                        console.log(error)
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
@@ -703,3 +705,4 @@
         padding-bottom: 102px;
     }
 </style>
+

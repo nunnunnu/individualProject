@@ -2,7 +2,7 @@
     <div v-if="songs!=null && songs.length!=0">
         <div class="HTML_Audio_player">
             <div class="Audio_Player_image">
-                <img style="border-radius: 60px;" :src="img" /></div>
+                <img class="imgTag" style="border-radius: 60px;" :src="imgLoad(songs[index==null?0:index].album.uri)"/></div>
             <div class="player-content">
                 <div class="player-info">
                     <a class="song-name" target="_blank">
@@ -127,7 +127,22 @@
             
         },
         watch: {
-            mp3: function () {}
+            // img(newValue) {
+            // // This will be called whenever the "img" property is updated
+            // console.log('New image source:', newValue);
+            // }
+            index(newIndex){
+                const list = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                this.img = this.imgLoad(list[newIndex].album.uri)
+                const imgTag = new Image();
+                imgTag.onload = () => {
+                    this.img = this.imgLoad(list[newIndex].album.uri);
+                    console.log(this.img)
+                    this.$forceUpdate()
+                };
+                imgTag.src = this.imgLoad(list[newIndex].album.uri);
+                console.log(imgTag)
+            }
         },
         methods: {
             searchClick(keyword) {
@@ -180,6 +195,7 @@
             },
             imgLoad(albumUri) {
                 this.img = `http://localhost:8250/image/album/${albumUri}`
+                return this.img
             },
             indexChange(idx) {
                 sessionStorage.setItem('nowIndex', idx)
@@ -190,7 +206,6 @@
                 // this.$refs.audioPlayer.play();
             },
             playNext() {
-                console.log("next")
                 if (this.songs.length - 1 <= this.index) {
                     this.index = 0
                 }else if(this.index==null){
@@ -200,7 +215,8 @@
                 }
                 sessionStorage.setItem('nowIndex', this.index)
                 this.mp3 = this.nowPlaying()
-                this.$refs.audioPlayer.play();
+                
+                // this.$refs.audioPlayer.play();
 
             },
             setPlayList() {

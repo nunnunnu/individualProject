@@ -75,7 +75,7 @@ public class AlbumController {
     @GetMapping("/comment/{album}")
     public ResponseEntity<Object> commentGet(
             @PathVariable Long album,
-            @PageableDefault(size=10, sort="createdDate",direction = Sort.Direction.ASC) @Nullable Pageable page
+            @PageableDefault(size=10, sort="createdDate",direction = Sort.Direction.DESC) @Nullable Pageable page
         ){
         Map<String, Object> map = cService.getComment(album, page);
 

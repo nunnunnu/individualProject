@@ -61,21 +61,21 @@ public class SongController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         
     }
-    
+    //가수의 참여곡 정보
     @GetMapping("/artist/part/{seq}/{type}")
     public ResponseEntity<Object> artistSongPart(@PathVariable Long seq,
-        @RequestParam @PageableDefault(size=10, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
+        // @RequestParam @PageableDefault(size=10, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
         @AuthenticationPrincipal UserDetails userDetails,
         @PathVariable String type
     ){
-        Map<String, Object> map = songService.artistSongParticipation(seq, page, userDetails, type);
+        Map<String, Object> map = songService.artistSongParticipation(seq, userDetails, type);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
         
     }
     @GetMapping("/new/{type}")
     public ResponseEntity<Object> newSongList(
-        @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
+        @PageableDefault(size=20, sort="siRegDt",direction = Sort.Direction.DESC) @Nullable Pageable page,
         @AuthenticationPrincipal UserDetails userDetails,
         @PathVariable String type
     ){
@@ -87,6 +87,11 @@ public class SongController {
     public ResponseEntity<List<SongFileInfoVO>> songFileDown(@PathVariable Long seq){
         
         return new ResponseEntity<>(songService.songFile(seq), HttpStatus.OK);
+    }
+
+    @PutMapping("/artist/connect/{artist}/{song}")
+    public ResponseEntity<Object> putSongAritst(@PathVariable Long artist, @PathVariable Long song){
+        return new ResponseEntity<>(songService.addSongArtist(song, artist), HttpStatus.OK);
     }
     
     

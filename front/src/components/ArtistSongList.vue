@@ -93,13 +93,12 @@
         },
         created() {
             this.seq = this.$route.params.seq;
-            this.loadPage(this.seq)
             if(Cookies.get('accessToken')!=null){
                 this.isLogin=true;
             }else{
                 this.isLogin=false
             }
-            console.log(this.isLogin)
+            this.loadPage(this.seq)
         },
         methods: {
             loadPage(seq) {
@@ -113,7 +112,8 @@
                     if(!e.data.status){
                         this.dataLength=0
                     }else{
-                        this.data = e.data.data.content
+                        this.data = e.data.data
+                        console.log(this.data)
                     }
 
                 })

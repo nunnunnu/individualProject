@@ -66,18 +66,18 @@ public class MemberService {
 
         Map<String, Object> map = new LinkedHashMap<>();
 
-        // MemberInfoEntity member = MemberInfoEntity.builder().miId(data.getId())
-        //                 .miPwd(wConfig.passwordEncoder().encode(data.getPwd()))
-        //                 .miName(data.getName())
-        //                 .miAge(data.getAge())
-        //                 .miPhone(data.getPhone())
-        //                 .miEmail(data.getEmail())
-        //                 .miBirth(data.getBirth())
-        //                 .miRegDt(data.getRegDt())
-        //                 .miNickName(data.getNickName())
-        //                 .build();
-        // mRepo.save(member);
-        // map.put("status", true);
+        MemberInfoEntity member = MemberInfoEntity.builder().miId(data.getId())
+                        .miPwd(wConfig.passwordEncoder().encode(data.getPwd()))
+                        .miName(data.getName())
+                        .miAge(data.getAge())
+                        .miPhone(data.getPhone())
+                        .miEmail(data.getEmail())
+                        .miBirth(data.getBirth())
+                        .miRegDt(data.getRegDt())
+                        .miNickName(data.getNickName())
+                        .build();
+        mRepo.save(member);
+        map.put("status", true);
         map.put("message", "회원가입 완료. 로그인페이지로 이동합니다.");
         map.put("code", HttpStatus.OK);
         return map;
