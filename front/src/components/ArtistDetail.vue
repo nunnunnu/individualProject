@@ -76,7 +76,7 @@
         <tr v-for="art in detail.artists" :key="art.seq">
             <!-- <div class="col"> -->
             <div class="card">
-                <span  @click="changeChanel(art.seq)">
+                <span  @click="changeChanel(art.seq)" class="onclick">
                     <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
                     <div class="card-body">
                         <p class="card-title">{{art.name}}</p>

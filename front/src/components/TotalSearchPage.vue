@@ -35,7 +35,7 @@
                         {{ item.album.name }}</router-link>
                 </td>
                 <td>
-                    <div @click="likeUnlike(item.seq)">
+                    <div @click="likeUnlike(item.seq)" class="onclick">
                                 <span v-if="item.isliked"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
     </svg></span>
@@ -46,7 +46,7 @@
 </div>
                 </td>
                 <td>
-                    <div v-if="item.files.length!=0">
+                    <div v-if="item.files.length!=0" class="onclick">
                                 <svg @click="playSong(item)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                     class="bi bi-play-fill" viewBox="0 0 16 16">
                                     <path
@@ -60,7 +60,7 @@
                             </div>
                 </td>
                 <td>
-                                <div v-if="item.files.length!=0">
+                                <div v-if="item.files.length!=0" class="onclick">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle-fill" viewBox="0 0 16 16">
   <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v3h-3a.5.5 0 0 0 0 1h3v3a.5.5 0 0 0 1 0v-3h3a.5.5 0 0 0 0-1h-3v-3z" @click="openPopup(item)"/>
 </svg>
@@ -72,7 +72,7 @@
                             </div>
                 </td>
                 <td>
-                            <div v-if="item.files.length!=0">
+                            <div v-if="item.files.length!=0" class="onclick">
                                 <svg @click="openDown(item)" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
                                     <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0zM9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1zm-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0z"/>
                                 </svg>
@@ -135,10 +135,13 @@
                 <router-link :to="{name:'songDetail', params:{seq:song.seq}}"><div v-html="stringFind(song.lyrics)"></div>
                 </router-link>
                 <div>
-                <tr v-for="art in song.artist" :key="art.seq">
-                    <router-link :to="{name:'artistDetail', params:{seq:art.seq}}" style="font-size:12px">
-                        {{ art.name }}</router-link>
-                </tr>
+                    <div style="display:flex; flex-direction: row;">
+                                    <tr v-for="(art, index) in song.artist" :key="art.seq">
+                                        <router-link :to="{name:'artistDetail', params:{seq:art.seq}}" style="font-size:12px">
+                                            {{ art.name }}</router-link>
+                                        <span v-if="index < song.artist.length - 1">, </span>
+                                    </tr>
+                                </div>
                 </div >
                 <router-link :to="{name:'albumDetail', params:{seq:song.album.seq}}" style="font-size:12px">
                     {{ song.album.name }}</router-link>
@@ -305,29 +308,30 @@
                 if(!this.isLogin){
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
-                }
-                axios.get("http://localhost:8250/ticket/check",{
-                    headers: {
-                        Authorization: 'Bearer ' + Cookies.get('accessToken')
-                    }
-                })
-                .then((e)=>{
-                    let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
-                    songlist.push(item)
-                    sessionStorage.setItem('playlist',JSON.stringify(songlist))
-                    sessionStorage.setItem('nowIndex',songlist.length-1)
-                    this.$router.go();
-                })
-                .catch((error)=>{
-                    console.log(error)
-                    if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
-                        this.$router.push("/ticket")
-                    }else{
-                        sessionStorage.removeItem('playlist')
-                        sessionStorage.removeItem('nowIndex')
+                }else{
+                    axios.get("http://localhost:8250/ticket/check",{
+                        headers: {
+                            Authorization: 'Bearer ' + Cookies.get('accessToken')
+                        }
+                    })
+                    .then((e)=>{
+                        let songlist = JSON.parse(sessionStorage.getItem('playlist') ?? '[]')
+                        songlist.push(item)
+                        sessionStorage.setItem('playlist',JSON.stringify(songlist))
+                        sessionStorage.setItem('nowIndex',songlist.length-1)
                         this.$router.go();
-                    }
-                })
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                        if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
+                            this.$router.push("/ticket")
+                        }else{
+                            sessionStorage.removeItem('playlist')
+                            sessionStorage.removeItem('nowIndex')
+                            this.$router.go();
+                        }
+                    })
+                }
             
             },
             openPopup(item){
@@ -372,8 +376,13 @@
                 })
             },
             openDown(item){
-                this.downPopup=true
-                this.seletedSong = item
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능한 서비스입니다.")
+                    this.$router.push("/login")
+                }else{
+                    this.downPopup=true
+                    this.seletedSong = item
+                }
             },
             closeDown(){
                 this.downPopup=false

@@ -40,7 +40,7 @@
             </div>
             <br>
             <div class="row">
-                <div v-for="list in playlist" :key="list.seq" @click="addPlayListSong(list.seq)">
+                <div v-for="list in playlist" :key="list.seq" @click="addPlayListSong(list.seq)" class="onclick">
                     <h6 align="left">{{ list.title }}</h6>
                     <div class="row">
                         <div class="col-auto">
@@ -106,6 +106,7 @@
                 .then((response) => {
                     alert(response.data.message)
                     this.name=null
+                    this.loadMyPlayList()
                 })
                 .catch((error) => {
                     const member = Cookies.get('member')

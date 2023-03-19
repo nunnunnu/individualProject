@@ -40,10 +40,10 @@
         </div>
       </div>
     </nav>
-    <router-view @setPlayList="setPlayList" @nowPlayingAdd="nowPlayingAdd" />
+    <router-view ref="routerView" @setPlayList="setPlayList" @nowPlayingAdd="nowPlayingAdd" @changeChanel="changeChanel" :artistSeq="artistSeq"/>
     <footer v-if="!$route.meta.hideNavbar" class="pt-5">
     
-      <playList @setPlayList="setPlayList" @nowPlaying="nowPlaying" ref="list" />
+      <playList @setPlayList="setPlayList" @nowPlaying="nowPlaying" ref="list" @changeChanel="changeChanel"/>
     </footer>
   </div>
 </template>
@@ -56,6 +56,7 @@
     data() {
       return {
         keywordSearch: null,
+        artistSeq:null
       }
     },
     created() {
@@ -72,6 +73,10 @@
       setPlayList(){
         console.log("sss")
         this.$refs.list.setPlayList()
+      },
+      changeChanel(seq){
+        this.artistSeq=seq
+        console.log(this.artistSeq)
       }
     }
   }
@@ -174,4 +179,7 @@
       transform: rotate(360deg)
     }
   }
+  .onclick:hover{
+    color: #0081C9
+}
 </style>

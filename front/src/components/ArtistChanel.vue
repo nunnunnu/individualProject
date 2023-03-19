@@ -74,7 +74,7 @@
     import Cookies from 'js-cookie'
     export default {
         name: 'artistChannel',
-        props: {},
+        props: ['artistSeq'],
         data() {
             return {
                 seq:null,
@@ -91,14 +91,15 @@
             }
             this.seq = this.$route.params.seq;
             this.loadPage(this.seq)
+            console.log(this.artistSeq)
         },
-        // watch:{
-        //     seq(){
-        //         console.log(this.seq)
-        //         this.loadPage(this.seq)
+        watch:{
+            artistSeq(newSeq){
+                console.log(newSeq)
+                this.loadPage(newSeq)
 
-        //     }
-        // },
+            }
+        },
         methods: {
             loadPage(seq) {
                 axios.get("http://localhost:8250/artist/channel/" + seq+"/"+(this.isLogin?"login":"unLogin"),{
@@ -111,6 +112,7 @@
                     console.log(this.data.isFan)
                 })
                 .catch((error)=>{
+                    console.log(error)
                     if(error.response.status==403){
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
@@ -155,39 +157,47 @@
                 }
             },
             artistFan(){
-                axios.post("http://localhost:8250/fan/" + this.seq,{},{
-                    headers: {
-                        Authorization: `Bearer `+Cookies.get('accessToken')
-                    }
-                })
-                .then((e) => {
-                    alert(e.data.message)
-                    this.loadPage(this.seq)
-                })
-                .catch((error)=>{
-                    console.log(error)
-                    if(error.response.status==403){
-                        const member = Cookies.get('member')
-                        const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
-                            id:member,
-                            refresh:refresh
-                        })
-                        .then((e)=>{
-                            Cookies.set('accessToken', e.data.token)
-                            this.fan()
-                        })
-                        .catch((error)=>{
-                            alert("다시 로그인해주세요")
-                            Cookies.remove('refreshToken')
-                            Cookies.remove('accessToken')
-                            Cookies.remove('member')
-                            sessionStorage.removeItem("nowIndex")
-                            sessionStorage.removeItem("playlist")
-                            this.$router.push("/login")
-                        })
-                    }
-                })
+                if(!this.isLogin){
+                    alert("로그인 후 이용가능한 기능입니다.")
+                    this.$router.push("/login")
+                }else{
+                    axios.post("http://localhost:8250/fan/" + this.seq,{},{
+                        headers: {
+                            Authorization: `Bearer `+Cookies.get('accessToken')
+                        }
+                    })
+                    .then((e) => {
+                        alert(e.data.message)
+                        this.loadPage(this.seq)
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                        if(error.response.status==403){
+                            const member = Cookies.get('member')
+                            const refresh = Cookies.get('refreshToken')
+                            axios.post("http://localhost:8250/member/refresh", {
+                                id:member,
+                                refresh:refresh
+                            })
+                            .then((e)=>{
+                                Cookies.set('accessToken', e.data.token)
+                                this.fan()
+                            })
+                            .catch((error)=>{
+                                alert("다시 로그인해주세요")
+                                Cookies.remove('refreshToken')
+                                Cookies.remove('accessToken')
+                                Cookies.remove('member')
+                                sessionStorage.removeItem("nowIndex")
+                                sessionStorage.removeItem("playlist")
+                                this.$router.push("/login")
+                            })
+                        }
+                    })
+                }
+            },
+            changeChanel(seq){
+                this.loadPage(seq)
             }
         }
     }

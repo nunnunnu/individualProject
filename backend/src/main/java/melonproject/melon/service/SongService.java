@@ -261,8 +261,7 @@ public class SongService {
             map.put("code", HttpStatus.FORBIDDEN);
             return map;
         }
-        LocalDate now = LocalDate.now().minusMonths(1);
-        Page<SongInfoEntity> entity = songRepo.findBySiRegDtLessThanEqual(now, page);
+        Page<SongInfoEntity> entity = songRepo.findByOrderBySiRegDtDescSiSeqAsc(page);
         if(userDetails!=null){
             MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
             if(member==null){

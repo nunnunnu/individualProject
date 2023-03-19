@@ -16,7 +16,7 @@ public interface SongInfoRepository extends JpaRepository<SongInfoEntity, Long>{
 
     SongInfoEntity findTop1ByAlbumAndSiTitle(AlbumInfoEntity album, Boolean title);
 
-    Page<SongInfoEntity> findBySiRegDtLessThanEqual(LocalDate date, Pageable page);
+    Page<SongInfoEntity> findByOrderBySiRegDtDescSiSeqAsc(Pageable page);
 
     List<SongInfoEntity> findTop10BySiNameContains(String keyword);
 

@@ -25,43 +25,42 @@
                             </div>
                             <div class="offcanvas-body">
                                 <tr v-for="(s, idx) in songs" :key="s.seq">
+                                    <div v-bind:class="{playing: idx==index || (index==null && idx ==0)}" >
                                     <div @click="indexChange(idx)">
                                         <div class="row">
-                                            <div class="col-1">
-                                                <div class="Audio_Player_image"><img style="border-radius: 60px;"
-                                                        width="30" height="30"
-                                                        :src="`http://localhost:8250/image/album/${s.album.uri}`" />
-                                                </div>
+                                            <div class="col-auto">
                                             </div>
-                                            <div class="col-2">
+                                            <div class="col-auto">
                                                 <img style="border-radius: 60px;" :src="imgLoad(s.album.uri)"
                                                     width="40" />
                                             </div>
                                             <div class="col-auto">
                                                 <p>{{s.name}}</p>
                                             </div>
-                                            <div class="col-auto">
-                                <tr v-for="a in s.artists" :key="a.seq">
-                                    <p>{{a.name}}</p>
-                                </tr>
-                            </div>
-                            <div class="col-auto">
-                                <div v-if="idx==index || (index==null && idx ==0)">
-                                    재생중
-                                </div>
-
-                            </div>
+                                        </div>
+                                    </div>
+                        <div style="display:flex; flex-direction: row;">
+                                    <tr v-for="(a, index) in s.artists" :key="a.seq">
+                                        <div @click="changeChanel(a.seq)">
+                                            <router-link :to="{name:'artistDetail', params:{seq:a.seq}}" style="font-size:12px">
+                                                {{ a.name }}</router-link>
+                                            <span v-if="index < s.artists.length - 1">, </span>
+                                        </div>
+                                    </tr>
+                        </div>
                         </div>
                         <hr>
-                </div>
-                </tr>
+                    </tr>
             </div>
         </div>
         </a>
-        <tr v-for="artist in songs[this.index==null?0:this.index].artists" :key="artist.seq">
-            <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
-                {{ artist.name }}</router-link>
-        </tr>
+        <div  style="display:flex; flex-direction: row; justify-content: center;">
+            <tr v-for="(artist, index) in songs[this.index==null?0:this.index].artists" :key="artist.seq">
+                <router-link :to="{name:'artistDetail', params:{seq:artist.seq}}" style="font-size:12px">
+                    {{ artist.name }}</router-link>
+                <span v-if="index < songs[this.index==null?0:this.index].artists.length - 1">, </span>
+            </tr>
+        </div>
     </div>
     <div v-if="mp3!=null && index!=null" class="k2_audio_player">
         <audio ref="audioPlayer" @ended="playNext()" controls autoplay style="width: 80%;">
@@ -230,10 +229,28 @@
                     this.index=0;
                     sessionStorage.setItem('nowIndex', 0)
                 }
+            },
+            changeChanel(changeSeq){
+                this.$emit('changeChanel', changeSeq)
             }
         }
     }
 </script>
 <style>
-
+.playing {
+    /* color: black; */
+    color: #03C988; 
+    animation: pulse 2s ease-in-out infinite; 
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>

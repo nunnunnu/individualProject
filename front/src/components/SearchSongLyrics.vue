@@ -9,10 +9,13 @@
                 <router-link :to="{name:'songDetail', params:{seq:song.seq}}"><div v-html="stringFind(song.lyrics)"></div>
                 </router-link>
                 <div>
-                <tr v-for="art in song.artist" :key="art.seq">
-                    <router-link :to="{name:'artistDetail', params:{seq:art.seq}}" style="font-size:12px">
-                        {{ art.name }}</router-link>
-                </tr>
+                <div style="display:flex; flex-direction: row;">
+                                    <tr v-for="(art, index) in song.artist" :key="art.seq">
+                                        <router-link :to="{name:'artistDetail', params:{seq:art.seq}}" style="font-size:12px">
+                                            {{ art.name }}</router-link>
+                                        <span v-if="index < song.artist.length - 1">, </span>
+                                    </tr>
+                                </div>
                 </div >
                 <router-link :to="{name:'albumDetail', params:{seq:song.album.seq}}" style="font-size:12px">
                     {{ song.album.name }}</router-link>

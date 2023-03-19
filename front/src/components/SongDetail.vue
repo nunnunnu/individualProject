@@ -13,13 +13,16 @@
                 <div class="col-5">
                     <!-- <p align="left">[{{ data.type }}]</p> -->
                     <h2 align="left">{{ data.name }}</h2>
-                    <tr v-for="item in data.artists" :key="item.seq">
-                        <router-link :to="{name:'artistDetail', params:{seq:item.seq}}" style="font-size:25px">
-                            {{ item.name }}</router-link>
-                    </tr>
+                    <div style="display:flex; flex-direction: row;">
+                        <tr v-for="(item, index) in data.artists" :key="item.seq">
+                            <router-link :to="{name:'artistDetail', params:{seq:item.seq}}" style="font-size:15px">
+                                {{ item.name }}</router-link>
+                                <span v-if="index < data.artists.length - 1">, </span>
+                        </tr>
+                    </div>
                     <br>
                     <div align="left">
-                        <router-link :to="{name:'albumDetail', params:{seq:data.album.seq}}" style="font-size:20px">앨범명
+                        <router-link :to="{name:'albumDetail', params:{seq:data.album.seq}}" style="font-size:15px">앨범명
                             : {{ data.album.name }}
                         </router-link>
                         <p align="left">발매일 : {{ data.regDt }}</p>

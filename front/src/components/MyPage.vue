@@ -131,11 +131,11 @@
                     labels: this.labels,
                     datasets: [
                         {
-                            backgroundColor: ['#B9F3E4', '#EA8FEA', '#FFAACF', '#F6E6C2', '#F6F7C1','#BEF0CB','#D1FFF3','#C1AEFC'],
+                            backgroundColor: ['#B9F3E4', '#EA8FEA', '#FFAACF', '#F6E6C2', '#F6F7C1','#BEF0CB','#D1FFF3','#C1AEFC','ECF2FF','E3DFFD','E5D1FA','FFF4D2','B9F3FC','AEE2FF','93C6E7','FEDEFF','FF597B','FF8E9E','F9B5D0','EEEEEE'],
                             data: this.data
                         }
                     ],
-                }//https://colorhunt.co/
+                }// 
             },
             loadMyPlayList(){
                 axios.get(
