@@ -68,4 +68,13 @@ p{
     object-fit: cover;
     padding-bottom: 102px;
 }
+.card {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    }
+
+
+    .pagearea{
+        padding-bottom: 102px;
+    }
 </style>

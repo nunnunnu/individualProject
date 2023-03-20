@@ -72,7 +72,7 @@
         <div v-if="detail.type=='그룹'">
             <h5 class="pb-4 mb-4 fst-italic border-bottom" align="left">그룹 멤버</h5>
         </div>
-        <div class="artists">
+        <div class="artists" style="height: 10;">
         <tr v-for="art in detail.artists" :key="art.seq">
             <!-- <div class="col"> -->
             <div class="card">
@@ -148,10 +148,12 @@ import Cookies from 'js-cookie'
     flex-direction: row;
     flex-wrap: wrap;
     object-fit: cover;
+    /* height: 10px; */
     padding-bottom: 102px;
 }
 .card-img-top{
     height:150px;
     overflow: hidden;
 }
+
 </style>

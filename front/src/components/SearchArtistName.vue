@@ -86,7 +86,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
 .artists{
     display: flex;
     flex-direction: row;
@@ -96,5 +96,8 @@
 }
 .search{
     padding-bottom: 102px;
+}
+.artists .card {
+  height: 350px;
 }
 </style>

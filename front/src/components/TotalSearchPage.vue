@@ -398,4 +398,11 @@
 .search{
     padding-bottom: 102px;
 }
+
+.albums .card {
+  flex: 0 0 calc(33.33% - 30px);
+  margin: 15px;
+  max-width: 423px;
+}
+
 </style>

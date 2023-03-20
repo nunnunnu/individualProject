@@ -8,8 +8,10 @@
                     <router-link :to="{name:'albumDetail', params:{seq:data.seq}}" style="font-size:15px">
                     <div class="row g-0">
                         <div class="col-md-4">
+                        <div class="aspect-ratio-1-1" style="position: relative;">
                             <img :src="`http://localhost:8250/image/album/${data.uri}`"
-                                style="max-width: 100%; height: auto;" align="center" class="rounded float-start">
+                                style="max-width: 250px; height: auto; position: relative;" align="center" class="rounded float-start">
+                        </div>
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -101,7 +103,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .typeInfo {
         font-size: 15px;
         color: gray;
@@ -110,14 +112,44 @@
     p {
         font-size: 15px;
     }
-
     .albums {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        object-fit: cover;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    }
+
+    .card {
+    width: 618px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    }
+
+    .card img {
+    width: 100%;
+    height: auto;
+    }
+
+    .card-body {
+    height: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
     }
     .pagearea{
         padding-bottom: 102px;
     }
+/* .col-4 {
+padding: 15px;
+}
+
+.card-body {
+    padding: 50px;
+}
+
+.col-5 {
+    padding: 15px;
+}
+
+.col-3 {
+    padding: 15px;
+} */
 </style>

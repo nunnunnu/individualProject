@@ -201,10 +201,6 @@
                                     <input class="form-control" type="file" id="formFileDisabled" disabled>
                                 </div>
                             </div>
-                            <div class="col-1">
-                                <div class="img" style="width:100px; height: 100px; border: 1px solid #999;" ref="imgbox">
-                            </div>
-                            </div>
                         </div>
                         <div class="mb-3">
                             <br>
@@ -218,6 +214,7 @@
                 <p align="left">총 {{ data.comment }}개</p>
                 <hr>
                 <div class="row">
+                    <div v-if="data.comment==0">아직 댓글이 등록되지않은 앨범입니다.</div>
                     <tr v-for="cmt in comment" :key="cmt.seq">
                         <div class="row" align="left">
                             <div class="col-auto">
@@ -270,27 +267,27 @@
                     </tr>
                 </div>
             </div>
-        <div class="pagearea">
-        <ul class="pagination justify-content-center">
-        <li class="page-item disabled">
-            <a v-if="currentPage==0" class="page-link">Previous</a>
-        </li>
-        <a v-if="currentPage!=0" class="page-link" @click="prePage()">Previous</a>
-            <tr v-for="page in totalPage" :key="page">
-                <li class="page-item">
-                    <a class="page-link" @click="pageClick(page-1)">
-                        <font color="red" v-if="page-1==currentPage">{{ page }}</font>
-                        <font v-if="page-1!=currentPage">{{ page }}</font>
-                    </a>
+        <div class="pagearea" v-if="comment !=null && comment.length!=0">
+            <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a v-if="currentPage==0" class="page-link">Previous</a>
+            </li>
+            <a v-if="currentPage!=0" class="page-link" @click="prePage()">Previous</a>
+                <tr v-for="page in totalPage" :key="page">
+                    <li class="page-item">
+                        <a class="page-link" @click="pageClick(page-1)">
+                            <font color="red" v-if="page-1==currentPage">{{ page }}</font>
+                            <font v-if="page-1!=currentPage">{{ page }}</font>
+                        </a>
+                    </li>
+                </tr>
+                <li v-if="currentPage+1==totalPage" class="page-item disabled">
+                <a class="page-link">Next</a>
                 </li>
-            </tr>
-            <li v-if="currentPage+1==totalPage" class="page-item disabled">
-            <a class="page-link">Next</a>
-            </li>
-            <li v-if="currentPage+1!=totalPage" class="page-item">
-            <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
-            </li>
-        </ul>
+                <li v-if="currentPage+1!=totalPage" class="page-item">
+                <a class="page-link" @click="pageClick(currentPage+1)">Next</a>
+                </li>
+            </ul>
         </div>
 
         </div>
@@ -562,7 +559,8 @@
                     this.comment = e.data.data.content
                     this.albumExplan = e.data.data.explan
                     this.totalPage=e.data.data.totalPages
-                    this.size=e.data.data.size     
+                    this.size=e.data.data.size    
+                    console.log(this.comment) 
                 })
             },
             imageChange(event){
