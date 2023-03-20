@@ -45,7 +45,7 @@ public class AlbumController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
     @GetMapping("/new")
-    public ResponseEntity<Object> newAlbum(@PageableDefault(size=10, sort="albumRegDt",direction = Sort.Direction.DESC) Pageable  page){
+    public ResponseEntity<Object> newAlbum(@PageableDefault(size=6, sort="albumRegDt",direction = Sort.Direction.DESC) Pageable  page){
         
         Map<String, Object> map = aService.newAlbumList(page, LocalDate.now());
     

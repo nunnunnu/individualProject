@@ -42,7 +42,7 @@
             loadPage(seq) {
                 axios.get("http://localhost:8250/album/artist/" + seq)
                     .then((e) => {
-                        console.log(e.data.status);
+                        console.log(e.data);
                         if(!e.data.status){
                             this.dataLength=0
                         }else{
