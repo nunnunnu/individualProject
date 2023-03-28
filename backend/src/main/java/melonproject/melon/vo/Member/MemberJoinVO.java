@@ -26,7 +26,7 @@ public class MemberJoinVO {
     private String name;
     // @NotNull(message="나이를 입력하지않으셨습니다.")
     @Min(value=14, message="14세 이상 가입가능합니다.")
-    private Integer age;
+    private Integer age;    
     private String phone;
     @Email(message="이메일 형식이 아닙니다.")
     private String email;

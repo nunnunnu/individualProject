@@ -33,7 +33,7 @@ public class SearchController {
     }
     @GetMapping("songName/{type}")
     public ResponseEntity<Object> songNameSearch(@RequestParam String keyword,  
-        @PageableDefault(size=2, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
+        @PageableDefault(size=10, sort="siRegDt",direction = Sort.Direction.ASC) @Nullable Pageable page,
         @AuthenticationPrincipal UserDetails userDetails,
         @PathVariable String type
     ){

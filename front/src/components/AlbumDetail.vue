@@ -404,6 +404,7 @@
                     .then((e) => {
                         if(e.data.status){
                             alert("등록되었습니다.")
+                            this.loadPage()
                             this.rating=0;
                         }else{
                             alert(e.data.message)
@@ -522,9 +523,9 @@
                     console.log(error)
                     if(confirm(error.response.data.message+"\n확인을 누르시면 이용권 페이지로 이동합니다.")){
                         this.$router.push("/ticket")
-                    }else{
                         sessionStorage.removeItem('playlist')
                         sessionStorage.removeItem('nowIndex')
+                    }else{
                         this.$router.go();
                     }
                 })
@@ -597,6 +598,7 @@
                     })
                     .then((e)=>{
                         this.loadComment()
+                        this.loadPage(this.seq);
                         this.commentDetail=""
                         this.imgData=null
                         const reader = new FileReader(); //파일 읽어들이는 클래스

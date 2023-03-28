@@ -119,7 +119,7 @@
     }
 
     .card {
-    width: 618px;
+    width: 610px;
     margin-right: 20px;
     margin-bottom: 20px;
     }
