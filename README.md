@@ -30,4 +30,8 @@
 3. 시연 영상
 
 ![Video Label](http://img.youtube.com/vi/ZD6hauRA0Pw/0.jpg)] (https://youtu.be/ZD6hauRA0Pw)
-4. 정리한 노션 주소
+---
+### 기타 주소
+[테이블 명세서 파일 (노션페이지)](https://coordinated-sunset-4f9.notion.site/42cbbe8076d6429e977a4cf67d2d14d2)
+
+[작업일지 (노션페이지)](https://coordinated-sunset-4f9.notion.site/2309aad3b89042c398d15e6ebc20fe1d?v=ecb5cea5a34240feb0269b6ed9bd801e)
