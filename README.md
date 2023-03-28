@@ -1,3 +1,4 @@
+[노션에서 보기](https://coordinated-sunset-4f9.notion.site/568a3d687d9a4666bbe69996d131b74f)
 # Water Melon
 음악 스트리밍 서비스 워터멜론 프로젝트입니다.
 
