@@ -66,7 +66,7 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/albumName?keyword=" + this.childKeyword+"&page="+this.currentPage)
+                axios.get("/search/albumName?keyword=" + this.childKeyword+"&page="+this.currentPage)
                     .then((e) => {
                         this.data = e.data.data.content
                         console.log(this.data)

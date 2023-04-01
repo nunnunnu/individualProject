@@ -58,7 +58,7 @@
                 this.$emit("closePopup")
             },
             buy(){
-                axios.put("http://localhost:8250/ticket/"+this.ticket.seq, {}, 
+                axios.put("/ticket/"+this.ticket.seq, {}, 
                 {
                     headers: {
                         "Content-Type": `application/json`,
@@ -77,7 +77,7 @@
                 .catch((error)=>{
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                     id:member,
                     refresh:refresh
                     })

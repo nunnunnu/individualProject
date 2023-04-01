@@ -68,6 +68,9 @@ dependencies {
 	//스포티파이
 	implementation 'se.michaelthelin.spotify:spotify-web-api-java:8.0.0'
 	implementation 'com.github.thelinmichael:spotify-web-api-java:master-SNAPSHOT'
+
+	//s3
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 	
 }
 

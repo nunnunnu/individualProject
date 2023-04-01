@@ -98,7 +98,7 @@
                 const token = Cookies.get('accessToken')
                 
                 axios.put(
-                    `http://localhost:8250/playlist/`+this.name,{}, {
+                    `/playlist/`+this.name,{}, {
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -111,7 +111,7 @@
                 .catch((error) => {
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                             id: member,
                             refresh: refresh
                         })
@@ -132,7 +132,7 @@
             },
             loadMyPlayList(){
                 axios.get(
-                    `http://localhost:8250/playlist`, {
+                    `/playlist`, {
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -143,7 +143,7 @@
                 .catch((error) => {
                     // const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                             // id: member,
                             refresh: refresh
                         })
@@ -165,7 +165,7 @@
             addPlayListSong(seq){
                 console.log(this.song.seq)
                 axios.put(
-                    `http://localhost:8250/playlist/song/${seq}/${this.song.seq}`, {}, {
+                    `/playlist/song/${seq}/${this.song.seq}`, {}, {
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -180,7 +180,7 @@
                     console.log(error)
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                         // id: member,
                         refresh: refresh
                     })

@@ -54,7 +54,7 @@
         },
         methods: {
             getSpotifyToken() {
-                axios.get("http://localhost:8250/spotify")
+                axios.get("/spotify")
                     .then((e) => {
                         console.log(e)
                         sessionStorage.setItem("spotifyAccess", e.data.spotifyAccess)

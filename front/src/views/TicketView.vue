@@ -52,7 +52,7 @@ export default {
     },
     methods:{
         loadTicket(){
-            axios.get("http://localhost:8250/ticket",{
+            axios.get("/ticket",{
                 headers: {
                     Authorization: 'Bearer ' + Cookies.get("accessToken")
                 }
@@ -64,7 +64,7 @@ export default {
                 if(error.response.status==403){
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                         id:member,
                         refresh:refresh
                     })

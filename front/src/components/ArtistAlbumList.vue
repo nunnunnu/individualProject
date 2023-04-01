@@ -40,7 +40,7 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/album/artist/" + seq)
+                axios.get("/album/artist/" + seq)
                     .then((e) => {
                         console.log(e.data);
                         if(!e.data.status){

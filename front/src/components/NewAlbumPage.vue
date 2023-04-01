@@ -82,7 +82,7 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/album/new?page="+this.currentPage)
+                axios.get("/album/new?page="+this.currentPage)
                     .then((e) => {
                         this.data = e.data.data.content
                         this.totalPage=e.data.data.totalPages

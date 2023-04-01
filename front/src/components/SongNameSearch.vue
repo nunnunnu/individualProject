@@ -164,7 +164,7 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/songName/"+(this.isLogin?"login":"unLogin")+"?keyword=" + this.childKeyword+"&page="+this.currentPage, {
+                axios.get("/search/songName/"+(this.isLogin?"login":"unLogin")+"?keyword=" + this.childKeyword+"&page="+this.currentPage, {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
@@ -179,7 +179,7 @@
                     if(error.response.status==403){
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                         })
@@ -215,7 +215,7 @@
                     alert("로그인 후 이용가능한 서비스입니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.post("http://localhost:8250/likeUnlike/"+seq , {}, {
+                    axios.post("/likeUnlike/"+seq , {}, {
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
@@ -228,7 +228,7 @@
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
+                            axios.post("/member/refresh", {
                                 id:member,
                                 refresh:refresh
                             })
@@ -255,7 +255,7 @@
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.get("http://localhost:8250/ticket/check",{
+                    axios.get("/ticket/check",{
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                         }
@@ -301,7 +301,7 @@
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
                 }
-                axios.get("http://localhost:8250/ticket/check",{
+                axios.get("/ticket/check",{
                     headers: {
                         Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }

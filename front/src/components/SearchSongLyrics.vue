@@ -67,7 +67,7 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/search/songLyrics?keyword=" + this.childKeyword+"&page="+this.currentPage)
+                axios.get("/search/songLyrics?keyword=" + this.childKeyword+"&page="+this.currentPage)
                     .then((e) => {
                         console.log(e)
                         this.data = e.data.data.content

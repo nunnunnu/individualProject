@@ -112,7 +112,7 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/song/artist/part/" + seq+"/"+(this.isLogin?"login":"unLogin"), {
+                axios.get("/song/artist/part/" + seq+"/"+(this.isLogin?"login":"unLogin"), {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
@@ -132,7 +132,7 @@
                     if(error.response.status==403){
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                         })
@@ -157,7 +157,7 @@
                     alert("로그인 후 이용가능한 서비스입니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.post("http://localhost:8250/likeUnlike/"+seq , {}, {
+                    axios.post("/likeUnlike/"+seq , {}, {
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
@@ -170,7 +170,7 @@
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
+                            axios.post("/member/refresh", {
                                 id:member,
                                 refresh:refresh
                             })
@@ -196,7 +196,7 @@
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.get("http://localhost:8250/ticket/check",{
+                    axios.get("/ticket/check",{
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                         }

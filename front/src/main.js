@@ -10,7 +10,7 @@ import 'bootstrap-vue-3/dist/bootstrap-vue-3.css'
 import router from './router'
 
 
-axios.defaults.baseURL="http://localhost:8250"
+axios.defaults.baseURL="http://15.164.21.92:8250"
 // axios.defaults.withCredentials = true
 
 const app = createApp(App).use(router)

@@ -139,7 +139,7 @@ export default {
             if(id==undefined || id=="" || id==""){
                 alert("아이디를 입력하지않으셨습니다")
             }else{
-                axios.get("http://localhost:8250/member/id?id="+id)
+                axios.get("/member/id?id="+id)
                 .then((e) => {
                             if(e.data.status){
                                 this.isDuplicate=false
@@ -171,7 +171,7 @@ export default {
                     birth: this.birth,
                     nickName: this.nickname
                 }
-                axios.put("http://localhost:8250/member/join", data)
+                axios.put("/member/join", data)
                     .then((e) => {
                         alert(e.data.message)
                             if(e.data.status){

@@ -126,13 +126,13 @@
     },
     methods: {
       loadNewAlbum() {
-        axios.get("http://localhost:8250/album/new/two")
+        axios.get("/album/new/two")
           .then((e) => {
             this.newAlbumList = e.data.data
           })
       },
       albumDetail(seq) {
-        axios.get("http://localhost:8250/album/detail/" + seq)
+        axios.get("/album/detail/" + seq)
           .then((e) => {
             this.albumData = e
           })
@@ -152,7 +152,7 @@
         const refresh =  Cookies.get('refreshToken')
         const token =  Cookies.get('accessToken')
         console.log(refresh)
-        axios.post("http://localhost:8250/refreshDel", {refresh: refresh}, {
+        axios.post("/refreshDel", {refresh: refresh}, {
             headers: {
               "Content-Type": `application/json`,
               Authorization: 'Bearer ' + token
@@ -170,7 +170,7 @@
         this.$router.go()
       },
       loadUserInfo(token) {
-        axios.get("http://localhost:8250/myInfo", {
+        axios.get("/myInfo", {
             headers: {
               Authorization: 'Bearer ' + token
             }
@@ -181,7 +181,7 @@
           .catch((error)=>{
             const member = Cookies.get('member')
             const refresh = Cookies.get('refreshToken')
-            axios.post("http://localhost:8250/member/refresh", {
+            axios.post("/member/refresh", {
               id:member,
               refresh:refresh
             })
@@ -202,7 +202,7 @@
           })
       },
       getSpotifyToken(){
-        axios.get("http://localhost:8250/spotify")
+        axios.get("/spotify")
         .then((e)=>{
           console.log(e)
           sessionStorage.setItem("spotifyAccess", e.data.spotifyAccess)

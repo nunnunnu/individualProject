@@ -90,7 +90,7 @@
         },
         methods: {
             loadPage() {
-                axios.get("http://localhost:8250/listen/genre", {
+                axios.get("/listen/genre", {
                     headers: {
                     Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -106,7 +106,7 @@
                     if(error.response.status==403){
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                         })
@@ -139,7 +139,7 @@
             },
             loadMyPlayList(){
                 axios.get(
-                    `http://localhost:8250/playlist`, {
+                    `/playlist`, {
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -150,7 +150,7 @@
                 .catch((error) => {
                     // const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                             // id: member,
                             refresh: refresh
                         })
@@ -185,7 +185,7 @@
             },
             savePlayList(){
                 axios.put(
-                    `http://localhost:8250/playlist/`+this.name,{}, {
+                    `/playlist/`+this.name,{}, {
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -199,7 +199,7 @@
                 .catch((error) => {
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                             id: member,
                             refresh: refresh
                         })
@@ -222,7 +222,7 @@
                 if(confirm("정말 삭제하겠습니까? 삭제한 플레이리스트는 되돌릴 수 없습니다.")){
                     console.log(seq)
                     axios.delete(
-                        `http://localhost:8250/playlist/`+seq, {
+                        `/playlist/`+seq, {
                             headers: {
                                 Authorization: 'Bearer ' + Cookies.get('accessToken')
                         }
@@ -235,7 +235,7 @@
                     .catch((error) => {
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                                 id: member,
                                 refresh: refresh
                             })

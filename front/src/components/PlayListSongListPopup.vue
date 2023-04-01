@@ -94,7 +94,7 @@
         methods:{
             loadSongList(){
                 axios.get(
-                    `http://localhost:8250/playlist/song/`+this.seq, {
+                    `/playlist/song/`+this.seq, {
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -107,7 +107,7 @@
                 .catch((error) => {
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                             // id: member,
                             refresh: refresh
                         })
@@ -130,7 +130,7 @@
                 this.$emit("closePopup")
             },
             playSong(item){
-                axios.get("http://localhost:8250/ticket/check",{
+                axios.get("/ticket/check",{
                     headers: {
                         Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -156,7 +156,7 @@
                 
             },
             nowPlay(){
-                axios.get("http://localhost:8250/ticket/check",{
+                axios.get("/ticket/check",{
                     headers: {
                         Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -181,7 +181,7 @@
             deleteSong(order){
                 if(confirm("정말 삭제하시겠습니까?")){
                     axios.delete(
-                        `http://localhost:8250/playlist/`+this.seq+"/"+order, {
+                        `/playlist/`+this.seq+"/"+order, {
                             headers: {
                                 Authorization: 'Bearer ' + Cookies.get('accessToken')
                         }
@@ -194,7 +194,7 @@
                         console.log(error)
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                             // id: member,
                             refresh: refresh
                         })

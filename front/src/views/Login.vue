@@ -45,7 +45,7 @@
                     id: this.id,
                     pwd: this.pwd
                 }
-                axios.post('http://localhost:8250/member/login', data)
+                axios.post('/member/login', data)
                     .then(response => {
                         const token = response.data.token
                         Cookies.set('accessToken', token.accessToken)

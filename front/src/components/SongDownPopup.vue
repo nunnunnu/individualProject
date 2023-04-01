@@ -37,7 +37,7 @@ export default {
             this.$emit("closeDown")
         },
         loadDown(){
-            axios.get("http://localhost:8250/song/file/"+this.song.seq , {
+            axios.get("/song/file/"+this.song.seq , {
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
@@ -51,7 +51,7 @@ export default {
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
+                            axios.post("/member/refresh", {
                                 id:member,
                                 refresh:refresh
                             })
@@ -72,14 +72,14 @@ export default {
                     })
         },
         down(file){
-            axios.get("http://localhost:8250/ticket/downcheck/"+this.song.seq,{
+            axios.get("/ticket/downcheck/"+this.song.seq,{
                 headers: {
                     Authorization: `Bearer `+Cookies.get('accessToken')
                 }
             }).then((e)=>{
                 console.log(e)
                 if(confirm(e.data.message)){
-                    axios.get("http://localhost:8250/songfile/"+file.uri+"/"+this.song.seq+"?type=down",{
+                    axios.get("/songfile/"+file.uri+"/"+this.song.seq+"?type=down",{
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         },
@@ -99,7 +99,7 @@ export default {
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
+                            axios.post("/member/refresh", {
                                 id:member,
                                 refresh:refresh
                             })
@@ -125,7 +125,7 @@ export default {
                 if(error.response.status==403){
                     const member = Cookies.get('member')
                     const refresh = Cookies.get('refreshToken')
-                    axios.post("http://localhost:8250/member/refresh", {
+                    axios.post("/member/refresh", {
                         id:member,
                         refresh:refresh
                     })

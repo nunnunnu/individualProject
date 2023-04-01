@@ -337,7 +337,7 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/album/detail/"+seq+"/"+(this.isLogin?"login":"unLogin"), {
+                axios.get("/album/detail/"+seq+"/"+(this.isLogin?"login":"unLogin"), {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
@@ -351,7 +351,7 @@
                     if(error.response.status==403){
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                         })
@@ -396,7 +396,7 @@
                     alert("평점이 입력되지않았습니다. 평점은 1점부터 등록할 수 있습니다.")
                 }else{
                     const token = Cookies.get('accessToken');
-                    axios.put("http://localhost:8250/grade/"+seq+"?grade="+this.rating, {} , {
+                    axios.put("/grade/"+seq+"?grade="+this.rating, {} , {
                         headers: {
                             Authorization: `Bearer `+token
                         }
@@ -412,7 +412,7 @@
                     .catch((error)=>{
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                         })
@@ -443,7 +443,7 @@
                     alert("로그인 후 이용가능한 서비스입니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.post("http://localhost:8250/likeUnlike/"+seq , {}, {
+                    axios.post("/likeUnlike/"+seq , {}, {
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
@@ -454,7 +454,7 @@
                     .catch((error)=>{
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                         id:member,
                         refresh:refresh
                         })
@@ -479,7 +479,7 @@
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.get("http://localhost:8250/ticket/check",{
+                    axios.get("/ticket/check",{
                         headers: {
                             Authorization: 'Bearer ' + Cookies.get('accessToken')
                         }
@@ -510,7 +510,7 @@
                     alert("로그인 후 이용가능합니다.")
                     this.$router.push("/login")
                 }
-                axios.get("http://localhost:8250/ticket/check",{
+                axios.get("/ticket/check",{
                     headers: {
                         Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -553,7 +553,7 @@
                 }
             },
             loadComment(){
-                axios.get("http://localhost:8250/album/comment/"+this.seq+"?page="+this.currentPage
+                axios.get("/album/comment/"+this.seq+"?page="+this.currentPage
                 )
                 .then((e) => {
                     this.comment = e.data.data.content
@@ -590,7 +590,7 @@
                 formdata.append("file", this.imgData)
                 console.log(this.imgData)
 
-                axios.put("http://localhost:8250/comment", formdata , {
+                axios.put("/comment", formdata , {
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
@@ -607,7 +607,7 @@
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
+                            axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                             })
@@ -635,7 +635,7 @@
                 formdata.append("comment", this.childComment)
                 formdata.append("parentSeq", seq)
 
-                axios.put("http://localhost:8250/comment", formdata , {
+                axios.put("/comment", formdata , {
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
@@ -651,7 +651,7 @@
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
+                            axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                             })

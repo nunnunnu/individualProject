@@ -116,7 +116,7 @@ import Cookies from 'js-cookie'
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/artist/detail/" + seq)
+                axios.get("/artist/detail/" + seq)
                     .then((e) => {
                         this.detail = e.data.data
                     })

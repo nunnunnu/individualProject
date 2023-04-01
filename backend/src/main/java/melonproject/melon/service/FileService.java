@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.services.s3.AmazonS3;
+
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.ArtistGroupInfoEntity;
@@ -37,14 +39,23 @@ public class FileService {
     @Value("${file.image.album}") String album_img_path;
     @Value("${file.image.song}") String song_img_path;
     @Value("${file.image.commnet}") String comment_img_path;
+    // @Value("${file.image.artist}") String artist_img_path;
+    // @Value("${file.image.album}") String album_img_path;
+    // @Value("${file.image.song}") String song_img_path;
+    // @Value("${file.image.commnet}") String comment_img_path;
 
     private final ArtistInfoRepository artRepo;
     private final AlbumInfoRepository albumRepo;
     private final SongFileRepository sfRepo;
     private final AlbumCommentRepository acRepo;
 
+    private final AmazonS3 amazonS3Client;
+
+    @Value("${cloud.aws.s3.bucket}") String bucket;
+
     public ResponseEntity<Resource> getImage ( @PathVariable String uri, 
     @PathVariable String type , HttpServletRequest request ) throws Exception { 
+    System.out.println(bucket);
     Path folderLocation = null;
     String filename = null;
     // 내보낼 파일의 이름을 만든다. 
@@ -89,16 +100,17 @@ public class FileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok()
-            // 응답의 코드를 200 OK로 설정하고 
-            // 산출한 타입을 응답에 맞는 형태로 변환 
-            .contentType(MediaType.parseMediaType(contentType))
-            // 내보낼 내용의 타입을 설정 (파일), 
-            // attachment; filename*=\""+r.getFilename()+"\" 요청한 쪽에서 다운로드 한 
-            // 파일의 이름을 결정 
-            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(exportName, "UTF-8") + "\"")
-            .body(r);
-        // 변환된 파일을 ResponseEntity에 추가 }
+        return null;
+        // return ResponseEntity.ok()
+        //     // 응답의 코드를 200 OK로 설정하고 
+        //     // 산출한 타입을 응답에 맞는 형태로 변환 
+        //     .contentType(MediaType.parseMediaType(contentType))
+        //     // 내보낼 내용의 타입을 설정 (파일), 
+        //     // attachment; filename*=\""+r.getFilename()+"\" 요청한 쪽에서 다운로드 한 
+        //     // 파일의 이름을 결정 
+        //     .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + URLEncoder.encode(exportName, "UTF-8") + "\"")
+        //     .body(r);
+        // // 변환된 파일을 ResponseEntity에 추가 }
     }
     public ResponseEntity<Resource> getSong ( @PathVariable String uri, 
         HttpServletRequest request 

@@ -102,7 +102,7 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/artist/channel/" + seq+"/"+(this.isLogin?"login":"unLogin"),{
+                axios.get("/artist/channel/" + seq+"/"+(this.isLogin?"login":"unLogin"),{
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
@@ -116,7 +116,7 @@
                     if(error.response.status==403){
                         const member = Cookies.get('member')
                         const refresh = Cookies.get('refreshToken')
-                        axios.post("http://localhost:8250/member/refresh", {
+                        axios.post("/member/refresh", {
                             id:member,
                             refresh:refresh
                         })
@@ -161,7 +161,7 @@
                     alert("로그인 후 이용가능한 기능입니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.post("http://localhost:8250/fan/" + this.seq,{},{
+                    axios.post("/fan/" + this.seq,{},{
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
@@ -175,7 +175,7 @@
                         if(error.response.status==403){
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
-                            axios.post("http://localhost:8250/member/refresh", {
+                            axios.post("/member/refresh", {
                                 id:member,
                                 refresh:refresh
                             })

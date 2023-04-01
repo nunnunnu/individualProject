@@ -135,13 +135,13 @@
         },
         methods: {
             loadPage(seq) {
-                axios.get("http://localhost:8250/song/detail/"+seq)
+                axios.get("/song/detail/"+seq)
                     .then((e) => {
                         this.data = e.data.data
                     })                
             },
             checkLiked(){
-                axios.get("http://localhost:8250/like/" + this.seq, {
+                axios.get("/like/" + this.seq, {
                     headers: {
                         Authorization: `Bearer `+Cookies.get('accessToken')
                     }
@@ -159,7 +159,7 @@
                 return this.data.movie
             },
             listenCount(){
-                axios.get("http://localhost:8250/listen/song/"+this.seq, {
+                axios.get("/listen/song/"+this.seq, {
                     headers: {
                     Authorization: 'Bearer ' + Cookies.get('accessToken')
                     }
@@ -173,7 +173,7 @@
                     alert("로그인 후 이용가능한 서비스입니다.")
                     this.$router.push("/login")
                 }else{
-                    axios.post("http://localhost:8250/likeUnlike/"+seq , {}, {
+                    axios.post("/likeUnlike/"+seq , {}, {
                         headers: {
                             Authorization: `Bearer `+Cookies.get('accessToken')
                         }
