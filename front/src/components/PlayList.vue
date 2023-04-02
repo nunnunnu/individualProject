@@ -23,8 +23,8 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
                                     aria-label="Close"></button>
                             </div>
+                            <tr v-for="(s, idx) in songs" :key="s.seq">
                             <div class="offcanvas-body">
-                                <tr v-for="(s, idx) in songs" :key="s.seq">
                                     <div v-bind:class="{playing: idx==index || (index==null && idx ==0)}" >
                                     <div @click="indexChange(idx)">
                                         <div class="row">
@@ -49,9 +49,9 @@
                                     </tr>
                         </div>
                         </div>
-                        <hr>
-                    </tr>
-            </div>
+                    </div>
+                    <hr>
+                </tr>
         </div>
         </a>
         <div  style="display:flex; flex-direction: row; justify-content: center;">
@@ -101,7 +101,6 @@
                         </span>
                     </div>
                 </div>
-                <hr>
             </div>
         </div>
     </div>

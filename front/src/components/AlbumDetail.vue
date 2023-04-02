@@ -193,7 +193,7 @@
                             <div class="col-1">
                             </div>
                             <div class="col-2" v-if="isLogin">
-                                <input class="form-control form-control-sm" id="formFileSm" type="file" @change="imageChange">
+                                <input class="form-control form-control-sm" id="formFileSm" type="file" @change="imageChange" accept="image/*">
                                 <br>
                             </div>
                             <div v-else>
@@ -605,6 +605,7 @@
                     .catch((error)=>{
                         console.log(error)
                         if(error.response.status==403){
+                            this.imgData=null
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
                             axios.post("/member/refresh", {
@@ -642,13 +643,15 @@
                     })
                     .then((e)=>{
                         this.loadComment()
-                        this.commentDetail=null
+                        this.commentDetail=""
                         this.imgData=null
                         const reader = new FileReader(); //파일 읽어들이는 클래스
                         reader.readAsDataURL(this.imgData)
                     })
                     .catch((error)=>{
+                        console.log(error)
                         if(error.response.status==403){
+                            this.commentDetail=""
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
                             axios.post("/member/refresh", {
