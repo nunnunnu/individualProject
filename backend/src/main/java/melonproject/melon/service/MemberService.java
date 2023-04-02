@@ -164,8 +164,9 @@ public class MemberService {
             map.put("code", HttpStatus.OK);
             return map;
         }
-        LocalDateTime start = LocalDateTime.now().withDayOfMonth(1);     
-        LocalDateTime end = start.withDayOfMonth(start.getMonth().length(start.toLocalDate().isLeapYear()));
+        LocalDateTime start = LocalDateTime.now().minusMonths(1);   
+        System.out.println(start);  
+        LocalDateTime end = LocalDateTime.now();
         TicketMemberEntity ticket = tmRepo.findByMemberAndTmRegDtBetween(member, start, end);
         MemberInfo result = new MemberInfo(member, ticket);
         map.put("status", true);

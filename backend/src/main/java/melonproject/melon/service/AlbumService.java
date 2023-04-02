@@ -1,5 +1,6 @@
 package melonproject.melon.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -12,6 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +59,7 @@ public class AlbumService {
     private final SongInfoRepository songRepo;
     private final SongLikesRepository slRepo;
 
-    public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file){
+    public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         Map<String, Object> map = new LinkedHashMap<>();
         if(data.getType()==null){
             map.put("status", false);

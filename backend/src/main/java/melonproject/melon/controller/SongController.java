@@ -1,5 +1,6 @@
 package melonproject.melon.controller;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.song.SoundQuality;
@@ -48,7 +52,7 @@ public class SongController {
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
     }
     @PutMapping("/add/file/{seq}")
-    public ResponseEntity<Object> songFileSave(@PathVariable Long seq, @RequestParam SoundQuality sound, @RequestPart MultipartFile file){
+    public ResponseEntity<Object> songFileSave(@PathVariable Long seq, @RequestParam SoundQuality sound, @RequestPart MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         Map<String, Object> map = songService.songFileAdd(seq, sound, file);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));

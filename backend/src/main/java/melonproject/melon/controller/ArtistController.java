@@ -1,5 +1,6 @@
 package melonproject.melon.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.ArtistService;
@@ -26,7 +30,7 @@ public class ArtistController {
     private final ArtistService artService;
 
     @PutMapping("/add")
-    public ResponseEntity<Object> addArtist(@RequestPart ArtistAddVO data, @RequestPart @Nullable MultipartFile file){
+    public ResponseEntity<Object> addArtist(@RequestPart ArtistAddVO data, @RequestPart @Nullable MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         Map<String, Object> map = artService.saveArtist(data, file);
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));

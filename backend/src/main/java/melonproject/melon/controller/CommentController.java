@@ -1,5 +1,6 @@
 package melonproject.melon.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.CommentService;
@@ -34,7 +38,7 @@ public class CommentController {
             @Valid CommentInputVO data, 
             BindingResult bindingResult,
             @Nullable MultipartFile file
-        ){
+        ) throws AmazonServiceException, SdkClientException, IOException{
         Map<String, Object> map = cService.albumCommentAdd(userDetails, data, bindingResult, file);
 
         return new ResponseEntity<>(map, HttpStatus.OK);

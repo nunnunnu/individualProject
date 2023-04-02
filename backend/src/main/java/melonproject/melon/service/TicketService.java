@@ -68,8 +68,8 @@ public class TicketService {
             throw new MemberNotFound();
         }
         Map<String, Object> map = new LinkedHashMap<>();
-        LocalDateTime start = LocalDateTime.now().withDayOfMonth(1);     
-        LocalDateTime end = start.withDayOfMonth(start.getMonth().length(start.toLocalDate().isLeapYear()));
+        LocalDateTime start = LocalDateTime.now().minusMonths(1);     
+        LocalDateTime end = LocalDateTime.now();
         TicketMemberEntity ticketMember = tmRepo.findByMemberAndTmRegDtBetween(member, start, end);
 
         if(ticketMember==null){
@@ -98,8 +98,8 @@ public class TicketService {
         }
         SongInfoEntity song = sRepo.findById(seq).orElseThrow(()-> new NotFoundSongException());
 
-        LocalDateTime start = LocalDateTime.now().withDayOfMonth(1);     
-        LocalDateTime end = start.withDayOfMonth(start.getMonth().length(start.toLocalDate().isLeapYear()));
+        LocalDateTime start = LocalDateTime.now().minusMonths(1);     
+        LocalDateTime end = LocalDateTime.now();
         TicketMemberEntity ticketMember = tmRepo.findByMemberAndTmRegDtBetween(member, start, end);
         Map<String, Object> map = new LinkedHashMap<>();
         if(ticketMember==null){

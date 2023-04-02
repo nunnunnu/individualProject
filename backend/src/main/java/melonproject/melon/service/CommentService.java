@@ -1,5 +1,6 @@
 package melonproject.melon.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.album.AlbumCommentEntity;
@@ -36,7 +40,7 @@ public class CommentService {
     private final AlbumInfoRepository aRepo;
     private final FileService fService;
 
-    public Map<String, Object> albumCommentAdd(UserDetails userDetails, CommentInputVO data, BindingResult bindingResult, MultipartFile file){
+    public Map<String, Object> albumCommentAdd(UserDetails userDetails, CommentInputVO data, BindingResult bindingResult, MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa"+data.getComment());
         if (bindingResult.hasErrors()) {
             List<String> errorMessage = new ArrayList<>();

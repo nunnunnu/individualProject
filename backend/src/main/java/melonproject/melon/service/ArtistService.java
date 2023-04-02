@@ -1,5 +1,6 @@
 package melonproject.melon.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.artist.ArtistConnectionEntity;
@@ -43,7 +47,7 @@ public class ArtistService {
     private final MemberInfoRepository mRepo;
     private final ArtistFanRepository afRepo;
 
-    public Map<String, Object> saveArtist(ArtistAddVO data, MultipartFile file){
+    public Map<String, Object> saveArtist(ArtistAddVO data, MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         Map<String, Object> map = new LinkedHashMap<>();
         if(data.getName()==null || data.getDtype()==null){
             map.put("status", false);

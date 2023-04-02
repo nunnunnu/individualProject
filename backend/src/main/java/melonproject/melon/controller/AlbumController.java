@@ -1,5 +1,6 @@
 package melonproject.melon.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -20,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.service.AlbumService;
 import melonproject.melon.service.CommentService;
@@ -33,7 +37,7 @@ public class AlbumController {
     private final CommentService cService;
 
     @PutMapping("/add")
-    public ResponseEntity<Object> addAlbum(@RequestPart AlbumAddVO data, @RequestPart MultipartFile file){
+    public ResponseEntity<Object> addAlbum(@RequestPart AlbumAddVO data, @RequestPart MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         Map<String, Object> map = aService.addAlbum(data, file);
 
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));
