@@ -30,7 +30,7 @@
                                 <router-link :to="{name:'albumDetail', params:{seq:item.album.seq}}" style="font-size:15px">
                                     <img style="border-radius: 5px;"
                                     width="50" height="50"
-                                    :src="`http://localhost:8250/image/album/${item.album.uri}`" />
+                                    :src="`http://15.164.21.92:8250/image/album/${item.album.uri}`" />
                                 </router-link>
                             </td>
                             <td align="left">

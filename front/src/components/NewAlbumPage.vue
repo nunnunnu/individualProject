@@ -9,7 +9,7 @@
                     <div class="row g-0">
                         <div class="col-md-4">
                         <div class="aspect-ratio-1-1" style="position: relative;">
-                            <img :src="`http://localhost:8250/image/album/${data.uri}`"
+                            <img :src="`http://15.164.21.92:8250/image/album/${data.uri}`"
                                 style="max-width: 250px; height: auto; position: relative;" align="center" class="rounded float-start">
                         </div>
                         </div>

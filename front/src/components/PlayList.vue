@@ -154,7 +154,7 @@
             nowPlaying() {
                 if (this.songs != null && this.songs.length != 0) {
                     axios.get(
-                        `http://localhost:8250/songfile/${this.songs[this.index==null?0:this.index].files[0].uri}/${this.songs[this.index==null?0:this.index].seq}`, {
+                        `http://15.164.21.92:8250/songfile/${this.songs[this.index==null?0:this.index].files[0].uri}/${this.songs[this.index==null?0:this.index].seq}`, {
                             headers: {
                                 Authorization: 'Bearer ' + Cookies.get('accessToken')
                             },
@@ -192,7 +192,7 @@
                 }
             },
             imgLoad(albumUri) {
-                this.img = `http://localhost:8250/image/album/${albumUri}`
+                this.img = `http://15.164.21.92:8250/image/album/${albumUri}`
                 return this.img
             },
             indexChange(idx) {

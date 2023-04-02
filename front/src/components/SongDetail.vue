@@ -7,7 +7,7 @@
         <div v-if="data!=null">
             <div class="row">
                 <div class="col-3">
-                    <img :src="`http://localhost:8250/image/album/${data.album.uri}`"
+                    <img :src="`http://15.164.21.92:8250/image/album/${data.album.uri}`"
                         style="max-width: 100%; height: auto;" align="right" class="rounded float-start">
                 </div>
                 <div class="col-5">
@@ -64,7 +64,7 @@
             <div class="creator">
                 <tr v-for="creator in data.creates" :key="creator.seq">
                     <div class="card">
-                        <img :src="`http://localhost:8250/image/artist/${creator.uri}`" class="card-img-top">
+                        <img :src="`http://15.164.21.92:8250/image/artist/${creator.uri}`" class="card-img-top">
                         <div class="card-body">
                             <p class="card-title">{{creator.name}}</p>
                             <p class="card-text">{{creator.type}}</p>

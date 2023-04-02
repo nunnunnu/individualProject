@@ -7,7 +7,7 @@
             <div v-if="data!=null">
                 <div class="row">
                     <div class="col-3">
-                        <img :src="`http://localhost:8250/image/album/${data.uri}`"
+                        <img :src="`http://15.164.21.92:8250/image/album/${data.uri}`"
                             style="max-width: 100%; height: auto;" align="right" class="rounded float-start">
                     </div>
                     <div class="col-5">
@@ -221,7 +221,7 @@
                                 <p>닉네임 : {{ cmt.name }}</p>
                             </div>
                             <div class="col-auto" v-if="cmt.uri!=null">
-                                <img :src='`http://localhost:8250/image/comment/${cmt.uri}`'  width="80" height="80">
+                                <img :src='`http://15.164.21.92:8250/image/comment/${cmt.uri}`'  width="80" height="80">
                             </div>
                             <div class="col-auto">
                                 <p>{{ cmt.content }}</p>

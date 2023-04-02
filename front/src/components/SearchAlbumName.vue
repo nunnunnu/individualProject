@@ -8,7 +8,7 @@
                 <div class="card mb-3" style="max-width: 423px;">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img :src="`http://localhost:8250/image/album/${data.uri}`"
+                            <img :src="`http://15.164.21.92:8250/image/album/${data.uri}`"
                                 style="max-width: 100%; height: auto;" align="right" class="rounded float-start">
                         </div>
                         <div class="col-md-8">

@@ -77,7 +77,7 @@
             <!-- <div class="col"> -->
             <div class="card">
                 <span  @click="changeChanel(art.seq)" class="onclick">
-                    <img :src="`http://localhost:8250/image/artist/${art.uri}`" class="card-img-top">
+                    <img :src="`http://15.164.21.92:8250/image/artist/${art.uri}`" class="card-img-top">
                     <div class="card-body">
                         <p class="card-title">{{art.name}}</p>
                         <!-- <a :href="`http://localhost:8080/artist/channel${art.seq}`">상세보기</a> -->

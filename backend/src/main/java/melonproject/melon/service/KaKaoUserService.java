@@ -79,7 +79,7 @@ public class KaKaoUserService {
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
         body.add("client_id", "4c2ba3938a53b9849aef10abf1a2283e");
-        body.add("redirect_uri", "http://localhost:8080/kakao");
+        body.add("redirect_uri", "http://watermelonfront.s3-website.ap-northeast-2.amazonaws.com/kakao");
         body.add("code", code);
 
         // HTTP 요청 보내기

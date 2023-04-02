@@ -6,7 +6,7 @@
             <tr v-for="data in data" :key="data.seq">
                 <router-link :to="{name:'artistDetail', params:{seq:data.seq}}" style="font-size:15px">
                 <div class="card">
-                    <img :src="`http://localhost:8250/image/artist/${data.uri}`"
+                    <img :src="`http://15.164.21.92:8250/image/artist/${data.uri}`"
                                 style="max-width: 100%; height: 200px;" align="right" class="rounded float-start">
                     <div class="card-body">
                     <router-link :to="{name:'artistDetail', params:{seq:data.seq}}"

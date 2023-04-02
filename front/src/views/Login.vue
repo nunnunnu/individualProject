@@ -65,7 +65,7 @@
             loginWithKakao() {
                 const authUrl = "https://kauth.kakao.com/oauth/authorize";
                 const clientId = "7774d49dca8e78175a8edb237dd6761e";
-                const redirectUri = "http://localhost:8080/kakao";
+                const redirectUri = "http://watermelonfront.s3-website.ap-northeast-2.amazonaws.com/kakao";
                 const responseType = "code";
                 const state = "kakao"; // 이 값은 보안을 위해 랜덤한 문자열을 생성해야 합니다.
 

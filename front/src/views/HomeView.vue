@@ -129,6 +129,7 @@
         axios.get("/album/new/two")
           .then((e) => {
             this.newAlbumList = e.data.data
+            console.log(this.newAlbumList)
           })
       },
       albumDetail(seq) {
@@ -176,7 +177,6 @@
             }
           })
           .then((e) => {
-            console.log(e)
             this.user = e.data.data
           })
           .catch((error)=>{

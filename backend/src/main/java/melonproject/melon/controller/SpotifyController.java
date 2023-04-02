@@ -27,7 +27,7 @@ public class SpotifyController {
         SpotifyApi spotifyApi = new SpotifyApi.Builder()
         .setClientId(clientId)
         .setClientSecret(clientSecret)
-        .setRedirectUri(URI.create("http://localhost:8080/callback"))
+        .setRedirectUri(URI.create("http://watermelonfront.s3-website.ap-northeast-2.amazonaws.com/callback"))
         .build();
 
         String code = "AQDtFw16Oe5CbJVCLb6FGGn9yrsAPAdrpBiZ-e_RoQaiZVwiWlkX3ZGW9MMoRmrKvehZ9wjRqc8uano6C737fgHCdmeMeIKoeFCE4NU3-2b7JshyfaJf76S62Tjmxw9kBTDGHor_remtcl07dKc6g9LP3uB4AQznIw4z9VEe0ileZajDCDuin36Rj38QxoTaP-3Z1XmY4kcz5eQ9am6ikw9EJitD4w";

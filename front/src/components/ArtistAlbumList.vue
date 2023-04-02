@@ -4,7 +4,7 @@
         <tr v-for="album in data" :key="album.seq">
             <router-link :to="{name:'albumDetail', params:{seq:album.seq}}" style="font-size:20px">
                 <div class="card" style="width: 13rem; height: 30rem">
-                    <img :src="`http://localhost:8250/image/album/${album.uri}`">
+                    <img :src="`http://15.164.21.92:8250/image/album/${album.uri}`">
                     <div class="card-body">
                         <p class="typeInfo">[{{ album.type }}]</p>
                         <h6 class="card-title">{{album.name}}</h6>

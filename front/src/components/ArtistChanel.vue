@@ -10,7 +10,7 @@
         <div v-if="data!=null">
             <div class="row">
                 <div class="col-3">
-                    <img :src="`http://localhost:8250/image/artist/${data.uri}`" style="max-width: 100%; height: auto;" align="right" 
+                    <img :src="`http://15.164.21.92:8250/image/artist/${data.uri}`" style="max-width: 100%; height: auto;" align="right" 
                         class="rounded float-start" id="artistimg">
                 </div>
                 <div class="col-5">
