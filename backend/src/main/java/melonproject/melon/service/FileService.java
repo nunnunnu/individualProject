@@ -197,7 +197,7 @@ public class FileService {
 			);
 			
         String imagePath = s3Client.getUrl(bucket, originFileName).toString(); // 접근가능한 URL 가져오기
-        return ArtistSoloInfoEntity.builder().artFile(imagePath).artUri(fileName).build();
+        return ArtistSoloInfoEntity.builder().artFile(saveFileName).artUri(fileName).build();
     }
     public ArtistGroupInfoEntity saveArtistGroupFile(MultipartFile file, String name) throws AmazonServiceException, SdkClientException, IOException{
         if(file==null){
@@ -228,7 +228,7 @@ public class FileService {
 			);
 			
         String imagePath = s3Client.getUrl(bucket, originFileName).toString(); // 접근가능한 URL 가져오기
-        return ArtistGroupInfoEntity.builder().artFile(imagePath).artUri(fileName).build();
+        return ArtistGroupInfoEntity.builder().artFile(saveFileName).artUri(fileName).build();
     }
     public SongFileEntity saveSongFile(MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         Path folderLocation = Paths.get(song_img_path);
@@ -256,7 +256,7 @@ public class FileService {
         );
         
         String imagePath = s3Client.getUrl(bucket, originFileName).toString(); // 접근가능한 URL 가져오기
-        return SongFileEntity.builder().sfFile(imagePath).sfUri(fileName).build();
+        return SongFileEntity.builder().sfFile(saveFileName).sfUri(fileName).build();
     }
     public AlbumCommentEntity saveCommentFile(MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
             String originalName = file.getOriginalFilename(); // 파일 이름
@@ -278,6 +278,6 @@ public class FileService {
 			);
 			
 			String imagePath = s3Client.getUrl(bucket, originalName).toString(); // 접근가능한 URL 가져오기
-        return AlbumCommentEntity.builder().albumcFile(imagePath).albumcUri(file.getOriginalFilename()).build();
+        return AlbumCommentEntity.builder().albumcFile(saveFileName).albumcUri(file.getOriginalFilename()).build();
     }
 }

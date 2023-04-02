@@ -596,11 +596,10 @@
                         }
                     })
                     .then((e)=>{
+                        this.loadPage(this.data.seq)
                         this.loadComment()
                         this.commentDetail=""
                         this.imgData=null
-                        const reader = new FileReader(); //파일 읽어들이는 클래스
-                        // reader.readAsDataURL(this.imgData)
                     })
                     .catch((error)=>{
                         console.log(error)
@@ -635,6 +634,7 @@
                 formdata.append("album", this.data.seq)
                 formdata.append("comment", this.childComment)
                 formdata.append("parentSeq", seq)
+                formdata.append("file", null)
 
                 axios.put("/comment", formdata , {
                         headers: {
@@ -646,11 +646,9 @@
                         this.commentDetail=""
                         this.imgData=null
                         const reader = new FileReader(); //파일 읽어들이는 클래스
-                        reader.readAsDataURL(this.imgData)
                     })
                     .catch((error)=>{
-                        console.log(error)
-                        if(error.response.status==403){
+                        if(error.response==403){
                             this.commentDetail=""
                             const member = Cookies.get('member')
                             const refresh = Cookies.get('refreshToken')
@@ -672,7 +670,7 @@
                                 this.$router.push("/login")
                             })
                         }else{
-                            alert(error.response.data.err)
+                            alert(error.response.err)
                         }
                     })
             },
