@@ -489,7 +489,7 @@
                         songlist.push(item)
                         sessionStorage.setItem('playlist',JSON.stringify(songlist))
                         sessionStorage.setItem('nowIndex',songlist.length-1)
-                        this.$router.go();
+                        location.reload();
                     })
                     .catch((error)=>{
                         console.log(error)
@@ -498,7 +498,7 @@
                         }else{
                             sessionStorage.removeItem('playlist')
                             sessionStorage.removeItem('nowIndex')
-                            this.$router.go();
+                            location.reload();
                         }
                     })
                 }
@@ -525,7 +525,7 @@
                     }else{
                         sessionStorage.removeItem('playlist')
                         sessionStorage.removeItem('nowIndex')
-                        this.$router.go();
+                        location.reload();
                     }
                 })
             },

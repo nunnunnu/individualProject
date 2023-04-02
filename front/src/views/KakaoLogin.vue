@@ -7,6 +7,7 @@
     export default {
         name: 'kakoLogin',
         mounted(){
+            console.log("???")
             const searchParams = new URLSearchParams(window.location.search);
 
             // code 파라미터 추출
@@ -16,6 +17,7 @@
 
             axios.get("kakao?code="+code)
             .then((e)=>{
+                console.log(e)
                 Cookies.set('accessToken', e.data.token.accessToken)
                 Cookies.set('refreshToken', e.data.token.refreshToken)
                 this.$router.push("/")

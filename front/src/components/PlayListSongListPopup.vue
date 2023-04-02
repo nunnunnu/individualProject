@@ -140,7 +140,7 @@
                     song.push(item)
                     sessionStorage.setItem('playlist',JSON.stringify(song))
                     sessionStorage.setItem('nowIndex',song.length-1)
-                    this.$router.go();
+                    location.reload();
                 })
                 .catch((error)=>{
                     console.log(error)
@@ -149,7 +149,7 @@
                     }else{
                         sessionStorage.removeItem('playlist')
                         sessionStorage.removeItem('nowIndex')
-                        this.$router.go();
+                        location.reload();
                     }
                 })
                 // let songlist = []
@@ -164,7 +164,7 @@
                 .then((e)=>{
                     sessionStorage.setItem("nowIndex",0)
                     sessionStorage.setItem("playlist", JSON.stringify(this.songlist))
-                    this.$router.go();
+                    location.reload();
                 })
                 .catch((error)=>{
                     console.log(error)
@@ -173,7 +173,7 @@
                     }else{
                         sessionStorage.removeItem('playlist')
                         sessionStorage.removeItem('nowIndex')
-                        this.$router.go();
+                        location.reload();
                     }
                 })
                 

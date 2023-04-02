@@ -168,7 +168,7 @@
         this.isLogin = false
         sessionStorage.removeItem("nowIndex")
         sessionStorage.removeItem("playlist")
-        this.$router.go()
+        location.reload();
       },
       loadUserInfo(token) {
         axios.get("/myInfo", {
