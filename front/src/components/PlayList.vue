@@ -30,10 +30,10 @@
                                         <div class="row">
                                             <div class="col-auto">
                                             </div>
-                                            <div class="col-auto">
+                                            <!-- <div class="col-auto">
                                                 <img style="border-radius: 60px;" :src="imgLoad(s.album.uri)"
                                                     width="40" />
-                                            </div>
+                                            </div> -->
                                             <div class="col-auto">
                                                 <p>{{s.name}}</p>
                                             </div>
