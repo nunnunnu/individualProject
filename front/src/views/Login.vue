@@ -41,26 +41,30 @@
         },
         methods: {
             submitForm() {
-                const data = {
-                    id: this.id,
-                    pwd: this.pwd
+                if(this.id==null || this.id == undefined || this.pwd == null || this.pwd ==undefined){
+                    alert("아이디 혹은 비밀번호를 입력하지 않으셨습니다.")
+                }else{
+                    const data = {
+                        id: this.id,
+                        pwd: this.pwd
+                    }
+                    axios.post('/member/login', data)
+                        .then(response => {
+                            const token = response.data.token
+                            Cookies.set('accessToken', token.accessToken)
+                            Cookies.set('refreshToken', token.refreshToken)
+                            Cookies.set('member', response.data.member)
+                            if(Cookies.get('beforePage')!=null){
+                                Cookies.remove('beforePage')
+                                this.$router.push("/");
+                            }else{
+                                this.$router.go(-1);
+                            }
+                        })
+                        .catch(error => {
+                            alert(error.response.data.message);
+                        });
                 }
-                axios.post('/member/login', data)
-                    .then(response => {
-                        const token = response.data.token
-                        Cookies.set('accessToken', token.accessToken)
-                        Cookies.set('refreshToken', token.refreshToken)
-                        Cookies.set('member', response.data.member)
-                        if(Cookies.get('beforePage')!=null){
-                            Cookies.remove('beforePage')
-                            this.$router.push("/");
-                        }else{
-                            this.$router.go(-1);
-                        }
-                    })
-                    .catch(error => {
-                        alert(error.response.data.message);
-                    });
             },
             loginWithKakao() {
                 const authUrl = "https://kauth.kakao.com/oauth/authorize";
