@@ -1,6 +1,8 @@
 [노션에서 보기(서버 배포 기록 등 더 자세한 기록을 볼 수 있습니다.)](https://coordinated-sunset-4f9.notion.site/568a3d687d9a4666bbe69996d131b74f)
-### 현재 aws를 이용해 서버 배포중입니다.
-http://watermelonfront.s3-website.ap-northeast-2.amazonaws.com/
+
+~~### 현재 aws를 이용해 서버 배포중입니다.~~
+
+~~http://watermelonfront.s3-website.ap-northeast-2.amazonaws.com/~~
 
 (test용 ID : user001 PWD : 123456)
 
