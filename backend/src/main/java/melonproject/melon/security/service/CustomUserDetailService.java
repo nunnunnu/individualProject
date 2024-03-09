@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import melonproject.melon.entity.user.MemberInfoEntity;
+import melonproject.melon.reader.MemberReader;
 import melonproject.melon.repository.user.MemberInfoRepository;
 
 @Service
@@ -16,9 +17,10 @@ import melonproject.melon.repository.user.MemberInfoRepository;
 public class CustomUserDetailService implements UserDetailsService {
     private final MemberInfoRepository mRepo;
     private final PasswordEncoder passwordEncoder;
+    private final MemberReader memberReader;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return createUserDetails(mRepo.findByMiId(username)); //자동실행 메소드
+        return createUserDetails(memberReader.findByMemberIdNotFoundError(username)); //자동실행 메소드
     }
     public UserDetails createUserDetails(MemberInfoEntity member) {
         return User.builder().username(member.getMiId())

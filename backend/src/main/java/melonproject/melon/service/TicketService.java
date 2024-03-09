@@ -17,6 +17,7 @@ import melonproject.melon.entity.user.TicketMemberEntity;
 import melonproject.melon.error.custom.MemberNotFound;
 import melonproject.melon.error.custom.NotFoundSongException;
 import melonproject.melon.error.custom.NotFoundTicket;
+import melonproject.melon.reader.MemberReader;
 import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.info.TicketInfoRepository;
 import melonproject.melon.repository.user.DownHistoryRepository;
@@ -34,6 +35,7 @@ public class TicketService {
     private final HistoryPlayRepository hpRepo;
     private final SongInfoRepository sRepo;
     private final DownHistoryRepository dhRepo;
+    private final MemberReader memberReader;
 
     public List<TicketInfoVO> ticketAll(){
         List<TicketInfoVO> result = tRepo.findAll().stream().map((t)->new TicketInfoVO(t)).toList();
@@ -41,10 +43,7 @@ public class TicketService {
         return result;
     }
     public Map<String, Object> buyTicket(UserDetails userDetails, Long seq){
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-        if(member==null){
-            throw new MemberNotFound();
-        }
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         Map<String, Object> map = new LinkedHashMap<>();
         if(tmRepo.existsByMemberAndTmRegDtBetween(member, LocalDateTime.now().minusDays(30), LocalDateTime.now())){
             map.put("status", false);
@@ -63,10 +62,7 @@ public class TicketService {
         return map;
     }
     public Map<String, Object> myTicketCheck(UserDetails userDetails){
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-        if(member==null){
-            throw new MemberNotFound();
-        }
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         Map<String, Object> map = new LinkedHashMap<>();
         LocalDateTime start = LocalDateTime.now().minusMonths(1);     
         LocalDateTime end = LocalDateTime.now();
@@ -92,11 +88,8 @@ public class TicketService {
         return map;
     }
     public Map<String, Object> downCheck(UserDetails userDetails, Long seq){
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-        if(member==null){
-            throw new MemberNotFound();
-        }
-        SongInfoEntity song = sRepo.findById(seq).orElseThrow(()-> new NotFoundSongException());
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
+        SongInfoEntity song = sRepo.findById(seq).orElseThrow(NotFoundSongException::new);
 
         LocalDateTime start = LocalDateTime.now().minusMonths(1);     
         LocalDateTime end = LocalDateTime.now();

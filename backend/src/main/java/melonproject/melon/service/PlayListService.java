@@ -59,7 +59,7 @@ public class PlayListService {
         return map;
     }
     public List<PlayListInfoVO> showMyPlaylist(UserDetails userDetails){
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         if(member==null){
             throw new MemberNotFound();
         }
@@ -71,7 +71,7 @@ public class PlayListService {
         return playlist.stream().map(PlayListInfoVO::new).collect(Collectors.toList());
     }
     public Map<String, Object> playlistAddSong(UserDetails userDetails, Long playlistseq, Long songSeq){
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         if(member==null){
             throw new MemberNotFound();
         }
@@ -92,7 +92,7 @@ public class PlayListService {
     }
     public Map<String, Object> showPlayListSongList(Long seq, UserDetails userDetails){
         Map<String, Object> map = new LinkedHashMap<>();
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         if(member==null){
             throw new MemberNotFound();
         }

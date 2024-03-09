@@ -28,6 +28,7 @@ import melonproject.melon.entity.info.AgencyInfoEntity;
 import melonproject.melon.entity.info.GenreInfoEntity;
 import melonproject.melon.entity.info.PublisherInfoEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
+import melonproject.melon.reader.MemberReader;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumGenreConnectionRepository;
 import melonproject.melon.repository.artist.album.AlbumGradeRepository;
@@ -58,6 +59,7 @@ public class AlbumService {
     private final AlbumGradeRepository gradeRepo;
     private final SongInfoRepository songRepo;
     private final SongLikesRepository slRepo;
+    private final MemberReader memberReader;
 
     public Map<String, Object> addAlbum(AlbumAddVO data, MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         Map<String, Object> map = new LinkedHashMap<>();
@@ -151,15 +153,9 @@ public class AlbumService {
         return map;
     }
 
-    public Map<String, Object> setAlbumGrade(UserDetails userdetails, Long albumSeq, Double grade){
+    public Map<String, Object> setAlbumGrade(UserDetails userDetails, Long albumSeq, Double grade){
         Map<String, Object> map = new LinkedHashMap<>();
-        MemberInfoEntity member = mRepo.findByMiId(userdetails.getUsername());
-        if(member==null){
-            map.put("status", false);
-            map.put("message", "회원 번호 오류입니다.");
-            map.put("code", HttpStatus.BAD_REQUEST);
-            return map;
-        }
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         AlbumInfoEntity album = albumRepo.findById(albumSeq).orElse(null);
         if(album==null){
             map.put("status", false);

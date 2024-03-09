@@ -17,6 +17,7 @@ import melonproject.melon.entity.artist.album.AlbumInfoEntity;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.artist.song.SoundQuality;
 import melonproject.melon.entity.user.MemberInfoEntity;
+import melonproject.melon.reader.MemberReader;
 import melonproject.melon.repository.artist.ArtistInfoRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.artist.song.SongFileRepository;
@@ -38,6 +39,7 @@ public class SearchService {
     private final SongFileRepository sfRepo;
     private final SongLikesRepository slRepo;
     private final MemberInfoRepository mRepo;
+    private final MemberReader memberReader;
 
     public Map<String, Object> searchTotal(String key, UserDetails userDetails, String type){
         Map<String, Object> map = new LinkedHashMap<>();
@@ -54,18 +56,12 @@ public class SearchService {
 
         List<SongInfoVO> songNameVO = new ArrayList<>();
         if(userDetails!=null){
-            MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-            if(member==null){
-                map.put("status", false);
-                map.put("message", "정상적인 접근이 아닙니다.");
-                map.put("code", HttpStatus.BAD_REQUEST);
-                return map;
-            }
+            MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
             for(SongInfoEntity s : songNames){
                 songNameVO.add(new SongInfoVO(
                     s, 
                     sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
-                    slRepo.countBySongAndMember(s, member)>=1?true:false
+					slRepo.countBySongAndMember(s, member) >= 1
                     ));
             }
             
@@ -109,7 +105,7 @@ public class SearchService {
         }
         Page<SongInfoEntity> songs = songRepo.findBySiNameContains(keyword, page);
         if(userDetails!=null){
-            MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
+            MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
             if(member==null){
                 map.put("status", false);
                 map.put("message", "정상적인 접근이 아닙니다.");
@@ -119,7 +115,7 @@ public class SearchService {
             Page<SongInfoVO> songNameVO = songs.map(
                 s->new SongInfoVO(s,
                 sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3)!=null?sfRepo.findBySongAndSfQuality(s, SoundQuality.MP3).getSfUri():null,
-                slRepo.countBySongAndMember(s, member)>=1?true:false
+					slRepo.countBySongAndMember(s, member) >= 1
                 ));
                 map.put("data", songNameVO);
         }else{
@@ -139,7 +135,7 @@ public class SearchService {
         Map<String, Object> map = new LinkedHashMap<>();
         Page<ArtistInfoEntity> entity = artistRepo.findByArtNameContains(keyword, page);
         Page<ArtistChannelVO> artisNameVO = entity.map(
-            s-> new ArtistChannelVO(s));
+			ArtistChannelVO::new);
             
         map.put("status", true);
         map.put("message", "조회성공");
@@ -168,7 +164,7 @@ public class SearchService {
 
         Page<AlbumInfoEntity> albums = albumRepo.findByAlbumNameContains(keyword, page);
         Page<AlbumInfoVO> albumVO = albums.map(
-            s-> new AlbumInfoVO(s));
+			AlbumInfoVO::new);
 
         map.put("status", true);
         map.put("message", "조회성공");

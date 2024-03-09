@@ -25,6 +25,7 @@ import melonproject.melon.error.custom.CommentInputException;
 import melonproject.melon.error.custom.MemberNotFound;
 import melonproject.melon.error.custom.NotFoundAlbumException;
 import melonproject.melon.error.custom.NotFoundComment;
+import melonproject.melon.reader.MemberReader;
 import melonproject.melon.repository.artist.album.AlbumCommentRepository;
 import melonproject.melon.repository.artist.album.AlbumInfoRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
@@ -39,6 +40,7 @@ public class CommentService {
     private final MemberInfoRepository mRepo;
     private final AlbumInfoRepository aRepo;
     private final FileService fService;
+    private final MemberReader memberReader;
 
     public Map<String, Object> albumCommentAdd(UserDetails userDetails, CommentInputVO data, BindingResult bindingResult, MultipartFile file) throws AmazonServiceException, SdkClientException, IOException{
         System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaa"+data.getComment());
@@ -54,10 +56,7 @@ public class CommentService {
             parentComment = acRepo.findById(data.getParentSeq()).orElseThrow(()->new NotFoundComment());
         }
 
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-        if(member==null){
-            throw new MemberNotFound();
-        }
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
 
         AlbumInfoEntity album = aRepo.findById(data.getAlbum()).orElseThrow(()->new NotFoundAlbumException());
 
