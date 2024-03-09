@@ -1,5 +1,7 @@
 package melonproject.melon.controller;
 
+import static org.springframework.util.StringUtils.*;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +38,12 @@ public class MemberController {
     }
     @PostMapping("/login")
     public ResponseEntity<Object> memberLogin(@RequestBody @Valid LoginVO data){
+        if(!hasText(data.getId()) || !hasText(data.getPwd())){
+            Map<String, Object> map = new HashMap<>();
+            map.put("status", false);
+            map.put("message", "아이디와 비밀번호 모두 입력해주세요.");
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+        }
         Map<String, Object> map = mService.login(data);
     
         return new ResponseEntity<>(map, (HttpStatus)map.get("code"));

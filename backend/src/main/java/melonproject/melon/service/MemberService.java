@@ -24,6 +24,7 @@ import melonproject.melon.Validator.SignUpFormValidator;
 import melonproject.melon.entity.artist.song.SongInfoEntity;
 import melonproject.melon.entity.user.MemberInfoEntity;
 import melonproject.melon.entity.user.TicketMemberEntity;
+import melonproject.melon.reader.MemberReader;
 import melonproject.melon.repository.artist.song.SongInfoRepository;
 import melonproject.melon.repository.user.HistoryPlayRepository;
 import melonproject.melon.repository.user.MemberInfoRepository;
@@ -49,9 +50,9 @@ public class MemberService {
     private final HistoryPlayRepository hpRepo;
     private final RedisTemplate<String, Object> redisTemplate;
     private final WebSecurityConfig wConfig;
-    // private final TmRepo tmRepo;
     private final RedisService redisService;
     private final SignUpFormValidator signUpFormValidator;
+    private final MemberReader memberReader;
 
     private Boolean checkPassword(String rawPassword, String findMemberPassword) {
         if (!wConfig.passwordEncoder().matches(rawPassword, findMemberPassword)) {
@@ -86,16 +87,8 @@ public class MemberService {
     @Transactional
     public Map<String, Object> login(LoginVO login){
         Map<String, Object> map = new LinkedHashMap<>();
-        
-        if(!hasText(login.getId()) || !hasText(login.getPwd())){
-            map.put("status", false);
-            map.put("message", "아이디와 비밀번호 모두 입력해주세요.");
-            map.put("code", HttpStatus.UNAUTHORIZED);
-            return map;
-        }
 
-        // login.setPwd(AESAlgorithm.Encrypt(login.getPwd()));
-        MemberInfoEntity member = mRepo.findByMiId(login.getId());
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(login.getId());
         if(member == null || !checkPassword(login.getPwd(), member.getPassword())){
             map.put("status", false);
             map.put("message", "아이디 또는 비밀번호 에러입니다.");
@@ -117,13 +110,6 @@ public class MemberService {
         String refreshToken = jwtTokenProvider.generateToken(authentication).getRefreshToken();
 
         redisService.setValues(refreshToken, member.getMiId());
-        // redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
-        // redisTemplate.opsForHash().put(member.getMiId(), "refreshToken", refreshToken);
-        // redisTemplate.opsForHash().put(member.getMiId(), "accessToken", accessToken);
-        // redisTemplate.opsForHash().put(member.getMiId(), refreshToken);
-
-        // ValueOperations<String, String> values = redisTemplate.opsForValue();
-        // values.set(member.getMiId(), refreshToken);
 
         map.put("status", true);
         map.put("message", "로그인 완료");
@@ -157,7 +143,7 @@ public class MemberService {
 
     public Map<String, Object> findUser(UserDetails userDetail) {
         Map<String, Object> map = new LinkedHashMap<>();
-        MemberInfoEntity member = mRepo.findByMiId(userDetail.getUsername());
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetail.getUsername());
         if(member==null){
             map.put("status", false);
             map.put("message", "토큰정보 에러같음??");
@@ -177,13 +163,7 @@ public class MemberService {
     }
     public Map<String, Object> songListen(Long seq, UserDetails userDetails){
         Map<String, Object> map = new LinkedHashMap<>();
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-        if(member==null){
-            map.put("status", false);
-            map.put("message", "정상적인 접근이 아닙니다.");
-            map.put("code", HttpStatus.BAD_REQUEST);
-            return map;
-        }
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         SongInfoEntity song = sRepo.findById(seq).orElse(null);
         if(song==null){
             map.put("status", false);
@@ -201,13 +181,7 @@ public class MemberService {
 
     public Map<String, Object> genreListen(UserDetails userDetails) {
         Map<String, Object> map = new LinkedHashMap<>();
-        MemberInfoEntity member = mRepo.findByMiId(userDetails.getUsername());
-        if(member==null){
-            map.put("status", false);
-            map.put("message", "회원인증 에러");
-            map.put("code", HttpStatus.BAD_REQUEST);
-            return map;
-        }
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(userDetails.getUsername());
         List<UserGenreVO> vos = hpRepo.countListenGenre(member);
         ChartVO chart = new ChartVO(vos);
         
@@ -219,7 +193,6 @@ public class MemberService {
     }
     public Map<String, Object> accessToken(RefreshCheck data){
         Map<String, Object> map = new LinkedHashMap<>();
-        // String refreshToken = (String) redisTemplate.opsForHash().get(data.getId(), "refreshToken");
         String id = redisService.getValues(data.getRefresh());
         if(!StringUtils.hasText(id)){
             map.put("message","해당 해원은 로그인 한적 없는 회원입니다.");
@@ -235,7 +208,7 @@ public class MemberService {
             map.put("status",false);
             return map;
         }
-        MemberInfoEntity member = mRepo.findByMiId(id);
+        MemberInfoEntity member = memberReader.findByMemberIdNotFoundError(id);
         UsernamePasswordAuthenticationToken authenticationToken =
         new UsernamePasswordAuthenticationToken(member.getMiId(), member.getMiPwd());
         
